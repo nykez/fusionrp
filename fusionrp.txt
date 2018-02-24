@@ -1,0 +1,6 @@
+"fusionrp"
+{
+	"base"		"base"
+	"title"		"Fusion RP"
+	"menusystem"	"1"
+}
