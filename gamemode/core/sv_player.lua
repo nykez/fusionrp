@@ -2,13 +2,20 @@ function PLAYER:LoadProfile()
     if !IsValid(self) then return end
     if !mysql:IsConnected() then return end
 
-    local query = mysql:Select("steam_id")
-    query:ForTable("player_data")
+    local query = mysql:Select("player_data")
     query:Where("steam_id", self:SteamID())
     query:Callback(function(result, status, lastID)
         if (type(result) == "table" and #result > 0) then
-            for k, v in pairs(result) do
-                print(v)
+            if result[1] != nil then
+                local vars = result[1]
+                self:SetFirstName(vars.rp_first)
+                self:SetLastName(vars.rp_last)
+                self:SetXP(vars.xp)
+                self:SetAccountLevel(vars.account_level)
+                self:SetMoney(vars.money)
+                self:SetBank(vars.bank)
+                self:SetOrganization(vars.organization)
+                self:SetPlayTime(vars.playtime)
             end
         else
             self.IsNew = true
@@ -39,8 +46,89 @@ function PLAYER:CreateProfile()
     query:Insert("nick", self:Nick())
     query:Execute()
 
+    self:SetFirstName("John")
+    self:SetLastName("Doe")
+    self:SetXP(0)
+    self:SetAccountLevel(0)
+    self:SetMoney(15000)
+    self:SetBank(0)
+    self:SetOrganization(0)
+    self:SetPlayTime(0)
+
     /*
     net.Start("fusion_new_player")
     net.Send(self)
     */
+end
+
+function PLAYER:SetFirstName(str)
+    if !IsValid(self) then return end
+
+    self:SetNetworkedString("rp_first", str)
+end
+
+function PLAYER:SetLastName(str)
+    if !IsValid(self) then return end
+
+    self:SetNetworkedString("rp_last", str)
+end
+
+function PLAYER:SetXP(int)
+    if !IsValid(self) then return end
+
+    self:SetNW2Int("xp", int)
+end
+
+function PLAYER:AddXP(int)
+    if !IsValid(self) then return end
+
+    local currentXP = self:GetNW2Int("xp", 0)
+
+    self:SetXP(math.Clamp((currentXP + int), 0, 999999999))
+end
+
+function PLAYER:TakeXP(int)
+    if !IsValid(self) then return end
+
+    local currentXP = self:GetNW2Int("xp", 0)
+
+    self:SetXP(math.Clamp((currentXP - int), 0, 999999999))
+end
+
+function PLAYER:SetAccountLevel(int)
+    if !IsValid(self) then return end
+
+    self:SetNetworkedInt("account_level", int)
+end
+
+function PLAYER:SetMoney(int)
+
+end
+
+function PLAYER:AddMoney(int)
+
+end
+
+function PLAYER:TakeMoney(int)
+
+end
+
+function PLAYER:SetBank(int)
+
+end
+
+function PLAYER:AddBank(int)
+
+end
+
+function PLAYER:TakeBank(int)
+
+end
+
+function PLAYER:SetOrganization(int)
+
+end
+
+function PLAYER:SetPlayTime(int)
+
 end

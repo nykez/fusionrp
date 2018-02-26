@@ -8,7 +8,7 @@ GM.FolderName = "fusionrp"
 PLAYER = FindMetaTable("Player")
 ENTITY = FindMetaTable("Entity")
 
-FUSION = FUSION or {}
+Fusion = Fusion or {}
 
 
 local function client(file)

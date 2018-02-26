@@ -1,2 +1,2 @@
-FUSION = FUSION or {}
-FUSION.Config = {}
+Fusion = Fusion or {}
+Fusion.Config = {}
