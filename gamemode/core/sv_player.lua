@@ -2,13 +2,13 @@ function PLAYER:LoadProfile()
     if !IsValid(self) then return end
     if !mysql:IsConnected() then return end
 
-    local query = mysql:Select("*")
+    local query = mysql:Select("steam_id")
     query:ForTable("player_data")
     query:Where("steam_id", self:SteamID())
     query:Callback(function(result, status, lastID)
         if (type(result) == "table" and #result > 0) then
             for k, v in pairs(result) do
-                PrintTable(v)
+                print(v)
             end
         else
             self.IsNew = true
@@ -29,6 +29,8 @@ function PLAYER:CreateProfile()
     query:Insert("rp_last", "Doe")
     query:Insert("xp", 0)
     query:Insert("account_level", 0)
+    query:Insert("inventory", "")
+    query:Insert("skills", "")
     query:Insert("money", 15000)
     query:Insert("bank", 0)
     query:Insert("organization", 0)
