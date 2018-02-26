@@ -1,3 +1,3 @@
 function GM:Initialize()
-    print("-==-=-=-=-==-=-")
+    print("[Fusion RP] Initialized! Running version " .. GM.Version)
 end
