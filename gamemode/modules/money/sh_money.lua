@@ -1,11 +1,11 @@
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:GetWallet()
-	return self:self:GetNW2Int("money", 0)
+	return self:GetNW2Int("money", 0)
 end
 
 function PLAYER:GetBank()
-	return self:self:GetNW2Int("bank", 0)
+	return self:GetNW2Int("bank", 0)
 end
 
 function PLAYER:GetMoney(strType)
