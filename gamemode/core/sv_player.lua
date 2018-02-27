@@ -75,47 +75,6 @@ function PLAYER:SetLastName(str)
     self:SetNetworkedString("rp_last", str)
 end
 
-function PLAYER:SetXP(int)
-    if !IsValid(self) then return end
-    if type(int) != "number" then return end
-
-    self:SetNW2Int("xp", int)
-end
-
-function PLAYER:AddXP(int)
-    if !IsValid(self) then return end
-    if type(int) != "number" then return end
-
-    local currentXP = self:GetNW2Int("xp", 0)
-
-    self:SetXP(math.Clamp((currentXP + int), 0, 999999999))
-end
-
-function PLAYER:TakeXP(int)
-    if !IsValid(self) then return end
-    if type(int) != "number" then return end
-
-    local currentXP = self:GetNW2Int("xp", 0)
-
-    self:SetXP(math.Clamp((currentXP - int), 0, 999999999))
-end
-
-function PLAYER:SetAccountLevel(int)
-    if !IsValid(self) then return end
-    if type(int) != "number" then return end
-
-    self:SetNetworkedInt("account_level", int)
-end
-
-
-
-function PLAYER:SetOrganization(int)
-    if !IsValid(self) then return end
-    if type(int) != "number" then return end
-
-    self:SetNetworkedInt("organization", int)
-end
-
 function PLAYER:SetPlayTime(int)
     if !IsValid(self) then return end
     if type(int) != "number" then return end
