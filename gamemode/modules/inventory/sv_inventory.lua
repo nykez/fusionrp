@@ -1,20 +1,25 @@
 // Nykez
 // Alpha Inventory 1.0
 // TODO: Rewrite with classes/meta
+//
 
 Fusion.inventory = Fusion.inventory or {}
 
 util.AddNetworkString("Fusion.inventory.sync")
 util.AddNetworkString("Fusion.inventory.syncid")
+
 function Fusion.inventory:AddQuantity(pPlayer, id, amount)
-	if not amount then amount = 1
+	if not amount then 
+		amount = 1
+	end
 
 	if pPlayer.inventory[id].quanity then
-		pPlayer.inventory[id].quanity + amount
+		pPlayer.inventory[id].quanity = pPlayer.inventory[id].quanity + amount
 	else
 		pPlayer.inventory[id].quanity = 1
 	end
 end
+
 
 
 function Fusion.inventory:Add(pPlayer, id)
@@ -72,4 +77,10 @@ function Fusion.inventory:Save(pPlayer)
 	updateObj:Where("steam_id", pPlayer:SteamID());
 	updateObj:Execute();
 	MsgN('saved')
+end
+
+local PLAYER = FindMetaTable("Player")
+
+function PLAYER:GetInventory()
+	return self.inventory or {}
 end

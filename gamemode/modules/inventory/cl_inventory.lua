@@ -15,9 +15,9 @@ net.Receive("Fusion.inventory.syncid", function()
 	if not tbl then return end
 
 	if bool then
-		Fusion.inventory:Sync(LocalPlayer(), tbl)
-	else
 		Fusion.inventory:Sync(LocalPlayer(), tbl, true)
+	else
+		Fusion.inventory:Sync(LocalPlayer(), tbl)
 	end
 	
 end)
