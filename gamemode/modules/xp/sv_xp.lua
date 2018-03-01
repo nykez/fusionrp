@@ -1,11 +1,25 @@
 Fusion.XP = Fusion.XP or {}
 Fusion.XP.MaxLevel = 100
 
+/*
+    PLAYER:SetLevel(int)
+    Only to be used internally..
+    If you want to set someone's level, see PLAYER:CheatLevel(int)
+*/
+
 function PLAYER:SetLevel(int)
     if !IsValid(self) then return end
     if type(int) != "number" then return end
 
     self:SetNW2Int("level", int)
+end
+
+function PLAYER:CheatLevel(int)
+    if !IsValid(self) then return end
+    if type(int) != "number" then return end
+
+    self:SetNW2Int("level", int)
+    self:SetNW2Int("xp", Fusion.XP.XPForLevel(int))
 end
 
 function PLAYER:SetXP(int)
