@@ -10,7 +10,6 @@ ENTITY = FindMetaTable("Entity")
 
 Fusion = Fusion or {}
 
-
 local function client(file)
 	if SERVER then AddCSLuaFile(file) end
 

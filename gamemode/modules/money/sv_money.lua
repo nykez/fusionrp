@@ -1,10 +1,13 @@
 Fusion.Money = Fusion.Money or {}
 Fusion.Money.Currency = "$"
 
+<<<<<<< HEAD
 //
 
 local PLAYER = FindMetaTable("Player")
 
+=======
+>>>>>>> 4f3ab2c00b67aed2243d81aa77bbe60f2d8cad60
 function PLAYER:SetMoney(int)
     if !IsValid(self) then return end
     if type(int) != "number" then return end
