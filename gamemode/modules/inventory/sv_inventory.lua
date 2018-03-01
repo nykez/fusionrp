@@ -7,10 +7,10 @@ Fusion.inventory = Fusion.inventory or {}
 util.AddNetworkString("Fusion.inventory.sync")
 util.AddNetworkString("Fusion.inventory.syncid")
 function Fusion.inventory:AddQuantity(pPlayer, id, amount)
-	if not amount then amount = 1
+	if not amount then amount = 1 end
 
 	if pPlayer.inventory[id].quanity then
-		pPlayer.inventory[id].quanity + amount
+		pPlayer.inventory[id].quanity = pPlayer.inventory[id].quantity + amount
 	else
 		pPlayer.inventory[id].quanity = 1
 	end
@@ -19,10 +19,10 @@ end
 
 function Fusion.inventory:Add(pPlayer, id)
 	if not IsValid(pPlayer) then return end
-	
-	local item = Fusion.Inventory.cache[id]
+
+	local item = Fusion.inventory.cache[id]
 	if not item then return end
-	
+
 	self:AddQuantity(pPlayer, id)
 	self:Sync(pPlayer, id)
 end
@@ -30,7 +30,7 @@ end
 function Fusion.inventory:Remove(pPlayer, id)
 	if not IsValid(pPlayer) then return end
 
-	local item = Fusion.Inventory.cache[id]
+	local item = Fusion.inventory.cache[id]
 	if not item then return end
 
 	if pPlayer.inventory[id].quanity and pPlayer.inventory[id].quanity > 1 then
@@ -64,7 +64,7 @@ end
 
 function Fusion.inventory:Save(pPlayer)
 	if not IsValid(pPlayer) then return end
-	
+
 	local tbl = Fusion.util:JSON(pPlayer.inventory)
 
 	local updateObj = mysql:Update("player_data");
