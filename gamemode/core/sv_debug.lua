@@ -6,5 +6,12 @@ end)
 
 concommand.Add("fs_xp_add", function(ply, cmd, args)
     ply:AddXP(tonumber(args[1]))
-    print(ply:GetLevel())
+    ply:ChatPrint(ply:GetLevel())
+    ply:ChatPrint(ply:GetXP())
+end)
+
+concommand.Add("fs_xp_print", function(ply, cmd, args)
+    for i = 1, 10 do
+        ply:ChatPrint("Level: " .. i .. ", XP: " .. Fusion.XP:XPForLevel(i))
+    end
 end)

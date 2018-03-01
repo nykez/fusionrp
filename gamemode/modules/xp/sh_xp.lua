@@ -7,5 +7,5 @@ end
 function PLAYER:GetLevel()
     if !IsValid(self) then return end
 
-    return self:GetNetworkedInt("level", 1)
+    return self:GetNW2Int("level", 1)
 end

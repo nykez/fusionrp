@@ -11,6 +11,8 @@ end
 function PLAYER:SetXP(int)
     if !IsValid(self) then return end
     if type(int) != "number" then return end
+
+    self:SetNW2Int("xp", int)
 end
 
 function PLAYER:AddXP(int)
@@ -24,7 +26,7 @@ function PLAYER:AddXP(int)
 
     local bLoop = true
     while (bLoop) do
-        if currentXP > Fusion.XP:XPForLevel(self:GetLevel() + 1) then
+        if currentXP >= Fusion.XP:XPForLevel(self:GetLevel() + 1) then
             self:SetLevel(self:GetLevel() + 1)
             hook.Run("OnPlayerLeveledUp", self:GetXP(), self:GetLevel())
         else
