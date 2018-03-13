@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-local no = "no"
-=======
+
 function PLAYER:GetXP()
     if !IsValid(self) then return end
 
@@ -12,4 +10,3 @@ function PLAYER:GetLevel()
 
     return self:GetNW2Int("level", 1)
 end
->>>>>>> 4f3ab2c00b67aed2243d81aa77bbe60f2d8cad60

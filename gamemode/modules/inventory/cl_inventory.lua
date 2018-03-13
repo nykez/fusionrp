@@ -1,4 +1,6 @@
 Fusion.inventory = Fusion.inventory or {}
+Fusion.inventory.cache = Fusion.inventory.cache or {}
+
 
 net.Receive("Fusion.inventory.sync", function()
 	local tbl = net.ReadTable()
@@ -27,7 +29,6 @@ function Fusion.inventory:FullSync(pPlayer, tbl)
 	
 	pPlayer.inventory = tbl
 
-	PrintTable(pPlayer.inventory)
 end
 
 function Fusion.inventory:Sync(pPlayer, id, bool)

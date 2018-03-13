@@ -4,39 +4,48 @@
 //
 
 Fusion.inventory = Fusion.inventory or {}
+Fusion.inventory.cache = Fusion.inventory.cache or {}
 
 util.AddNetworkString("Fusion.inventory.sync")
 util.AddNetworkString("Fusion.inventory.syncid")
+util.AddNetworkString("Fusion.inventory.spawn")
+util.AddNetworkString("Fusion.inventory.edit")
+
 
 function Fusion.inventory:AddQuantity(pPlayer, id, amount)
-<<<<<<< HEAD
 	if not amount then 
 		amount = 1
 	end
 
-	if pPlayer.inventory[id].quanity then
-		pPlayer.inventory[id].quanity = pPlayer.inventory[id].quanity + amount
-=======
 	if not amount then amount = 1 end
 
-	if pPlayer.inventory[id].quanity then
-		pPlayer.inventory[id].quanity = pPlayer.inventory[id].quantity + amount
->>>>>>> 4f3ab2c00b67aed2243d81aa77bbe60f2d8cad60
+	if pPlayer.inventory[id] then
+		if pPlayer.inventory[id].quantity then
+			pPlayer.inventory[id].quantity = pPlayer.inventory[id].quantity + amount
+		else
+			pPlayer.inventory[id].quantity = 1 + amount
+		end
 	else
-		pPlayer.inventory[id].quanity = 1
+		pPlayer.inventory[id] = {
+			quantity = 1,
+		}
 	end
+	self:FullSync(pPlayer)
 end
 
 
-
-function Fusion.inventory:Add(pPlayer, id)
+function Fusion.inventory:Add(pPlayer, id, amount)
 	if not IsValid(pPlayer) then return end
 
 	local item = Fusion.inventory.cache[id]
 	if not item then return end
 
-	self:AddQuantity(pPlayer, id)
-	self:Sync(pPlayer, id)
+	if not amount then
+		amount = 1
+	end
+
+	self:AddQuantity(pPlayer, id, amount)
+	self:FullSync(pPlayer)
 end
 
 function Fusion.inventory:Remove(pPlayer, id)
@@ -45,15 +54,15 @@ function Fusion.inventory:Remove(pPlayer, id)
 	local item = Fusion.inventory.cache[id]
 	if not item then return end
 
-	if pPlayer.inventory[id].quanity and pPlayer.inventory[id].quanity > 1 then
-		pPlayer.inventory[id].quanity = pPlayer.inventory[id].quanity - 1
+	if pPlayer.inventory[id].quantity and pPlayer.inventory[id].quantity > 1 then
+		pPlayer.inventory[id].quantity = pPlayer.inventory[id].quantity - 1
 	else
 		pPlayer.inventory[id] = nil
 	end
 
 	// Will fix this
 	// Atm we will just send the whole player inventory until further development
-	self:FullSync(pPlayer, id, true)
+	self:FullSync(pPlayer)
 end
 
 function Fusion.inventory:Sync(pPlayer, id, boolRemove)
@@ -85,12 +94,56 @@ function Fusion.inventory:Save(pPlayer)
 	updateObj:Execute();
 	MsgN('saved')
 end
-<<<<<<< HEAD
+
+net.Receive("Fusion.inventory.spawn", function(len, pPlayer)
+	local id = net.ReadInt(16)
+
+	if not id then return end
+	
+	Fusion.inventory:Spawn(pPlayer, id)
+end)
+
+function Fusion.inventory:Spawn(pPlayer, itemID)
+	if not pPlayer then return end
+	if not itemID then return end
+
+	MsgN("Inventory ID: " .. itemID)
+
+	if not pPlayer.inventory[itemID] then return end
+
+	local item = Fusion.inventory:GetItem(itemID)
+
+
+
+	local ent = ents.Create("ent_item")
+	ent:SetModel(item.model)
+	ent:Spawn()
+	ent.canedit = true
+	ent.id = item.id
+
+	local tr = util.TraceEntity({
+		start = pPlayer:EyePos(),
+		endpos = pPlayer:EyePos() + pPlayer:GetAimVector() * 150,
+		filter = pPlayer
+	}, ent)
+
+	local spawnPos = tr.HitPos
+
+	ent:SetPos(spawnPos)
+	
+	self:Remove(pPlayer, item.id)
+end
 
 local PLAYER = FindMetaTable("Player")
-
 function PLAYER:GetInventory()
 	return self.inventory or {}
 end
-=======
->>>>>>> 4f3ab2c00b67aed2243d81aa77bbe60f2d8cad60
+
+concommand.Add("inventory", function(pPlayer)
+	if not pPlayer.inventory then pPlayer.inventory = {} end
+
+	Fusion.inventory:Add(pPlayer, 1, 5)
+	Fusion.inventory:Add(pPlayer, 2, 5)
+
+	PrintTable(pPlayer.inventory)
+end)

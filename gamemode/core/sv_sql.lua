@@ -43,6 +43,7 @@ local function populateTables()
 	players:Create("model", "VARCHAR(255) NOT NULL")
 	players:Create("playtime", "INT NOT NULL")
 	players:Create("nick", "VARCHAR(255) NOT NULL")
+	players:Create("vehicles", "LONGTEXT")
 	players:PrimaryKey("id")
 	players:Execute()
 
@@ -67,5 +68,6 @@ local function populateTables()
 	orgs:Execute()
 
 	print("[Fusion RP] Completed!")
+	print("[Fusion RP] Database connected.")
 end
 hook.Add("DatabaseConnected", "fusion_populateTables", populateTables)
