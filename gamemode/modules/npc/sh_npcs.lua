@@ -28,21 +28,23 @@ function Fusion.npcs:RegisterNPC(tblNPC)
 	print('loaded npc ->' .. tblNPC.name)
 
 	if SERVER then
-		local spawnPos = tblNPC.spawn[game.GetMap()][1]
-		local angles = tblNPC.angle[game.GetMap()][1]
+		timer.Simple(5, function()
+			local spawnPos = tblNPC.spawn[game.GetMap()][1]
+			local angles = tblNPC.angle[game.GetMap()][1]
 
-		if not spawnPos then
-			MsgN("No spawn postion for -> " ..tblNPC.name)
-			return
-		end
+			if not spawnPos then
+				MsgN("No spawn postion for -> " ..tblNPC.name)
+				return
+			end
 
-		local ent = ents.Create("npc_vendor")
-		ent:SetModel(tblNPC.model)
-		ent:SetPos(spawnPos)
-		ent:SetAngles(angles)
-		ent:Spawn()
+			local ent = ents.Create("npc_vendor")
+			ent:SetModel(tblNPC.model)
+			ent:SetPos(spawnPos)
+			ent:SetAngles(angles)
+			ent:Spawn()
 
-		ent:SetourName(tblNPC.name)
+			ent:SetourName(tblNPC.name)
+		end)
 	end
 end
 
