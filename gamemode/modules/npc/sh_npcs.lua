@@ -13,7 +13,7 @@ function Fusion.npcs:LoadNPC()
 
 		include(path)
 	end
-	
+
 	MsgN("[Fusion RP] Loaded all NPCs")
 end
 hook.Add("PostGamemodeLoaded", "FusionRP.LoadNPCs", Fusion.npcs.LoadNPC)
@@ -42,6 +42,7 @@ function Fusion.npcs:RegisterNPC(tblNPC)
 			ent:SetPos(spawnPos)
 			ent:SetAngles(angles)
 			ent:Spawn()
+			ent.id = tblNPC.id
 
 			ent:SetourName(tblNPC.name)
 		end)

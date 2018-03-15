@@ -1,3 +1,7 @@
+Fusion.property = Fusion.property or {}
+Fusion.property.cache = Fusion.property.cache or {}
+Fusion.property.owners = Fusion.property.owners or {}
+
 function Fusion.property:Sync(len)
     local properties = net.ReadTable()
     local owners = net.ReadTable()

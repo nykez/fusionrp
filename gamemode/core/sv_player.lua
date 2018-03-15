@@ -17,6 +17,9 @@ function PLAYER:LoadProfile()
                 self:SetBank(vars.bank)
                 self:SetOrganization(vars.organization)
                 self:SetPlayTime(vars.playtime)
+
+                self.inventory = {}
+                self.vehicles = {}
             end
         else
             self.IsNew = true
@@ -58,6 +61,9 @@ function PLAYER:CreateProfile()
     self:SetOrganization(0)
     self:SetPlayTime(0)
 
+    self.inventory = {}
+    self.vehicles = {}
+
     /*
     net.Start("fusion_new_player")
     net.Send(self)
@@ -82,7 +88,7 @@ function PLAYER:SaveProfile()
     query:Execute()
 
     Fusion.inventory:Save(self)
-    //Fusion.vehicles:Save(self)
+    Fusion.vehicles:Save(self)
 end
 
 function PLAYER:SetFirstName(str)

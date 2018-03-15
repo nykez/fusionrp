@@ -15,3 +15,7 @@ concommand.Add("fs_xp_print", function(ply, cmd, args)
         ply:ChatPrint("Level: " .. i .. ", XP: " .. Fusion.XP:XPForLevel(i))
     end
 end)
+
+concommand.Add("fs_doorprint", function(ply, cmd, args)
+    ply:ChatPrint(Fusion.property.cache[tonumber(args[1])].name)
+end)

@@ -5,16 +5,16 @@ Fusion.vehicles.cache = Fusion.vehicles.cache or {}
 util.AddNetworkString("Fusion.vehicles.sync")
 function Fusion.vehicles:PurchaseCar(pPlayer, id, color)
 	if not pPlayer then return end
-	
+
 	if not id then return end
-	
+
 
 	local car = Fusion.vehicles:GetCarByID(id)
 
 	if not car then return end
-	
+
 	if pPlayer.vehicles[id] then return end
-	
+
 	if pPlayer:GetWallet() < car.price then return end
 
 	pPlayer.vehicles[id] = {
@@ -33,7 +33,7 @@ function Fusion.vehicles:Sync(pPlayer)
 	net.Send(pPlayer)
 end
 
-function Fusion.vehicles:SyncDatabase(pPlayer)
+function Fusion.vehicles:Save(pPlayer)
 	if not pPlayer.vehicles then
 		pPlayer.vehicles = {}
 	end

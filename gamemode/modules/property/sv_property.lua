@@ -1,3 +1,7 @@
+Fusion.property = Fusion.property or {}
+Fusion.property.cache = Fusion.property.cache or {}
+Fusion.property.owners = Fusion.property.owners or {}
+
 util.AddNetworkString("Fusion.property.sync")
 util.AddNetworkString("Fusion.property.purchase")
 util.AddNetworkString("Fusion.property.sell")

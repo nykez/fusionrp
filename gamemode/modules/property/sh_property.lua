@@ -3,16 +3,21 @@ Fusion.property.cache = Fusion.property.cache or {}
 Fusion.property.owners = Fusion.property.owners or {}
 
 function Fusion.property:Load()
-	local properties = file.Find(GAMEMODE.FolderName.."/gamemode/modules/property/properties/*.lua", "LUA")
+	local files, folders = file.Find(GAMEMODE.FolderName.."/gamemode/modules/property/properties/*", "LUA")
 
-	for k, v in pairs(properties) do
-		local path = GAMEMODE.FolderName.."/gamemode/modules/property/properties/"..v
+	for k, v in pairs(folders) do
+		if string.lower(v) != string.lower(game.GetMap()) then continue end
+		local dir = GAMEMODE.FolderName .. "/gamemode/modules/property/properties/" .. v .. "/*.lua"
 
-		if SERVER then
-			AddCSLuaFile(path)
+		for _, file in pairs(file.Find(dir, "LUA")) do
+			local path = GAMEMODE.FolderName .. "/gamemode/modules/property/properties/" .. v .. "/" .. file
+
+			if SERVER then
+				AddCSLuaFile(path)
+			end
+
+			include(path)
 		end
-
-		include(path)
 	end
 
 	MsgN("[Fusion RP] Loaded all properties")

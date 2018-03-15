@@ -4,8 +4,10 @@ end
 
 function GM:PlayerInitialSpawn(ply)
     ply:LoadProfile()
+    ply:SetupHands()
 
     ply:Give('weapon_physgun')
+    ply:Give("weapon_doorfinder")
 end
 
 function GM:PlayerDisconnected(ply)
