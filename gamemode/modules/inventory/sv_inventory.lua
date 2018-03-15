@@ -13,7 +13,7 @@ util.AddNetworkString("Fusion.inventory.edit")
 
 
 function Fusion.inventory:AddQuantity(pPlayer, id, amount)
-	if not amount then 
+	if not amount then
 		amount = 1
 	end
 
@@ -27,9 +27,11 @@ function Fusion.inventory:AddQuantity(pPlayer, id, amount)
 		end
 	else
 		pPlayer.inventory[id] = {
-			quantity = 1,
+			id = id,
+			quantity = amount,
 		}
 	end
+
 	self:FullSync(pPlayer)
 end
 
@@ -99,7 +101,7 @@ net.Receive("Fusion.inventory.spawn", function(len, pPlayer)
 	local id = net.ReadInt(16)
 
 	if not id then return end
-	
+
 	Fusion.inventory:Spawn(pPlayer, id)
 end)
 
@@ -130,7 +132,7 @@ function Fusion.inventory:Spawn(pPlayer, itemID)
 	local spawnPos = tr.HitPos
 
 	ent:SetPos(spawnPos)
-	
+
 	self:Remove(pPlayer, item.id)
 end
 

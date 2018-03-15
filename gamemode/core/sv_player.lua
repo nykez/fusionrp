@@ -18,7 +18,7 @@ function PLAYER:LoadProfile()
                 self:SetOrganization(vars.organization)
                 self:SetPlayTime(vars.playtime)
 
-                self.inventory = {}
+                self.inventory = Fusion.util:Table(tostring(vars.inventory))
                 self.vehicles = {}
             end
         else
@@ -88,7 +88,7 @@ function PLAYER:SaveProfile()
     query:Execute()
 
     Fusion.inventory:Save(self)
-    Fusion.vehicles:Save(self)
+    //Fusion.vehicles:Save(self)
 end
 
 function PLAYER:SetFirstName(str)
