@@ -33,12 +33,12 @@ function SWEP:PrimaryAttack()
     local ply = self.Owner
     local trace = ply:GetEyeTrace().Entity
 
-    if !IsValid(ply) or !IsValid(trace) then
-        self.Owner:ChatPrint("That is not a door!")
-    end
+    if !IsValid(ply) or !IsValid(trace) then return end
 
     if trace:GetClass() == "prop_door_rotating" or trace:GetClass() == "func_door" or trace:GetClass() == "func_door_rotating" then
         table.insert(self.Doors, trace)
+    else
+        self.Owner:Notify("That is not a door!")
     end
 end
 
@@ -50,7 +50,7 @@ function SWEP:SecondaryAttack()
         if !IsValid(v) then continue end
         self.Owner:ChatPrint("\tVector(" .. v:GetPos().x .. ", " .. v:GetPos().y .. ", " .. v:GetPos().z .. "),")
     end
-    self.Owner:ChatPrint("}\n")
+    self.Owner:ChatPrint("}")
 
     self.Doors = {}
 end
