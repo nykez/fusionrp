@@ -23,3 +23,4 @@ for _, Dir in pairs(fol) do
 	end
 end
 
+Fusion.util:Font("BebasNeue-Regular")
