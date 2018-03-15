@@ -5,7 +5,7 @@ function Fusion.util:JSON(tbl)
 end
 
 function Fusion.util:Table(JSON)
-	return util.JSONToTable(json)
+	return util.JSONToTable(JSON)
 end
 
 if SERVER then
