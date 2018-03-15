@@ -19,3 +19,15 @@ end)
 concommand.Add("fs_doorprint", function(ply, cmd, args)
     ply:ChatPrint(Fusion.property.cache[tonumber(args[1])].name)
 end)
+
+concommand.Add("fs_b_a", function(ply, cmd, args)
+    ply:AddBank(tonumber(args[1]))
+end)
+
+concommand.Add("fs_p_b", function(ply, cmd, args)
+    Fusion.property:Purchase(ply, tonumber(args[1]))
+end)
+
+concommand.Add("fs_p_s", function(ply, cmd, args)
+    Fusion.property:Sell(ply, tonumber(args[1]))
+end)

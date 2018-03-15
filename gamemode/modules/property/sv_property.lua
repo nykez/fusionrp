@@ -32,12 +32,20 @@ function Fusion.property:Purchase(ply, id)
     local property = self:Get(id)
     if !property then return end
 
-    if self:IsOwned(id) then return end
-    if self:GetBank() < property.price then return end
+    if self:IsOwned(id) then
+        ply:Notify("That property is already owned!")
+    end
+
+    if ply:GetBank() < property.price then
+        ply:Notify("You can't afford that!")
+        return
+    end
 
     ply:TakeBank(property.price)
 
     self.owners[id] = ply
+
+    ply:Notify("You purchased " .. property.name .. "!")
 
     self:SyncAll()
 end
@@ -51,9 +59,11 @@ function Fusion.property:Sell(ply, id)
     if !self:IsOwned(id) then return end
     if self:GetOwner(id) != ply then return end
 
-    ply:AddBank(property.price / 2)
+    ply:AddBank(math.Round(property.price / 2))
 
     self.owners[id] = nil
+
+    ply:Notify("You sold " .. property.name .. "!")
 
     self:SyncAll()
 end

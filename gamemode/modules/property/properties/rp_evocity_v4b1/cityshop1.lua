@@ -4,6 +4,10 @@ property.id = 1
 
 property.name = "City Shop #1"
 
+property.category = "Shop"
+
+property.price = 800
+
 property.doors = {
 	Vector(-5432, -7890, 135),
 	Vector(-5432, -7768, 135),
