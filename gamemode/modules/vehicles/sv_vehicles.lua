@@ -24,7 +24,24 @@ function Fusion.vehicles:PurchaseCar(pPlayer, id, color)
 	}
 
 	self:Sync(pPlayer)
-	self:SyncDatabase(pPlayer)
+	self:Save(pPlayer)
+end
+
+function Fusion.vehicles:SellCar(ply, id)
+	if !IsValid(ply) then return end
+	if !id then return end
+
+	local car = Fusion.vehicles:GetCarByID(id)
+	if !car then return end
+
+	if ply.vehicles[id] then return end
+
+	ply:AddBank(math.Round(car.price / 2))
+
+	ply.vehicles[id] = nil
+
+	self:Sync(ply)
+	self:Save(ply)
 end
 
 function Fusion.vehicles:Sync(pPlayer)
