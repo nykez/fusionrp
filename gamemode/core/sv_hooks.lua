@@ -14,7 +14,7 @@ function GM:PlayerSpawn(ply)
 end
 
 function GM:PlayerNoClip(ply)
-    return ply:GetAccountLevel() > 4
+    return ply:GetAccountLevel() > 3
 end
 
 function GM:PlayerDisconnected(ply)
