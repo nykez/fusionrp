@@ -37,7 +37,7 @@ concommand.Add("fs_save", function(ply, cmd, args)
 end)
 
 concommand.Add("fs_invprint", function(ply, cmd, args)
-    PrintTable(ply:GetInventory())
+    PrintTable(ply.inventory)
 end)
 
 concommand.Add("fs_setteam", function(ply, cmd, args)
@@ -54,4 +54,8 @@ end)
 
 concommand.Add("fs_b_print", function(ply, cmd, args)
     ply:ChatPrint("Bank: " .. ply:GetBank())
+end)
+
+concommand.Add("fs_setrank", function(ply, cmd, args)
+    ply:SetAccountLevel(tonumber(args[1]))
 end)

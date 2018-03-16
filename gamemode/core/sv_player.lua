@@ -19,9 +19,6 @@ function PLAYER:LoadProfile()
                 self:SetPlayTime(tonumber(vars.playtime))
 
                 self.inventory = {}
-                self.inventory = util.JSONToTable(tostring(vars.inventory))
-                Fusion.inventory:FullSync(self)
-
                 self.vehicles = {}
             end
         else
