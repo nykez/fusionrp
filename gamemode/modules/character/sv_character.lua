@@ -45,7 +45,7 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 	local updateObj = mysql:Update("player_data");
 		updateObj:Where("steam_id", pPlayer:SteamID());
 		updateObj:Update("model", model);
-		updateObj:Update("rp_first", "nigger");
+		updateObj:Update("rp_first", fname);
 		updateObj:Update("rp_last", lname);
 		//updateObj:Update("modeldata", ourModelData);
 	updateObj:Execute();
