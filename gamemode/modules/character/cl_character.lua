@@ -39,6 +39,8 @@ surface.CreateFont( "Fusion_Char_Button", {
 
 function PANEL:Init()
 
+	local fadeSpeed = 1
+
 	local fadeSpeed = 0
 
 	self:Dock(FILL)
@@ -53,6 +55,19 @@ function PANEL:Init()
 	self.background:TDLib():Background(Color(32, 32, 32, 255))
 	self.background:Dock(FILL)
 
+	self.title = self:Add("DLabel")
+	self.title:SetContentAlignment(5)
+	self.title:SetPos(0, 64)
+	self.title:SetSize(ScrW(), 64)
+	self.title:SetFont("Fusion_Title")
+	self.title:SetText(" ")
+	self.title:SizeToContentsY()
+	self.title:SetTextColor(color_white)
+	self.title:SetZPos(400)
+	self.title:SetAlpha(255)
+
+	self.title:SetExpensiveShadow(2, Color(0, 0, 0, 200))
+
 
 	
 	self:CreateModel()
@@ -60,6 +75,20 @@ function PANEL:Init()
 
 	self.model = nil
 	self.data = {}
+
+end
+
+function PANEL:TextFade()
+	self.title:AlphaTo(0, 1, 3 * 1, function()
+
+	end)
+end
+
+function PANEL:StartText(strText)
+	self.title:SetAlpha(255)
+	self.title:SetText(strText)
+
+	self:TextFade()
 
 end
 
@@ -116,7 +145,7 @@ function PANEL:CreateModels(parent)
 		self.button[k] = self.container:Add("SpawnIcon")
 		self.button[k]:SetModel(v)
 		self.button[k].model = v
-		self.button[k]:On('Paint', function(s)
+		self.button[k]:TDLib():On('Paint', function(s)
 			if selected == s then
 				surface.SetDrawColor(Color(20, 20, 20))
 				surface.DrawRect(0, 0, s:GetWide(), s:GetTall())
@@ -128,6 +157,7 @@ function PANEL:CreateModels(parent)
 			end
 			selected = s
 			self.model = self.button[k].model
+			self.data.model = self.button[k].model
 			self.modelpnl:SetModel(self.button[k].model)
 			self.modelpnl.Entity:SetAngles(Angle(0, 40, 0))
 		end)
@@ -140,6 +170,10 @@ function PANEL:CreateModels(parent)
 	self.nextFunc =  function() CreateOptions() end
 	self.next:TDLib():Background(Color(35, 35, 35)):Text("Next", "Fusion_Char_Button")
 	self.next.DoClick = function()
+		if not self.data.model then
+			self:StartText("NO MODEL SELECTED")
+			return
+		end
 		self.panel:SizeTo(ScrW()*0.2, 25, 0.5, 0, 10, function()
 			self.next:SetVisible(false)
 
@@ -204,25 +238,104 @@ function PANEL:CreateOptions()
 		end
 	end
 
-	self.skinsel = self.options:Add("DNumSlider")
-	self.skinsel:Dock(TOP)
-	self.skinsel:SetDecimals(0)
-	self.skinsel:SetMin(0)
-	self.skinsel:SetMax(self.modelpnl.Entity:SkinCount())
-	self.skinsel:DockMargin(5, 10, 5, 0)
-	self.skinsel:SetText("Skin")
-	function self.skinsel.OnValueChanged()
-		self.modelpnl:SetSkin(self.skinsel:GetValue())
-		self.modelpnl.Entity:SetSkin(self.skinsel:GetValue())
-		self.data.skin = self.skinsel:GetValue()
-	end
-
-
 	self.next.DoClick = function()
 		self.options:Remove()
+		self.panel:SizeTo(ScrW()*0.2, 25, 0.5, 0, 10, function()
+			self.next:SetVisible(false)
+			self.panel:SizeTo(ScrW()*0.2, ScrH()*0.17, 0.5, 0, 10, function()
+				self:CreateName()
+				self.next:SetVisible(true)
+			end)
+		end)
+		
 	end
 end
 
+function PANEL:CreateName()
+	self.options = self.panel:Add("DScrollPanel")
+	self.options:Dock(FILL)
+	self.options:DockMargin(0, 10, 0, 0)
+
+
+	self.labelName = self.options:Add("DLabel")
+	self.labelName:Dock(TOP)
+	self.labelName:SetText("First Name")
+	self.labelName:DockMargin(5, 5, 5, 0)
+
+	self.fname = self.options:Add("DTextEntry")
+	self.fname:Dock(TOP)
+	self.fname:DockMargin(5, 5, 5, 0)
+	self.fname:TDLib():Background(Color(50, 50, 50)):ReadyTextbox()
+    :BarHover()
+    self.fname:SetTextColor(color_white)
+    self.fname.OnTextChanged = function(s)
+    	local txt = s:GetValue()
+    	local length = string.len(txt)
+
+    	if length < 5 then
+    		self.fname:SetTextColor(Color(255, 0, 0))
+    		self.data.fname = txt
+    	else
+    		self.fname:SetTextColor(color_white)
+    		self.data.fname = txt
+    	end
+    end
+
+	self.labelName = self.options:Add("DLabel")
+	self.labelName:Dock(TOP)
+	self.labelName:SetText("Last Name")
+	self.labelName:DockMargin(5, 5, 5, 0)
+
+
+
+	self.lname = self.options:Add("DTextEntry")
+	self.lname:Dock(TOP)
+	self.lname:DockMargin(5, 5, 5, 5)
+	self.lname:TDLib():Background(Color(50, 50, 50)):ReadyTextbox()
+    :BarHover(Color(32, 32, 32))
+    self.lname:SetTextColor(color_white)
+    self.lname.OnTextChanged = function(s)
+    	local txt = s:GetValue()
+    	local length = string.len(txt)
+
+    	if length < 5 then
+    		self.lname:SetTextColor(Color(255, 0, 0))
+    		self.data.lname = txt
+    	else
+    		self.lname:SetTextColor(color_white)
+    		self.data.lname = txt
+    	end
+    end
+
+	self.next:SetText("Finish")
+
+	self.next.DoClick = function()
+		if not self.data then return end
+
+		if !self.data.lname or !self.data.fname then
+			self:StartText("NO NAME SELECTED")
+			return
+		end
+
+		if self.data.lname and string.len(self.data.lname) < 5 then
+			self:StartText("LAST NAME MUST BE FIVE+ CHARS")
+			return
+		end
+
+		if self.data.fname and string.len(self.data.fname) < 5 then
+			self:StartText("FIRST NAME MUST BE FIVE+ CHARS")
+			return
+		end
+		
+		net.Start("fusion.character.create")
+			net.WriteTable(self.data)
+		net.SendToServer()
+
+		self:Remove()
+	end
+
+
+end
 
 
 function PANEL:Think()

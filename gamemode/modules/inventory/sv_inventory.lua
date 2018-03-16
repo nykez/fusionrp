@@ -2,6 +2,8 @@
 // Alpha Inventory 1.0
 // TODO: Rewrite with classes/meta
 //
+if not SERVER then return end
+
 
 Fusion.inventory = Fusion.inventory or {}
 Fusion.inventory.cache = Fusion.inventory.cache or {}
@@ -33,7 +35,6 @@ function Fusion.inventory:AddQuantity(pPlayer, id, amount)
 
 	self:FullSync(pPlayer)
 end
-
 
 function Fusion.inventory:Add(pPlayer, id, amount)
 	if not IsValid(pPlayer) then return end
@@ -101,13 +102,7 @@ function Fusion.inventory.LoadPlayer(pPlayer)
 	MsgN(pPlayer:SteamID())
 
 	local queryObj = mysql:Select("player_data");
-		queryObj:WhereEqual("steam_id", pPlayer:SteamID());
-		queryObj:Callback(function(result, status, lastID)
-			if (type(result) == "table" and #result > 0) then
-
-			end
-
-		end)
+		queryObj:WhereEqual("steam_id", pPlayer:SteamID())
 	queryObj:Execute();
 end
 
@@ -154,6 +149,7 @@ end
 local PLAYER = FindMetaTable("Player")
 function PLAYER:GetInventory()
 	return self.inventory or {}
+<<<<<<< HEAD
 end
 
 concommand.Add("inventory", function(pPlayer)
@@ -165,3 +161,6 @@ concommand.Add("inventory", function(pPlayer)
 	print('loading inventory')
 	Fusion.inventory.LoadPlayer(pPlayer)
 end)
+=======
+end
+>>>>>>> c354ab52ee8cfc12486fabd2262c865e5a9bde91
