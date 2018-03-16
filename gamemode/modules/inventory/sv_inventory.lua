@@ -36,7 +36,6 @@ function Fusion.inventory:AddQuantity(pPlayer, id, amount)
 	self:FullSync(pPlayer)
 end
 
-
 function Fusion.inventory:Add(pPlayer, id, amount)
 	if not IsValid(pPlayer) then return end
 
