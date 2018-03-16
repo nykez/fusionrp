@@ -27,7 +27,6 @@ function Fusion.inventory:AddQuantity(pPlayer, id, amount)
 		end
 	else
 		pPlayer.inventory[id] = {
-			id = id,
 			quantity = amount,
 		}
 	end
