@@ -1,9 +1,10 @@
 Fusion.character = Fusion.character or {}
 Fusion.character.cache = Fusion.character or {}
 
-util.AddNetworkString("fusion.character.create")
+util.AddNetworkString("Fusion.character.create")
+util.AddNetworkString("Fusion.new.character")
 
-net.Receive("fusion.character.create",function(len, pPlayer)
+net.Receive("Fusion.character.create",function(len, pPlayer)
 	local data = net.ReadTable()
 
 	if not data then return end

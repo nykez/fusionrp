@@ -2,7 +2,7 @@
 local PANEL = {}
 
 surface.CreateFont( "Fusion_Title", {
-	font = "Bebas Neue", 
+	font = "Bebas Neue",
 	extended = true,
 	size = 100,
 	weight = 0,
@@ -20,7 +20,7 @@ surface.CreateFont( "Fusion_Title", {
 } )
 
 surface.CreateFont( "Fusion_Char_Button", {
-	font = "Bebas Neue", 
+	font = "Bebas Neue",
 	extended = false,
 	size = 24,
 	weight = 500,
@@ -69,7 +69,7 @@ function PANEL:Init()
 	self.title:SetExpensiveShadow(2, Color(0, 0, 0, 200))
 
 
-	
+
 	self:CreateModel()
 	self:CreateModels(self.panel)
 
@@ -212,7 +212,7 @@ function PANEL:CreateOptions()
 		pnl:SetValue(v.name)
 		pnl:AddChoice("Default");
 		pnl.Bodygroup = v.id
-		for a, b in pairs (v.submodels) do			
+		for a, b in pairs (v.submodels) do
 			pnl:AddChoice(b);
 		end
 		pnl.OnSelect = function(panel, index, value)
@@ -233,7 +233,7 @@ function PANEL:CreateOptions()
 	    	end
 
 	    	self.data.bodygroups = ourBodygroups
-	    	
+
 		end
 	end
 
@@ -246,7 +246,7 @@ function PANEL:CreateOptions()
 				self.next:SetVisible(true)
 			end)
 		end)
-		
+
 	end
 end
 
@@ -325,8 +325,8 @@ function PANEL:CreateName()
 			self:StartText("FIRST NAME MUST BE FIVE+ CHARS")
 			return
 		end
-		
-		net.Start("fusion.character.create")
+
+		net.Start("Fusion.character.create")
 			net.WriteTable(self.data)
 		net.SendToServer()
 
@@ -354,5 +354,10 @@ concommand.Add("char", function()
 
 end)
 
+net.Receive("Fusion.new.character", function()
+	if fusionchar then
+		fusionchar:Remove()
+	end
 
-
+	fusionchar = vgui.Create("FusionCharMenu")
+end)
