@@ -2,6 +2,8 @@
 // Alpha Inventory 1.0
 // TODO: Rewrite with classes/meta
 //
+if not SERVER then return end
+
 
 Fusion.inventory = Fusion.inventory or {}
 Fusion.inventory.cache = Fusion.inventory.cache or {}
