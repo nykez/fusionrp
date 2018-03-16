@@ -116,19 +116,9 @@ function PANEL:CreateModel()
 	self.modelpnl:SetCamPos( Vector( size, size, size ) )
 	self.modelpnl:SetLookAt( ( mn + mx ) * 0.5 )
 
+	self.modelpnl:SetAlpha(0)
 end
 
-
-local tbl = {
-	"models/player/zelpa/male_01_extended.mdl",
-	"models/player/zelpa/male_02_extended.mdl",
-	"models/player/zelpa/male_03_extended.mdl",
-	"models/player/zelpa/male_04_extended.mdl",
-	"models/player/zelpa/male_06_extended.mdl",
-	"models/player/zelpa/male_08_extended.mdl",
-	"models/player/zelpa/male_09_extended.mdl",
-	"models/player/zelpa/male_10_extended.mdl",
-}
 
 function PANEL:CreateModels(parent)
 	self.panel = self:Add("DPanel")
@@ -136,32 +126,30 @@ function PANEL:CreateModels(parent)
 	self.panel:SetPos(ScrW() * 0.01, ScrH()*0.1)
 	self.panel:TDLib():Background(Color(45, 45, 45))
 
-	self.container = self.panel:Add("DIconLayout")
-	self.container:Dock(FILL)
+	self.gender = self.panel:Add("DButton")
+	self.gender:Dock(TOP)
+	self.gender:DockMargin(5, 5, 5, 5)
+	self.gender:SetText("Female")
+	self.gender.DoClick = function(s)
+		if s:GetText() == "Female" then
+			s:SetText("Male")
+			self:InvalidateModels("female")
+			self.data.gender = "female"
+		else
+			s:SetText("Female")
+			self:InvalidateModels("male")
+			self.data.gender = "male"
+		end
+	end
+	self.gender:TDLib():Background(Color(35, 35, 35))
+	self.gender:SetTextColor(color_white)
+
+
 
 	self.button = {}
-	local selected = nil
-	for k,v in pairs(tbl) do
-		self.button[k] = self.container:Add("SpawnIcon")
-		self.button[k]:SetModel(v)
-		self.button[k].model = v
-		self.button[k]:TDLib():On('Paint', function(s)
-			if selected == s then
-				surface.SetDrawColor(Color(20, 20, 20))
-				surface.DrawRect(0, 0, s:GetWide(), s:GetTall())
-			end
-		end)
-		self.button[k]:On('DoClick', function(s)
-			if self.model == self.button[k].model then
-				return
-			end
-			selected = s
-			self.model = self.button[k].model
-			self.data.model = self.button[k].model
-			self.modelpnl:SetModel(self.button[k].model)
-			self.modelpnl.Entity:SetAngles(Angle(0, 40, 0))
-		end)
-	end
+
+
+	//self.panel:InvalidateModels("male")
 
 	self.next = self.panel:Add('DButton')
 	self.next:Dock(BOTTOM)
@@ -176,6 +164,7 @@ function PANEL:CreateModels(parent)
 		end
 		self.panel:SizeTo(ScrW()*0.2, 25, 0.5, 0, 10, function()
 			self.next:SetVisible(false)
+			self.gender:Remove()
 
 			for k,v in pairs(self.button) do
 				v:Remove()
@@ -191,6 +180,43 @@ function PANEL:CreateModels(parent)
 
 	end
 
+end
+
+function PANEL:InvalidateModels(strGender)
+		if self.container then
+			self.container:Remove()
+		end
+
+		local strGender = tostring(strGender)
+
+		self.container = self.panel:Add("DIconLayout")
+		self.container:Dock(FILL)
+
+
+		local selected = nil
+
+		for k,v in pairs(Fusion.config.models[strGender]) do
+			self.button[k] = self.container:Add("SpawnIcon")
+			self.button[k]:SetModel(v)
+			self.button[k].model = v
+			self.button[k]:TDLib():On('Paint', function(s)
+				if selected == s then
+					surface.SetDrawColor(Color(20, 20, 20))
+					surface.DrawRect(0, 0, s:GetWide(), s:GetTall())
+				end
+			end)
+			self.button[k]:On('DoClick', function(s)
+				if self.model == self.button[k].model then
+					return
+				end
+				selected = s
+				self.model = self.button[k].model
+				self.data.model = self.button[k].model
+				self.modelpnl:SetModel(self.button[k].model)
+				self.modelpnl.Entity:SetAngles(Angle(0, 40, 0))
+				self.modelpnl:SetAlpha(255)
+			end)
+		end
 end
 
 function PANEL:CreateOptions()

@@ -23,20 +23,15 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 	local lname = tblData.lname
 	local model = tblData.model
 
-	//
 	tblData.fname = nil
 	tblData.lname = nil
 	tblData.model = nil
 
-	local validModel = true
+	local validModel = false
 
-	//
-
-	-- for k,v in pairs(fusion.config.models) do
-	-- 	if v == model then
-	-- 		validModel = true
-	-- 	end
-	-- end
+	if table.HasValue(Fusion.config.models[tblData.gender], model) then
+		validModel = true
+	end
 
 	if !validModel then
 		MsgN("Player tried creating a character with a model that doesn't exist in config. Exploit?")
@@ -44,7 +39,6 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 	end
 
 	// Ready JSON
-
 	local ourModelData = "[]"
 	if tblData.bodygroups then
 		ourModelData = util.TableToJSON(tblData.bodygroups)
@@ -58,17 +52,28 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 		updateObj:Update("modeldata", ourModelData);
 	updateObj:Execute();
 
+	print("finished character")
+
+	self:PostCreation(pPlayer, tblData, fname, lname, model)
+end
+
+function Fusion.character:PostCreation(pPlayer, data, fname, lname, model)
 	pPlayer:SetFirstName(fname)
 	pPlayer:SetLastName(lname)
 
-	print("finishec character")
+	pPlayer:SetModel(model)
 
-	//self:PostCreation(pPlayer, data)
+	if data.bodygroups then
+		Fusion.character:BodyGroups(pPlayer, data.bodygroups)
+	end
 end
 
-function Fusion.character:PostCreation(pPlayer, data)
 
+function Fusion.character:BodyGroups(pPlayer, data)
+	if not data then return end
 
-
-
+	for k,v in pairs(data) do
+		pPlayer:SetBodygroup(k, v)
+	end
+	
 end

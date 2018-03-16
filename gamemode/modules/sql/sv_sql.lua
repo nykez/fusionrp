@@ -9,7 +9,7 @@ local mysql_data = {
 	database = "pgrpdev_fusionrp",
 
 	// Supports sqlite, tmysql4, mysqloo
-	module = "sqlite"
+	module = "mysqloo"
 }
 
 
