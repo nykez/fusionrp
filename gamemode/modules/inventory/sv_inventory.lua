@@ -87,7 +87,8 @@ end
 function Fusion.inventory:Save(pPlayer)
 	if not IsValid(pPlayer) then return end
 
-	local tbl = Fusion.util:JSON(pPlayer.inventory)
+	local tbl = Fusion.util:JSON(pPlayer.inventory or {})
+
 
 	local updateObj = mysql:Update("player_data");
 	updateObj:Update("inventory", tbl);
@@ -95,6 +96,21 @@ function Fusion.inventory:Save(pPlayer)
 	updateObj:Execute();
 	MsgN('saved')
 end
+
+function Fusion.inventory.LoadPlayer(pPlayer)
+	MsgN(pPlayer:SteamID())
+
+	local queryObj = mysql:Select("player_data");
+		queryObj:WhereEqual("steam_id", pPlayer:SteamID());
+		queryObj:Callback(function(result, status, lastID)
+			if (type(result) == "table" and #result > 0) then
+
+			end
+
+		end)
+	queryObj:Execute();
+end
+
 
 net.Receive("Fusion.inventory.spawn", function(len, pPlayer)
 	local id = net.ReadInt(16)
@@ -143,8 +159,9 @@ end
 concommand.Add("inventory", function(pPlayer)
 	if not pPlayer.inventory then pPlayer.inventory = {} end
 
-	Fusion.inventory:Add(pPlayer, 1, 5)
-	Fusion.inventory:Add(pPlayer, 2, 5)
+	-- Fusion.inventory:Add(pPlayer, 1, 5)
+	-- Fusion.inventory:Add(pPlayer, 2, 5)
 
-	PrintTable(pPlayer.inventory)
+	print('loading inventory')
+	Fusion.inventory.LoadPlayer(pPlayer)
 end)
