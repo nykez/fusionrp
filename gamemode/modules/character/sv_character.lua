@@ -9,13 +9,13 @@ net.Receive("fusion.character.create",function(len, pPlayer)
 	if not data then return end
 
 	PrintTable(data)
-	
+
 	Fusion.character:CreateCharacter(pPlayer, data)
 end)
 
 function Fusion.character:CreateCharacter(pPlayer, tblData)
 	if not IsValid(pPlayer) then return end
-	
+
 	print("creating character")
 
 	local fname = tblData.fname
@@ -24,7 +24,7 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 
 	//
 	tblData.fname = nil
-	tblData.fname = nil
+	tblData.lname = nil
 	tblData.model = nil
 
 	local validModel = true
