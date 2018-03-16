@@ -84,6 +84,9 @@ function Fusion.inventory:FullSync(pPlayer)
 		net.WriteTable(pPlayer.inventory or {})
 	net.Send(pPlayer)
 end
+hook.Add("Fusion.PlayerLoaded", function(ply)
+	Fusion.inventory:FullSync(ply)
+end)
 
 function Fusion.inventory:Save(pPlayer)
 	if not IsValid(pPlayer) then return end
