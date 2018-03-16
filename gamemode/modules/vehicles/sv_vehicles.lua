@@ -49,6 +49,9 @@ function Fusion.vehicles:Sync(pPlayer)
 		net.WriteTable(pPlayer.vehicles or {})
 	net.Send(pPlayer)
 end
+hook.Add("Fusion.PlayerLoaded", function(ply)
+	Fusion.vehicles:Sync(ply)
+end)
 
 function Fusion.vehicles:Save(pPlayer)
 	if not pPlayer.vehicles then

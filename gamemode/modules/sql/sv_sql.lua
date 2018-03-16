@@ -22,7 +22,6 @@ hook.Add( "Initialize", "fusion_connectDatabase", connectDatabase)
 
 hook.Add("OnReloaded", "fusion_reconnectDatabase", function()
 	if !mysql:IsConnected() then
-		print("reconnecting database")
 		connectDatabase()
 	end
 end)

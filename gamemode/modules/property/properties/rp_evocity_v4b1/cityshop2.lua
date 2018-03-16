@@ -8,6 +8,8 @@ property.category = "Shop"
 
 property.price = 800
 
+property.image = ""
+
 property.doors = {
 	Vector(-5377, -6945, 135),
 	Vector(-5255, -6945, 135),
