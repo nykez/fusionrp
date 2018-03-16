@@ -9,7 +9,7 @@ local mysql_data = {
 	database = "pgrpdev_fusionrp",
 
 	// Supports sqlite, tmysql4, mysqloo
-	module = "mysqloo"
+	module = "sqlite"
 }
 
 
@@ -20,7 +20,7 @@ end
 hook.Add( "Initialize", "fusion_connectDatabase", connectDatabase)
 
 
-hook.Add("OnReloaded", "mysql.reconnectDatabase", function()
+hook.Add("OnReloaded", "fusion_reconnectDatabase", function()
 	if !mysql:IsConnected() then
 		print("reconnecting database")
 		connectDatabase()

@@ -57,6 +57,9 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 		updateObj:Update("modeldata", ourModelData);
 	updateObj:Execute();
 
+	pPlayer:SetFirstName(fname)
+	pPlayer:SetLastName(lname)
+
 	print("finishec character")
 
 	//self:PostCreation(pPlayer, data)
