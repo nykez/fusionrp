@@ -4,6 +4,29 @@
 
 	Alexander Grist-Hucker
 	http://www.alexgrist.com
+
+
+	The MIT License (MIT)
+
+	Copyright (c) 2014 Alex Grist-Hucker
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
 --]]
 
 mysql = mysql or {};
@@ -14,6 +37,21 @@ local Connected = false;
 local type = type;
 local tostring = tostring;
 local table = table;
+
+--[[
+	Replacement tables
+--]]
+
+local Replacements = {
+	sqlite = {
+		Create = {
+			{"UNSIGNED ", ""},
+			{"AUTO_INCREMENT", ""},
+			{"INT%(%d*%)", "INTEGER"},
+			{"INT ", "INTEGER"}
+		}
+	}
+};
 
 --[[
 	Phrases
@@ -54,7 +92,6 @@ function QUERY_CLASS:Where(key, value)
 end;
 
 function QUERY_CLASS:WhereEqual(key, value)
-	print(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` = \""..self:Escape(value).."\"";
 end;
 
@@ -62,12 +99,14 @@ function QUERY_CLASS:WhereNotEqual(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` != \""..self:Escape(value).."\"";
 end;
 
-function QUERY_CLASS:WhereLike(key, value)
-	self.whereList[#self.whereList + 1] = "`"..key.."` LIKE \""..self:Escape(value).."\"";
+function QUERY_CLASS:WhereLike(key, value, format)
+	format = format or "%%%s%%"
+	self.whereList[#self.whereList + 1] = "`"..key.."` LIKE \""..string.format(format, self:Escape(value)).."\"";
 end;
 
-function QUERY_CLASS:WhereNotLike(key, value)
-	self.whereList[#self.whereList + 1] = "`"..key.."` NOT LIKE \""..self:Escape(value).."\"";
+function QUERY_CLASS:WhereNotLike(key, value, format)
+	format = format or "%%%s%%"
+	self.whereList[#self.whereList + 1] = "`"..key.."` NOT LIKE \""..string.format(format, self:Escape(value)).."\"";
 end;
 
 function QUERY_CLASS:WhereGT(key, value)
@@ -85,6 +124,20 @@ end;
 function QUERY_CLASS:WhereLTE(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` <= \""..self:Escape(value).."\"";
 end;
+
+function QUERY_CLASS:WhereIn(key, value)
+	value = istable(value) and value or {value}
+
+	local values = "";
+	local bFirst = true;
+
+	for k, v in pairs(value) do
+		values = values .. (bFirst and "" or ", ") .. self:Escape(v);
+		bFirst = false
+	end;
+
+	self.whereList[#self.whereList + 1] = "`"..key.."` IN ("..values..")";
+end
 
 function QUERY_CLASS:OrderByDesc(key)
 	self.orderByList[#self.orderByList + 1] = "`"..key.."` DESC";
@@ -114,6 +167,14 @@ function QUERY_CLASS:Create(key, value)
 	self.createList[#self.createList + 1] = {"`"..key.."`", value};
 end;
 
+function QUERY_CLASS:Add(key, value)
+	self.add = {"`"..key.."`", value};
+end;
+
+function QUERY_CLASS:Drop(key)
+	self.drop = "`"..key.."`";
+end;
+
 function QUERY_CLASS:PrimaryKey(key)
 	self.primaryKey = "`"..key.."`";
 end;
@@ -125,6 +186,21 @@ end;
 function QUERY_CLASS:Offset(value)
 	self.offset = value;
 end;
+
+local function ApplyQueryReplacements(mode, query)
+	if (!Replacements[Module]) then
+		return query
+	end
+
+	local result = query
+	local entries = Replacements[Module][mode]
+
+	for i = 1, #entries do
+		result = string.gsub(result, entries[i][1], entries[i][2])
+	end
+
+	return result
+end
 
 local function BuildSelectQuery(queryObj)
 	local queryString = {"SELECT"};
@@ -160,8 +236,9 @@ local function BuildSelectQuery(queryObj)
 	return table.concat(queryString);
 end;
 
-local function BuildInsertQuery(queryObj)
-	local queryString = {"INSERT INTO"};
+local function BuildInsertQuery(queryObj, bIgnore)
+	local suffix = (bIgnore and (Module == "sqlite" and "INSERT OR IGNORE INTO" or "INSERT IGNORE INTO") or "INSERT INTO");
+	local queryString = {suffix};
 	local keyList = {};
 	local valueList = {};
 
@@ -288,7 +365,7 @@ local function BuildCreateQuery(queryObj)
 
 		for i = 1, #queryObj.createList do
 			if (Module == "sqlite") then
-				createList[#createList + 1] = queryObj.createList[i][1].." "..string.gsub(string.gsub(string.gsub(queryObj.createList[i][2], "AUTO_INCREMENT", ""), "AUTOINCREMENT", ""), "INT ", "INTEGER ");
+				createList[#createList + 1] = queryObj.createList[i][1].." "..ApplyQueryReplacements("Create", queryObj.createList[i][2]);
 			else
 				createList[#createList + 1] = queryObj.createList[i][1].." "..queryObj.createList[i][2];
 			end;
@@ -304,7 +381,31 @@ local function BuildCreateQuery(queryObj)
 
 	queryString[#queryString + 1] = " )";
 
-	return table.concat(queryString); 
+	return table.concat(queryString);
+end;
+
+local function BuildAlterQuery(queryObj)
+	local queryString = {"ALTER TABLE"};
+
+	if (type(queryObj.tableName) == "string") then
+		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
+	else
+		ErrorNoHalt("[mysql] No table name specified!\n");
+		return;
+	end;
+
+	if (type(queryObj.add) == "table") then
+		queryString[#queryString + 1] = " ADD "..queryObj.add[1].." "..ApplyQueryReplacements("Create", queryObj.add[2]);
+	elseif (type(queryObj.drop) == "string") then
+		if (Module == "sqlite") then
+			ErrorNoHalt("[mysql] Cannot drop columns in sqlite!\n");
+			return;
+		end;
+
+		queryString[#queryString + 1] = " DROP COLUMN "..queryObj.drop;
+	end;
+
+	return table.concat(queryString);
 end;
 
 function QUERY_CLASS:Execute(bQueueQuery)
@@ -315,6 +416,8 @@ function QUERY_CLASS:Execute(bQueueQuery)
 		queryString = BuildSelectQuery(self);
 	elseif (queryType == "insert") then
 		queryString = BuildInsertQuery(self);
+	elseif (queryType == "insert ignore") then
+		queryString = BuildInsertQuery(self, true);
 	elseif (queryType == "update") then
 		queryString = BuildUpdateQuery(self);
 	elseif (queryType == "delete") then
@@ -325,6 +428,8 @@ function QUERY_CLASS:Execute(bQueueQuery)
 		queryString = BuildTruncateQuery(self);
 	elseif (queryType == "create") then
 		queryString = BuildCreateQuery(self);
+	elseif (queryType == "alter") then
+		queryString = BuildAlterQuery(self);
 	end;
 
 	if (type(queryString) == "string") then
@@ -348,6 +453,10 @@ function mysql:Insert(tableName)
 	return QUERY_CLASS:New(tableName, "INSERT");
 end;
 
+function mysql:InsertIgnore(tableName)
+	return QUERY_CLASS:New(tableName, "INSERT IGNORE");
+end;
+
 function mysql:Update(tableName)
 	return QUERY_CLASS:New(tableName, "UPDATE");
 end;
@@ -366,6 +475,10 @@ end;
 
 function mysql:Create(tableName)
 	return QUERY_CLASS:New(tableName, "CREATE");
+end;
+
+function mysql:Alter(tableName)
+	return QUERY_CLASS:New(tableName, "ALTER");
 end;
 
 -- A function to connect to the MySQL database.
@@ -396,7 +509,7 @@ function mysql:Connect(host, username, password, database, port, socket, flags)
 		if (type(mysqloo) != "table") then
 			require("mysqloo");
 		end;
-	
+
 		if (mysqloo) then
 			local clientFlag = flags or 0;
 
@@ -412,7 +525,7 @@ function mysql:Connect(host, username, password, database, port, socket, flags)
 
 			self.connection.onConnectionFailed = function(database, errorText)
 				mysql:OnConnectionFailed(errorText);
-			end;		
+			end;
 
 			self.connection:connect();
 		else
@@ -437,10 +550,10 @@ function mysql:RawQuery(query, callback, flags, ...)
 
 			if (queryStatus) then
 				if (type(callback) == "function") then
-					local bStatus, value = pcall(callback, result[1]["data"], queryStatus, result[1]["lastid"]);
+					local bStatus, value = pcall(callback, result[1]["data"], queryStatus, tonumber(result[1]["lastid"]));
 
 					if (!bStatus) then
-						ErrorNoHalt(string.format("[mysql] MySQL Callback Error!\n%s\n", value));
+						error(string.format("[mysql] MySQL Callback Error!\n%s\n", value));
 					end;
 				end;
 			else
@@ -454,10 +567,10 @@ function mysql:RawQuery(query, callback, flags, ...)
 
 		queryObj.onSuccess = function(queryObj, result)
 			if (callback) then
-				local bStatus, value = pcall(callback, result, true, queryObj:lastInsert());
+				local bStatus, value = pcall(callback, result, true, tonumber(queryObj:lastInsert()));
 
 				if (!bStatus) then
-					ErrorNoHalt(string.format("[mysql] MySQL Callback Error!\n%s\n", value));
+					error(string.format("[mysql] MySQL Callback Error!\n%s\n", value));
 				end;
 			end;
 		end;
@@ -471,13 +584,13 @@ function mysql:RawQuery(query, callback, flags, ...)
 		local result = sql.Query(query);
 
 		if (result == false) then
-			ErrorNoHalt(string.format("[mysql] SQL Query Error!\nQuery: %s\n%s\n", query, sql.LastError()));
+			error(string.format("[mysql] SQL Query Error!\nQuery: %s\n%s\n", query, sql.LastError()));
 		else
 			if (callback) then
-				local bStatus, value = pcall(callback, result);
+				local bStatus, value = pcall(callback, result, true, tonumber(sql.QueryValue("SELECT last_insert_rowid()")));
 
 				if (!bStatus) then
-					ErrorNoHalt(string.format("[mysql] SQL Callback Error!\n%s\n", value));
+					error(string.format("[mysql] SQL Callback Error!\n%s\n", value));
 				end;
 			end;
 		end;
@@ -502,7 +615,7 @@ function mysql:Escape(text)
 			return self.connection:escape(text);
 		end;
 	else
-		return sql.SQLStr(string.gsub(text, "\"", "'"), true);
+		return sql.SQLStr(string.gsub(text, "\"", "\"\""), true);
 	end;
 end;
 
@@ -510,7 +623,7 @@ end;
 function mysql:Disconnect()
 	if (self.connection) then
 		if (Module == "tmysql4") then
-			return self.connection:Disconnect();	
+			return self.connection:Disconnect();
 		end;
 	end;
 
@@ -523,7 +636,7 @@ function mysql:Think()
 			local queueObj = QueueTable[1];
 			local queryString = queueObj[1];
 			local callback = queueObj[2];
-			
+
 			if (type(queryString) == "string") then
 				self:RawQuery(queryString, callback);
 			end;

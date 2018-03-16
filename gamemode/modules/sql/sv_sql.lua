@@ -78,6 +78,6 @@ local function populateTables()
 end
 hook.Add("DatabaseConnected", "fusion_populateTables", populateTables)
 
-timer.Create("databaseThink", 1, 0, function()
-	mysql:Think();
-end);
+-- timer.Create("databaseThink", 1, 0, function()
+-- 	mysql:Think();
+-- end);
