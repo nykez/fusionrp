@@ -102,13 +102,7 @@ function Fusion.inventory.LoadPlayer(pPlayer)
 	MsgN(pPlayer:SteamID())
 
 	local queryObj = mysql:Select("player_data");
-		queryObj:WhereEqual("steam_id", pPlayer:SteamID());
-		queryObj:Callback(function(result, status, lastID)
-			if (type(result) == "table" and #result > 0) then
-
-			end
-
-		end)
+		queryObj:WhereEqual("steam_id", pPlayer:SteamID())
 	queryObj:Execute();
 end
 
