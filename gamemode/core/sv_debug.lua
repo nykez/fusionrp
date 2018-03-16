@@ -37,7 +37,7 @@ concommand.Add("fs_save", function(ply, cmd, args)
 end)
 
 concommand.Add("fs_invprint", function(ply, cmd, args)
-    PrintTable(ply:GetInventory())
+    PrintTable(ply.inventory)
 end)
 
 concommand.Add("fs_setteam", function(ply, cmd, args)
