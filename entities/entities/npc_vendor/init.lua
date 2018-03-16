@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua");
 
 include("shared.lua");
 
-util.AddNetworkString("CarDealer.net.use")
+util.AddNetworkString("Fusion.npc.use")
 
 function ENT:Initialize ( )
 	self:SetSolid(SOLID_BBOX);
@@ -31,7 +31,7 @@ end
 function ENT:UseFake ( User )
 	if (!IsValid(User) || !User:IsPlayer()) then return false; end
 
-	net.Start("CarDealer.net.use")
+	net.Start("Fusion.npc.use")
 		net.WriteInt(self.id, 16)
 	net.Send(User)
 end

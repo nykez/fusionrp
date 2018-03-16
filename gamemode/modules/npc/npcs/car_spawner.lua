@@ -19,7 +19,7 @@ npc.angle = {
 	}
 }
 
-npc.OnUse = function()
+npc.use = function()
 
 end
 
