@@ -19,14 +19,17 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 	print("creating character")
 
 	local fname = tblData.fname
-	local lname = tblData.fname
+	local lname = tblData.lname
 	local model = tblData.model
 
+	//
 	tblData.fname = nil
 	tblData.fname = nil
 	tblData.model = nil
 
 	local validModel = true
+
+	//
 
 	-- for k,v in pairs(fusion.config.models) do
 	-- 	if v == model then
