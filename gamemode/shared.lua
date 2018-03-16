@@ -54,27 +54,27 @@ end
 /* Load modules */
 /* Note: all module files must contain a cl, sh, or sv prefix in order to be recognized */
 
-root = GM.FolderName .. "/gamemode/modules/"
-local _, folders = file.Find(root .. "*", "LUA")
+-- root = GM.FolderName .. "/gamemode/modules/"
+-- local _, folders = file.Find(root .. "*", "LUA")
 
-print("[Fusion RP] Initializing modules...")
+-- print("[Fusion RP] Initializing modules...")
 
-for _, folder in SortedPairs(folders, true) do
-    if folder == "." or folder == ".." then continue end
+-- for _, folder in SortedPairs(folders, true) do
+--     if folder == "." or folder == ".." then continue end
 
-    for _, temp in SortedPairs(file.Find(root .. folder .. "/cl_*.lua", "LUA"), true) do
-        client(root .. folder .. "/" .. temp)
-    end
+--     for _, temp in SortedPairs(file.Find(root .. folder .. "/cl_*.lua", "LUA"), true) do
+--         client(root .. folder .. "/" .. temp)
+--     end
 
-    for _, temp in SortedPairs(file.Find(root .. folder .. "/sh_*.lua", "LUA"), true) do
-        shared(root .. folder .. "/" .. temp)
-    end
+--     for _, temp in SortedPairs(file.Find(root .. folder .. "/sh_*.lua", "LUA"), true) do
+--         shared(root .. folder .. "/" .. temp)
+--     end
 
-    for _, temp in SortedPairs(file.Find(root .. folder .. "/sv_*.lua", "LUA"), true) do
-        server(root .. folder .. "/" .. temp)
-    end
+--     for _, temp in SortedPairs(file.Find(root .. folder .. "/sv_*.lua", "LUA"), true) do
+--         server(root .. folder .. "/" .. temp)
+--     end
 
-	print("\t-> " .. folder)
-end
+-- 	print("\t-> " .. folder)
+-- end
 
-print("[Fusion RP] Completed!")
+-- print("[Fusion RP] Completed!")
