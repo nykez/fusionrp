@@ -18,8 +18,10 @@ function PLAYER:LoadProfile()
                 self:SetOrganization(tonumber(vars.organization))
                 self:SetPlayTime(tonumber(vars.playtime))
 
-                self.inventory = util.JSONToTable(tostring(vars.inventory))
-                self.vehicles = {}
+                self.inventory = Fusion.util:Table(tostring(vars.inventory))
+                self.vehicles = Fusion.util:Table(tostring(vars.vehicles))
+
+                hook.Run("Fusion.PlayerLoaded", self)
             end
         else
             self.IsNew = true
@@ -66,10 +68,8 @@ function PLAYER:CreateProfile()
     self.inventory = {}
     self.vehicles = {}
 
-    /*
-    net.Start("fusion_new_player")
+    net.Start("Fusion.new.character")
     net.Send(self)
-    */
 end
 
 function PLAYER:SaveProfile()
