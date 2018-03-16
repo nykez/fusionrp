@@ -43,14 +43,18 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 	end
 
 	// Ready JSON
-	//local ourModelData = util.TableToJSON(table table,boolean prettyPrint=false)
+
+	local ourModelData = "[]"
+	if tblData.bodygroups then
+		ourModelData = util.TableToJSON(tblData.bodygroups)
+	end
 
 	local updateObj = mysql:Update("player_data");
 		updateObj:Where("steam_id", pPlayer:SteamID());
 		updateObj:Update("model", model);
 		updateObj:Update("rp_first", fname);
 		updateObj:Update("rp_last", lname);
-		//updateObj:Update("modeldata", ourModelData);
+		updateObj:Update("modeldata", ourModelData);
 	updateObj:Execute();
 
 	print("finishec character")

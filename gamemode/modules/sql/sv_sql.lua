@@ -19,7 +19,6 @@ local function connectDatabase()
 end
 hook.Add( "Initialize", "fusion_connectDatabase", connectDatabase)
 
-mysql:IsConnected()
 
 hook.Add("OnReloaded", "mysql.reconnectDatabase", function()
 	if !mysql:IsConnected() then

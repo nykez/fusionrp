@@ -232,9 +232,8 @@ function PANEL:CreateOptions()
 	    		self.modelpnl.Entity:SetBodygroup(k, v)
 	    	end
 
-	    	self.data.bodygroups = {
-	    		ourBodygroups
-	    	}
+	    	self.data.bodygroups = ourBodygroups
+	    	
 		end
 	end
 
