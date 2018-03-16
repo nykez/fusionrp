@@ -13,6 +13,10 @@ function GM:PlayerSpawn(ply)
     ply:SetupHands()
 end
 
+function GM:PlayerNoClip(ply)
+    return ply:GetAccountLevel() > 4
+end
+
 function GM:PlayerDisconnected(ply)
     ply:SaveProfile()
     // Remove all of their props and stuff later

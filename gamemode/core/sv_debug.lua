@@ -55,3 +55,7 @@ end)
 concommand.Add("fs_b_print", function(ply, cmd, args)
     ply:ChatPrint("Bank: " .. ply:GetBank())
 end)
+
+concommand.Add("fs_setrank", function(ply, cmd, args)
+    ply:SetAccountLevel(tonumber(args[1]))
+end)
