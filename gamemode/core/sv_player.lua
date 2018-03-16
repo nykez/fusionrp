@@ -18,7 +18,7 @@ function PLAYER:LoadProfile()
                 self:SetOrganization(tonumber(vars.organization))
                 self:SetPlayTime(tonumber(vars.playtime))
 
-                self.inventory = {}
+                self.inventory = util.JSONToTable(tostring(vars.inventory))
                 self.vehicles = {}
             end
         else

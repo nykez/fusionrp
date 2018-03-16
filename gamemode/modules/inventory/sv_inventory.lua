@@ -149,4 +149,18 @@ end
 local PLAYER = FindMetaTable("Player")
 function PLAYER:GetInventory()
 	return self.inventory or {}
+<<<<<<< HEAD
 end
+
+concommand.Add("inventory", function(pPlayer)
+	if not pPlayer.inventory then pPlayer.inventory = {} end
+
+	Fusion.inventory:Add(pPlayer, 1, 5)
+	Fusion.inventory:Add(pPlayer, 2, 5)
+
+	print('loading inventory')
+	Fusion.inventory.LoadPlayer(pPlayer)
+end)
+=======
+end
+>>>>>>> c354ab52ee8cfc12486fabd2262c865e5a9bde91
