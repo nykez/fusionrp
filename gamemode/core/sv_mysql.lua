@@ -1,11 +1,10 @@
 --[[
-Usage :
+	mysql - 1.0.2
+	A simple MySQL wrapper for Garry's Mod.
 
-
-
-
-
---]] 
+	Alexander Grist-Hucker
+	http://www.alexgrist.com
+--]]
 
 mysql = mysql or {};
 
@@ -55,6 +54,7 @@ function QUERY_CLASS:Where(key, value)
 end;
 
 function QUERY_CLASS:WhereEqual(key, value)
+	print(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` = \""..self:Escape(value).."\"";
 end;
 
