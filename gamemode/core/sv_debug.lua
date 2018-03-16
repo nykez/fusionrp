@@ -31,3 +31,27 @@ end)
 concommand.Add("fs_p_s", function(ply, cmd, args)
     Fusion.property:Sell(ply, tonumber(args[1]))
 end)
+
+concommand.Add("fs_save", function(ply, cmd, args)
+	ply:SaveProfile()
+end)
+
+concommand.Add("fs_invprint", function(ply, cmd, args)
+    PrintTable(ply:GetInventory())
+end)
+
+concommand.Add("fs_setteam", function(ply, cmd, args)
+    Fusion.jobs:Join(ply, tonumber(args[1]))
+end)
+
+concommand.Add("fs_printteam", function(ply, cmd, args)
+    ply:ChatPrint(Fusion.jobs:Get(ply:Team()).name)
+end)
+
+concommand.Add("fs_quitjob", function(ply, cmd, args)
+    Fusion.jobs:Quit(ply)
+end)
+
+concommand.Add("fs_b_print", function(ply, cmd, args)
+    ply:ChatPrint("Bank: " .. ply:GetBank())
+end)

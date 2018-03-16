@@ -8,17 +8,20 @@ function PLAYER:LoadProfile()
         if (type(result) == "table" and #result > 0) then
             if result[1] != nil then
                 local vars = result[1]
-                self:SetFirstName(vars.rp_first)
-                self:SetLastName(vars.rp_last)
-                self:SetXP(vars.xp)
-                self:SetLevel(vars.level)
-                self:SetAccountLevel(vars.account_level)
-                self:SetMoney(vars.money)
-                self:SetBank(vars.bank)
-                self:SetOrganization(vars.organization)
-                self:SetPlayTime(vars.playtime)
+                self:SetFirstName(tostring(vars.rp_first))
+                self:SetLastName(tostring(vars.rp_last))
+                self:SetXP(tonumber(vars.xp))
+                self:SetLevel(tonumber(vars.level))
+                self:SetAccountLevel(tonumber(vars.account_level))
+                self:SetMoney(tonumber(vars.money))
+                self:SetBank(tonumber(vars.bank))
+                self:SetOrganization(tonumber(vars.organization))
+                self:SetPlayTime(tonumber(vars.playtime))
 
-                self.inventory = Fusion.util:Table(tostring(vars.inventory))
+                self.inventory = {}
+                self.inventory = util.JSONToTable(tostring(vars.inventory))
+                Fusion.inventory:FullSync(self)
+
                 self.vehicles = {}
             end
         else
@@ -41,8 +44,6 @@ function PLAYER:CreateProfile()
     query:Insert("xp", 0)
     query:Insert("level", 1)
     query:Insert("account_level", 0)
-    query:Insert("inventory", "")
-    query:Insert("skills", "")
     query:Insert("money", 15000)
     query:Insert("bank", 0)
     query:Insert("organization", 0)
