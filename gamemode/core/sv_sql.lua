@@ -27,13 +27,12 @@ hook.Add("Shutdown", "fusion_discDatabase", discDatabase)
 local function populateTables()
 	print("[Fusion RP] Setting up database tables...")
 
-	-- local INT_NOT_NULL_AUTO_INCR = "INT NOT NULL AUTO_INCREMENT"
-	-- local INT_NOT_NULL = "INT NOT NULL"
-	-- local VARCHAR_NOT_NULL = "VARCHAR(255) NOT NULL"
-	-- local LONGTEXT_NOT_NULL = "LONGTEXT NOT NULL"
+	local INT_NOT_NULL_AUTO_INCR = "INT NOT NULL AUTO_INCREMENT"
+	local INT_NOT_NULL = "INT NOT NULL"
+	local VARCHAR_NOT_NULL = "VARCHAR(255) NOT NULL"
+	local LONGTEXT_NOT_NULL = "LONGTEXT NOT NULL"
 
 	local players = mysql:Create("player_data")
-<<<<<<< HEAD
 	players:Create("id", INT_NOT_NULL_AUTO_INCR)
 	players:Create("steam_id", VARCHAR_NOT_NULL)
 	players:Create("rp_first", VARCHAR_NOT_NULL)
@@ -49,23 +48,6 @@ local function populateTables()
 	players:Create("model", VARCHAR_NOT_NULL)
 	players:Create("playtime", INT_NOT_NULL)
 	players:Create("nick", VARCHAR_NOT_NULL)
-=======
-	players:Create("id", "INT NOT NULL AUTO_INCREMENT")
-	players:Create("steam_id","VARCHAR(255) NOT NULL")
-	players:Create("rp_first", "VARCHAR(255) NOT NULL")
-	players:Create("rp_last", "VARCHAR(255) NOT NULL")
-	players:Create("xp", "INT NOT NULL")
-	players:Create("level", "INT NOT NULL")
-	players:Create("account_level", "INT NOT NULL")
-	players:Create("inventory", "LONGTEXT")
-	players:Create("skills", "LONGTEXT")
-	players:Create("money", "INT NOT NULL")
-	players:Create("bank", "INT NOT NULL")
-	players:Create("organization", "INT NOT NULL")
-	players:Create("model", "VARCHAR(255) NOT NULL")
-	players:Create("playtime", "INT NOT NULL")
-	players:Create("nick", "VARCHAR(255) NOT NULL")
->>>>>>> 30fb8a279bed7c2d0d58b6764c5b84b5aece7d4e
 	players:Create("vehicles", "LONGTEXT")
 	players:PrimaryKey("id")
 	players:Execute()
