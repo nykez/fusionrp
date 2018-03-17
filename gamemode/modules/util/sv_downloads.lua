@@ -9,6 +9,8 @@ function Fusion.util:AddDownloads(strFolder)
 		end
 	end
 
+	MsgN('[Fusion] Added materials from -> ' .. strFolder)
 end
 
 Fusion.util:AddDownloads("f_phone")
+///
