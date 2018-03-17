@@ -1,5 +1,4 @@
 
-
 net.Receive("Fusion.vehicles.sync",function()
 	local tbl = net.ReadTable()
 

@@ -65,7 +65,20 @@ function Fusion.character:PostCreation(pPlayer, data, fname, lname, model)
 
 	if data.bodygroups then
 		Fusion.character:BodyGroups(pPlayer, data.bodygroups)
+		pPlayer.character = {
+			bodygroups = data.bodygroups
+		}
 	end
+
+	// Setup spawns
+
+
+	// Setup team
+
+
+	// Do loadout
+
+	// Most of these should be functions that are called to use across the gamemode
 end
 
 

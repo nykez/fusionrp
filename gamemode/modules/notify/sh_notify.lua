@@ -8,7 +8,7 @@ end
 
 function PLAYER:Notify(str)
 	if CLIENT then
-		notification.AddLegacy(str, NOTIFY_GENERIC, 5)
+		AddNotify(str)
 		surface.PlaySound("ui/notify.wav")
 	else
 		net.Start("Fusion.notify")
