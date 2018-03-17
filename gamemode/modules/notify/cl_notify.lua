@@ -104,8 +104,11 @@ local function DrawNotice( self, k, v, i )
 	local w = v.w
 	local h = v.h
 	
-	w = w + 16
+	// REUSE WHEN ICON IS ADDED - NYJEZ
+	//w = w + 16
 	h = h + 16
+
+
 	---------- OLD -----------
 	--surface.SetDrawColor(52, 73, 94,255);
 	---surface.DrawRect( x - w - h + 8, y - 8, w + h, h);
@@ -115,8 +118,8 @@ local function DrawNotice( self, k, v, i )
 	surface.DrawRect( x - w - h + 8, y - 8, w + h, h, Color( 24, 24, 24, 200 ) )
 	
 	--- OLD NOTICES ------------
-	--	surface.SetDrawColor(44, 62, 80,255);
-	--surface.DrawOutlinedRect( x - w - h + 8, y - 8, w + h, h);
+	surface.SetDrawColor(32, 32, 32, 255)
+	surface.DrawOutlinedRect( x - w - h + 8, y - 8, w + h, h);
 	-------------------------------------------------------
 	
 	
