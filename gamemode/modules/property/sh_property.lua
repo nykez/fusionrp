@@ -25,11 +25,15 @@ end
 hook.Add("PostGamemodeLoaded", "Fusion.LoadProperties", Fusion.property.Load)
 
 function Fusion.property:Register(tbl)
-    if !tbl or !tbl.id then return end
+    if !tbl then return end
     if !Fusion.property.cache then return end
 
-    if !Fusion.property.cache[tbl.id] then
-        Fusion.property.cache[tbl.id] = tbl
+	local id = #self.cache + 1
+
+	tbl.id = id
+
+    if !Fusion.property.cache[id] then
+        Fusion.property.cache[id] = tbl
     end
 end
 
