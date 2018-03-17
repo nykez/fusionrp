@@ -1,4 +1,4 @@
-local PANEL = {}
+local PANEL = PANEL or {}
 
 surface.CreateFont( "Fusion_Dialog_Title", {
 	font = "Bebas Neue",
@@ -25,7 +25,6 @@ function PANEL:Init()
 	self:SetTall(ScrW() * 0.12)
 
 	self:Center()
-	self:MakePopup()
 
 	self.background = self:Add("DPanel")
 	self.background:TDLib():Background(Color(32, 32, 32, 255)):Gradient(Color(35, 35, 35))
@@ -44,6 +43,10 @@ function PANEL:Init()
 
 	self.container = self.background:Add("DScrollPanel")
 	self.container:Dock(FILL)
+
+	self:SetVisible(false);
+
+	self:SetContentAlignment(2)
 
 	self.buttons = {}
 end
@@ -75,17 +78,24 @@ end
 
 function PANEL:Think()
 	if input.IsKeyDown(KEY_F1) then
-		self:Remove()
+		self:Hide()
 	end
+end
+
+function PANEL:Show( )
+	self:SetVisible(true);
+	self:MakePopup();
+end
+
+
+function PANEL:Hide()
+	self:SetVisible(false);
+	self:ClearCanvas()
 end
 
 vgui.Register("FusionDialog", PANEL, "EditablePanel")
 
 
-concommand.Add("dialog", function()
-	if fusionchar then
-		fusionchar:Remove()
-	end
 
-	fusionchar = vgui.Create("FusionDialog")
-end)
+
+

@@ -28,7 +28,11 @@ npc.angle = {
 }
 
 npc.use = function()
-	LocalPlayer():ChatPrint("It worked!")
+	Fusion.dialog.Canvas:SetTitle('Car Dealer')
+
+	Fusion.dialog.Canvas:AddButton("I'm looking for a car.", Fusion.dialog.Close)
+
+	Fusion.dialog.Canvas:Show()
 end
 
 
