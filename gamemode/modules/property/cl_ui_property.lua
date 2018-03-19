@@ -38,13 +38,13 @@ function PANEL:Load()
 		if !self.cats[v.category] then 
 			self.cats[v.category] = self.items:Add("DCollapsibleCategory")
 			self.cats[v.category]:Dock(TOP)
-			self.cats[v.category]:SetLabel(" ")
+			self.cats[v.category]:SetLabel(v.category)
 			self.cats[v.category]:DockMargin(0, 0, 0, 5)
 			self.cats[v.category].ourcat = v.category
 			self.cats[v.category]:SetExpanded(false)
 			self.cats[v.category].height = 0
-			self.cats[v.category]:TDLib():Background(Color(54, 54, 54)):Text(v.category, "Fusion_Dialog_Title")
-			self.cats[v.category]:SetTall(60)
+			self.cats[v.category]:TDLib():Background(Color(54, 54, 54))//:Text(v.category, "Fusion_Dialog_Title")
+			//self.cats[v.category]:SetTall(60)
 		end
 
 		self.buttons[k] = self.cats[v.category]:Add("DPanel")
