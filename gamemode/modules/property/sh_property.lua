@@ -6,7 +6,7 @@ function Fusion.property:Load()
 	local files, folders = file.Find(GAMEMODE.FolderName.."/gamemode/modules/property/properties/*", "LUA")
 
 	for k, v in pairs(folders) do
-		if string.lower(v) != string.lower(game.GetMap()) then continue end
+		//if string.lower(v) != string.lower(game.GetMap()) then continue end
 		local dir = GAMEMODE.FolderName .. "/gamemode/modules/property/properties/" .. v .. "/*.lua"
 
 		for _, file in pairs(file.Find(dir, "LUA")) do
@@ -25,15 +25,13 @@ end
 hook.Add("PostGamemodeLoaded", "Fusion.LoadProperties", Fusion.property.Load)
 
 function Fusion.property:Register(tbl)
-    if !tbl then return end
+    if !tbl or !tbl.id then return end
     if !Fusion.property.cache then return end
 
-	local id = #self.cache + 1
+    PrintTable(tbl)
 
-	tbl.id = id
-
-    if !Fusion.property.cache[id] then
-        Fusion.property.cache[id] = tbl
+    if !Fusion.property.cache[tbl.id] then
+        Fusion.property.cache[tbl.id] = tbl
     end
 end
 
@@ -46,9 +44,5 @@ function Fusion.property:GetOwner(id)
 end
 
 function Fusion.property:IsOwned(id)
-    if Fusion.property.owners[id] == nil then
-        return false
-    else
-        return true
-    end
+	return Fusion.property.owners[id] and true or false
 end

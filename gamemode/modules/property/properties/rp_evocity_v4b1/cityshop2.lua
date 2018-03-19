@@ -1,10 +1,11 @@
+
 local property = {}
 
 property.id = 2
 
 property.name = "City Shop #2"
 
-property.category = "Shop"
+property.category = "Apartments"
 
 property.price = 800
 
