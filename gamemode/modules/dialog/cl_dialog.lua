@@ -34,7 +34,7 @@ function PANEL:Init()
 	self.title:Dock(TOP)
 	self.title:DockMargin(5, 0, 0, 0)
 	self.title:SetFont("Fusion_Dialog_Title")
-	self.title:SetText("Car Dealer")
+	self.title:SetText("DIALOG TITLE")
 	self.title:SetTextColor(color_white)
 	self.title:SetZPos(400)
 	self.title:SetAlpha(255)
@@ -64,7 +64,8 @@ function PANEL:AddButton(strText, func)
 	self.buttons[strText]:SetText(strText)
 	self.buttons[strText]:Dock(TOP)
 	self.buttons[strText]:DockMargin(5, 0, 5, 3)
-	self.buttons[strText]:TDLib():Background(Color(37, 37, 37)):BarHover(Color(64, 64, 64, 255), 3)
+	self.buttons[strText]:SetTall(30)
+	self.buttons[strText]:TDLib():Background(Color(37, 37, 37)):BarHover(Color(64, 160, 255, 255), 3)
 	self.buttons[strText]:SetTextColor(color_white)
 	self.buttons[strText]:On("DoClick", function(s)
 		self:ClearCanvas()
@@ -94,8 +95,3 @@ function PANEL:Hide()
 end
 
 vgui.Register("FusionDialog", PANEL, "EditablePanel")
-
-
-
-
-

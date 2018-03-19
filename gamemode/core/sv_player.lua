@@ -8,6 +8,14 @@ function PLAYER:LoadProfile()
         if (type(result) == "table" and #result > 0) then
             if result[1] != nil then
                 local vars = result[1]
+
+                if tostring(vars.rp_first) == "John" and tostring(vars.rp_last) == "Doe" then
+                    self.IsNew = true
+                    net.Start("Fusion.new.character")
+                    net.Send(self)
+                    return
+                end
+
                 self:SetFirstName(tostring(vars.rp_first))
                 self:SetLastName(tostring(vars.rp_last))
                 self:SetXP(tonumber(vars.xp))

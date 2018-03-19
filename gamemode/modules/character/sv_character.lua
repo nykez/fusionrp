@@ -8,10 +8,13 @@ net.Receive("Fusion.character.create",function(len, pPlayer)
 	local data = net.ReadTable()
 
 	if not data then return end
+	if not pPlayer.IsNew then return end
 
 	PrintTable(data)
 
 	Fusion.character:CreateCharacter(pPlayer, data)
+
+	pPlayer.IsNew = false
 end)
 
 function Fusion.character:CreateCharacter(pPlayer, tblData)
@@ -88,5 +91,5 @@ function Fusion.character:BodyGroups(pPlayer, data)
 	for k,v in pairs(data) do
 		pPlayer:SetBodygroup(k, v)
 	end
-	
+
 end
