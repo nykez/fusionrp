@@ -35,6 +35,8 @@ function GM:HUDAmmoPickedUp(Name) return false; end
 function GM:HUDDrawPickupHistory() return false; end
 
 function DrawHUD()
+	if property then return end 
+	
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(0, ScrH() - 60, ScrW(), 60)
 
