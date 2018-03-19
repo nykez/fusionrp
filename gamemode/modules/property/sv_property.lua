@@ -34,6 +34,7 @@ function Fusion.property:Purchase(ply, id)
 
     if self:IsOwned(id) then
         ply:Notify("That property is already owned!")
+        return
     end
 
     if ply:GetBank() < property.price then
