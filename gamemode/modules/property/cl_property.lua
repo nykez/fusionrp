@@ -11,3 +11,10 @@ function Fusion.property:Sync(len)
     PrintTable(prop)
 end
 net.Receive("Fusion.property.sync", Fusion.property.Sync)
+
+hook.Add("OnReloaded", "Fusion.PropertyPanelRefresh", function()
+    if Fusion.property.panel then
+        Fusion.property.panel:Remove()
+        Fusion.property.panel = nil
+    end
+end)
