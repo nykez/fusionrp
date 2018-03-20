@@ -49,6 +49,20 @@ function Fusion.npcs:RegisterNPC(tblNPC)
 	end
 end
 
+hook.Add("OnReloaded", "Fusion.NPCReload", function()
+	Fusion.npcs.cache = {}
+
+	if SERVER then
+		local ents = ents.FindByClass("npc_vendor")
+
+		for k,v in pairs(ents) do
+			v:Remove()
+		end
+	end
+
+	Fusion.npcs:LoadNPC()
+end)
+
 concommand.Add("flushnpc", function()
 	Fusion.npcs.cache = {}
 
