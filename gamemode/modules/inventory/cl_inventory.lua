@@ -24,6 +24,41 @@ net.Receive("Fusion.inventory.syncid", function()
 
 end)
 
+net.Receive("Fusion.inventory.equip", function()
+	local type = net.ReadString()
+	local slot = net.ReadInt(16)
+	local item = net.ReadInt(16)
+	if not LocalPlayer().inventory[type] then
+		LocalPlayer().inventory[type] = {}
+	end
+	LocalPlayer().inventory[type][slot] = item
+end) 
+
+net.Receive("Fusion.inventory.cosmetic", function()
+	local slot = net.ReadInt(16)
+	local item = net.ReadInt(16)
+
+	LocalPlayer().inventory.cosmetic[slot] = item
+end)
+
+net.Receive("Fuson.inventory.inventory_slots", function()
+	local x = net.ReadInt(16)
+	local y = net.ReadInt(16)
+	local item = net.ReadInt(16)
+
+	LocalPlayer().inventory.items[x][y] = item
+end)
+
+net.Receive('Fusion.inventory.unequip', function()
+	local type = net.ReadString()
+	local slot = net.ReadInt(16)
+
+	print(type)
+	print(slot)
+
+	LocalPlayer().inventory[type][slot] = nil
+end)
+
 function Fusion.inventory:FullSync(pPlayer, tbl)
 	if not IsValid(pPlayer) then return end
 

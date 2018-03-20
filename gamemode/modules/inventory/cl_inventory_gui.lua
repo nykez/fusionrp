@@ -1,4 +1,39 @@
 
+surface.CreateFont( "Fusion_Label_Inventory", {
+	font = "Bebas Neue",
+	extended = true,
+	size = 30,
+	weight = 0,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+} )
+
+surface.CreateFont( "Fusion_Label_Inventory2", {
+	font = "Arial",
+	extended = true,
+	size = 18,
+	weight = 300,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+} )
 
 
 local PANEL = {}
@@ -19,6 +54,8 @@ function PANEL:Init()
 	self:CreateWeapons()
 
 	self:CreateHUD()
+
+	self:CreateInfoPanel()
 
 	//self:CreateView()
 end
@@ -70,7 +107,6 @@ function PANEL:CreateInventory()
 	local data = Fusion.inventory:GetInventory(LocalPlayer())
 	if not data then return end
 
-	PrintTable(data)
 	local count = 1	
 	local items = {}
 	for k,v in pairs(data) do
@@ -93,12 +129,13 @@ function PANEL:CreateInventory()
 		items[k]:SetLookAt( ( mn + mx ) * 0.5 )
 
 		items[k]:TDLib():On("Paint", function(s)
-			draw.SimpleText(items[k].quantity, "TargetID", 5, 5, Color(255, 255, 255, 100), TEXT_ALIGN_LEFT)
+			draw.SimpleText("x"..items[k].quantity, "TargetID", 5, 5, Color(255, 255, 255, 100), TEXT_ALIGN_LEFT)
 		end)
 
 		items[k]:On("OnMouseReleased", function(s)
-			MsgN('released')
+			self:SetInfoModel(k, s, self.inventory_items)
 		end)
+		items[k]:Droppable('equipped')
 
 
 
@@ -134,11 +171,23 @@ function PANEL:CreateWeapons()
 
 	self.weapons.items = {}
 
-	local counter = 0;
+	local counter = 1;
 	for i=1, MAX_WEAPON do
 		self.weapons.items[i] = self.weapons:Add("DPanel")
 		self.weapons.items[i]:SetSize(64 + 24, 64 + 24)
 		self.weapons.items[i]:TDLib():Background(Color(24, 24, 24)):Outline(Color(52, 152, 219, 100))
+		self.weapons.items[i]:Receiver( 'equipped', function( receiver, tableOfDroppedPanels, isDropped, menuIndex, mouseX, mouseY ) 
+			if isDropped then
+				local ourPanel = tableOfDroppedPanels[1]
+
+				if ourPanel then
+					print(ourPanel)
+					local posX, posY = receiver:LocalToScreen(0, 0)
+					ourPanel:SetPos(posX, posY)
+					ourPanel:TDLib():Outline(Color(255, 0, 0))
+				end
+			end
+		end, {} )
 		counter = counter + 1
 	end
 
@@ -147,34 +196,366 @@ function PANEL:CreateWeapons()
 		self.weapons.items[counter]:SetSize(64 + 24, 64 + 24)
 		self.weapons.items[counter]:TDLib():Background(Color(24, 24, 24)):Outline(Color(46, 204, 113, 100))
 		counter = counter + 1
+		//print("[AFTER] Slot Counter: " .. counter)
+	end
+
+	self.OurWeapons = {}
+	if LocalPlayer().inventory and LocalPlayer().inventory.equip then
+		for k,v in pairs(LocalPlayer().inventory.equip) do
+			local data = Fusion.inventory:GetItem(v)
+			if not data then continue end
+
+			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
+			self.OurWeapons[k]:Dock(FILL)
+			self.OurWeapons[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			local size = 0
+			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+			size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+			-- local function self.OurWeapons[k]:LayoutEntity( ent )
+			-- 	return
+			-- end
+
+			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeapons[k]:SetFOV( 45 )
+			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+				net.Start('Fusion.inventory.unequip')
+					net.WriteString("equip")
+					net.WriteInt(k, 16)
+				net.SendToServer()
+				s:Remove()
+				timer.Simple(0.2, function()
+					self:RebuildInventory()
+				end)
+			end)
+		end
+	end
+
+	if LocalPlayer().inventory and LocalPlayer().inventory.misc then
+		for k,v in pairs(LocalPlayer().inventory.misc) do
+			local data = Fusion.inventory:GetItem(v)
+			if not data then continue end
+			k = k + 2
+			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
+			self.OurWeapons[k]:Dock(FILL)
+			self.OurWeapons[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			local size = 0
+			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+			size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+			-- local function self.OurWeapons[k]:LayoutEntity( ent )
+			-- 	return
+			-- end
+
+			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeapons[k]:SetFOV( 45 )
+			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+				net.Start('Fusion.inventory.unequip')
+					net.WriteString("misc")
+					net.WriteInt(k, 16)
+				net.SendToServer()
+				s:Remove()
+				timer.Simple(0.2, function()
+					self:RebuildInventory()
+				end)
+			end)
+		end
 	end
 
 end
 
+function PANEL:ReBuildWeapons()
+	if self.OurWeapons then
+		for k,v in pairs(self.OurWeapons) do
+			if v then
+				v:Remove()
+			end
+		end
+	end
+
+	if LocalPlayer().inventory and LocalPlayer().inventory.equip then
+		for k,v in pairs(LocalPlayer().inventory.equip) do
+			local data = Fusion.inventory:GetItem(v)
+			if not data then continue end
+
+			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
+			self.OurWeapons[k]:Dock(FILL)
+			self.OurWeapons[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			local size = 0
+			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+			size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+			-- local function self.OurWeapons[k]:LayoutEntity( ent )
+			-- 	return
+			-- end
+
+			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeapons[k]:SetFOV( 45 )
+			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+				net.Start('Fusion.inventory.unequip')
+					net.WriteString("equip")
+					net.WriteInt(k, 16)
+				net.SendToServer()
+				s:Remove()
+				timer.Simple(0.2, function()
+					self:RebuildInventory()
+				end)
+			end)
+		end
+	end
+	if LocalPlayer().inventory and LocalPlayer().inventory.misc then
+		for k,v in pairs(LocalPlayer().inventory.misc) do
+			local data = Fusion.inventory:GetItem(v)
+			if not data then continue end
+			k = k + 2
+			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
+			self.OurWeapons[k]:Dock(FILL)
+			self.OurWeapons[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			local size = 0
+			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+			size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+			-- local function self.OurWeapons[k]:LayoutEntity( ent )
+			-- 	return
+			-- end
+
+			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeapons[k]:SetFOV( 45 )
+			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+				net.Start('Fusion.inventory.unequip')
+					net.WriteString("misc")
+					net.WriteInt(k, 16)
+				net.SendToServer()
+				s:Remove()
+				timer.Simple(0.2, function()
+					self:RebuildInventory()
+				end)
+			end)
+		end
+	end
+end
+
 function PANEL:CreateHUD()
 	self.hud = self:Add("DPanel")
-	self.hud:SetPos(self:GetWide()*0.78, self:GetTall() * 0.85)
-	self.hud:SetSize(self:GetWide() * 0.2, self:GetTall() * 0.13)
+	self.hud:SetPos(10, self:GetTall() * 0.85)
+	self.hud:SetSize(self:GetWide() * 0.2, self:GetTall() * 0.105)
 	self.hud:TDLib():Background(Color(32, 32, 32, 255)):Outline(Color(64, 64, 64))
 
 	local health = self.hud:Add("DPanel")
 	health:Dock(TOP)
 	health:DockMargin(5, 5, 5, 0)
-	health:SetTall(30)
+	health:SetTall(25)
 	health:TDLib():Background(Color(46, 204, 113)):Outline(Color(54, 54, 54))
 
 	
 	local hungry = self.hud:Add("DPanel")
 	hungry:Dock(TOP)
 	hungry:DockMargin(5, 5, 5, 0)
-	hungry:SetTall(30)
+	hungry:SetTall(25)
 	hungry:TDLib():Background(Color(230, 126, 34)):Outline(Color(54, 54, 54))
 
 	local thrist = self.hud:Add("DPanel")
 	thrist:Dock(TOP)
 	thrist:DockMargin(5, 5, 5, 0)
-	thrist:SetTall(30)
+	thrist:SetTall(25)
 	thrist:TDLib():Background(Color(52, 152, 219)):Outline(Color(54, 54, 54))
+end
+
+
+function PANEL:CreateInfoPanel()
+	self.infopanel = self:Add("DPanel")
+	self.infopanel:SetSize(self:GetWide() * 0.30, self:GetTall() * 0.25)
+	self.infopanel:SetPos(self.modelpnl:GetWide(), self:GetTall() * 0.05)
+	self.infopanel:TDLib():Background(Color(35, 35, 35, 255))
+
+	self.infomodel = self.infopanel:Add("DModelPanel")
+	self.infomodel:SetPos(5, 1)
+	self.infomodel:SetSize(self.infopanel:GetWide() * 0.5, self.infopanel:GetTall())
+	self.infomodel:SetModel("models/player/gman_high.mdl")
+	//self.modelpnl:SetAlpha(0)
+	local mn, mx = self.infomodel.Entity:GetRenderBounds()
+	local size = 0
+	size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+	size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+	size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+	self.infomodel.Entity:SetAngles(Angle(-15, 40, 0))
+	self.infomodel:SetFOV( 70 )
+	self.infomodel:SetCamPos( Vector( size, size, size ) )
+	self.infomodel:SetLookAt( ( mn + mx ) * 0.5 )
+
+	self.actionpnl = self.infopanel:Add('DPanel')
+	self.actionpnl:SetSize(self.infopanel:GetWide() * 0.35, self.infopanel:GetTall() * 0.28)
+	self.actionpnl:SetPos(self.infopanel:GetWide() * 0.64, self.infopanel:GetTall() * 0.69)
+	self.actionpnl:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
+
+
+	self.title = self.infopanel:Add("DLabel")
+	self.title:Dock(TOP)
+	self.title:DockMargin(10, 10, 0, 0)
+	self.title:SetFont("Fusion_Label_Inventory")
+	self.title:SetText(" ")
+	self.title:SetTextColor(color_white)
+	self.title:SetAlpha(255)
+
+	self.title:SetExpensiveShadow(2, Color(0, 0, 0, 200))
+
+	self.dsec = self.infopanel:Add("DLabel")
+	self.dsec:SetPos(10, 15)
+	self.dsec:SetWide(self.infopanel:GetWide() * 0.8)
+	self.dsec:SetTall(80)
+	self.dsec:SetFont("Fusion_Label_Inventory2")
+	self.dsec:SetText(" ")
+	self.dsec:SetTextColor(color_white)
+	self.dsec:SetAlpha(255)
+	self.dsec:SetWrap(true)
+	self.dsec:SetMultiline(true)
+//	self.dsec:SizeToContents()
+
+
+	self.infopanel:SetVisible(false)
+
+	self.actionpnl.buttons = {}
+end
+
+function PANEL:SetInfoModel(strItemID, model, parent)
+	if not strItemID then return end
+
+	
+
+	local data = Fusion.inventory:GetItem(strItemID)
+	if not data then return end
+
+	for k,v in pairs(self.actionpnl.buttons) do
+		if v then v
+			:Remove() 
+		end
+	end
+
+	self.actionpnl.buttons["Drop"] = self.actionpnl:Add("DButton")
+	self.actionpnl.buttons["Drop"]:Dock(TOP)
+	self.actionpnl.buttons["Drop"]:DockMargin(5, 5, 5, 0)
+	self.actionpnl.buttons["Drop"]:SetText('Drop')
+	self.actionpnl.buttons["Drop"]:TDLib():Background(Color(40, 40, 40)):Outline(Color(64, 64, 64))
+	self.actionpnl.buttons["Drop"]:SetTextColor(Color(255, 255, 255))
+	self.actionpnl.buttons["Drop"]:On('DoClick', function(s)
+		net.Start("Fusion.inventory.spawn")
+			net.WriteInt(data.id, 16)
+		net.SendToServer()
+		model.quantity = model.quantity - 1
+
+		if model.quantity < 1 then
+			model:Remove()
+			parent:InvalidateLayout()
+		end
+	end)
+	self.actionpnl:SetTall(self.infopanel:GetTall() * 0.15)
+
+	if data.weapon then
+		self.actionpnl.buttons["Equip"] = self.actionpnl:Add("DButton")
+		self.actionpnl.buttons["Equip"]:Dock(TOP)
+		self.actionpnl.buttons["Equip"]:DockMargin(5, 5, 5, 0)
+		self.actionpnl.buttons["Equip"]:SetText('Equip')
+		self.actionpnl.buttons["Equip"]:TDLib():Background(Color(40, 40, 40)):Outline(Color(64, 64, 64))
+		self.actionpnl.buttons["Equip"]:SetTextColor(Color(255, 255, 255))
+		self.actionpnl.buttons["Equip"]:On('DoClick', function(s)
+			net.Start('Fusion.inventory.equip')
+				net.WriteInt(data.id, 16)
+			net.SendToServer()
+			timer.Simple(0.1, function()
+				self:ReBuildWeapons()
+				self:RebuildInventory()
+			end)
+		end)
+		self.actionpnl:SetTall(self.infopanel:GetTall() * 0.28)
+	end
+
+	self.ourItem = strItemID
+	self.infopanel:SetVisible(true)
+	self.infomodel:SetModel(data.model)
+	self.title:SetText(data.name)
+	self.dsec:SetText(data.desc)
+	
+
+end
+
+function PANEL:RebuildInventory()
+	self.inventory_items = self:Add("DIconLayout")
+	self.inventory_items:SetSize(self:GetWide() * 0.33, self:GetTall() * 0.55)
+	self.inventory_items:SetPos(self.modelpnl:GetWide() + 10, self:GetTall() * 0.35)
+	self.inventory_items:SetSpaceX(5)
+	self.inventory_items:SetSpaceY(5)
+	self.inventory_items.items = {}
+
+	for k,v in pairs(self.inventory_items.items) do
+		v:Remove()
+	end
+
+	local MAX_COUNTER = 25
+	for i=1, 25 do
+		self.inventory_items.items[i] = self.inventory_items:Add("DPanel")
+		self.inventory_items.items[i]:SetSize(64 + 24, 64 + 24)
+		self.inventory_items.items[i]:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
+	end
+
+	local data = Fusion.inventory:GetInventory(LocalPlayer())
+	if not data then return end
+
+	local count = 1	
+	local items = {}
+	for k,v in pairs(data) do
+		local item = Fusion.inventory:GetItem(k)
+		if not item then continue end 
+
+		items[k] = self.inventory_items.items[count]:Add("DModelPanel")
+		items[k]:SetModel(item.model)
+		items[k]:Dock(FILL)
+		items[k].quantity = v.quantity
+		local mn, mx = items[k].Entity:GetRenderBounds()
+		local size = 0
+		size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+		size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+		size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+		items[k].Entity:SetAngles(Angle(-15, 40, 0))
+		items[k]:SetFOV( 75 )
+		items[k]:SetCamPos( Vector( size, size, size ) )
+		items[k]:SetLookAt( ( mn + mx ) * 0.5 )
+
+		items[k]:TDLib():On("Paint", function(s)
+			draw.SimpleText("x"..items[k].quantity, "TargetID", 5, 5, Color(255, 255, 255, 100), TEXT_ALIGN_LEFT)
+		end)
+
+		items[k]:On("OnMouseReleased", function(s)
+			self:SetInfoModel(k, s, self.inventory_items)
+		end)
+		items[k]:Droppable('equipped')
+
+
+
+		count = count + 1
+	end
+
 end
 
 

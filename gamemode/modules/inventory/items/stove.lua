@@ -7,4 +7,6 @@ item.name = "Stove"
 
 item.model = "models/props_c17/furnitureStove001a.mdl"
 
+item.desc = "You place this prop to cook on it. You can do other things with it as well.."
+
 Fusion.inventory:RegisterItem(item)

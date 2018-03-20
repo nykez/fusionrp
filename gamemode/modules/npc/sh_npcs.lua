@@ -29,6 +29,8 @@ function Fusion.npcs:RegisterNPC(tblNPC)
 
 	if SERVER then
 		timer.Simple(5, function()
+			if not tblNPC.spawn[game.GetMap()] then return end
+			
 			local spawnPos = tblNPC.spawn[game.GetMap()][1]
 			local angles = tblNPC.angle[game.GetMap()][1]
 

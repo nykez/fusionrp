@@ -26,7 +26,7 @@ function PLAYER:LoadProfile()
                 self:SetOrganization(tonumber(vars.organization))
                 self:SetPlayTime(tonumber(vars.playtime))
 
-                self.inventory = Fusion.util:Table(tostring(vars.inventory))
+                //self.inventory = Fusion.util:Table(tostring(vars.inventory))
                 self.vehicles = Fusion.util:Table(tostring(vars.vehicles))
 
                 hook.Run("Fusion.PlayerLoaded", self)
