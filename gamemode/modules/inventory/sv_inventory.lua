@@ -121,7 +121,6 @@ function Fusion.inventory:Spawn(pPlayer, itemID)
 	if not itemID then return end
 
 	MsgN("Inventory ID: " .. itemID)
-	PrintTable(pPlayer.inventory)
 
 	if not pPlayer.inventory[itemID] then return end
 
