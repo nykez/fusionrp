@@ -12,6 +12,85 @@ util.AddNetworkString("Fusion.inventory.sync")
 util.AddNetworkString("Fusion.inventory.syncid")
 util.AddNetworkString("Fusion.inventory.spawn")
 util.AddNetworkString("Fusion.inventory.edit")
+util.AddNetworkString("Fusion.inventory.equip")
+util.AddNetworkString("Fusion.inventory.unequip")
+util.AddNetworkString("Fusion.inventory.cosmetic")
+util.AddNetworkString("Fuson.inventory.inventory_slots")
+
+local MAX_WEAPONS = 2
+local MAX_MISC = 4
+
+net.Receive('Fusion.inventory.unequip', function(len, pPlayer)
+	local type = net.ReadString()
+	local slot = net.ReadInt(16)
+
+	print(type, slot)
+
+
+	local item = Fusion.inventory:GetSlot(pPlayer, type, slot)
+
+	print(item)
+	item = Fusion.inventory:GetItem(item)
+
+	if not item then return end
+
+	if pPlayer:HasWeapon(item.weapon) then
+		pPlayer:StripWeapon(item.weapon)
+	end
+
+	pPlayer.inventory[type][slot] = nil
+
+	net.Start('Fusion.inventory.unequip')
+		net.WriteString(type)
+		net.WriteInt(slot, 16)
+	net.Send(pPlayer)
+
+	Fusion.inventory:Add(pPlayer, item.id, 1)
+	print("sent data")
+end)
+
+
+net.Receive('Fusion.inventory.equip',function (len, pPlayer)
+	local item = net.ReadInt(16)
+
+	if not item then return end
+	
+	local data = Fusion.inventory:GetItem(item)
+	if not data then return end
+
+	if not pPlayer.inventory[data.equipslot] then
+		pPlayer.inventory[data.equipslot] = {}
+	end
+
+	if table.HasValue(pPlayer.inventory[data.equipslot], item) then
+		pPlayer:Notify("That is already equipped.")
+		return
+	end
+
+	local count = #pPlayer.inventory[data.equipslot]
+
+
+	if count >= Fusion.inventory:GetMaxSlots(data.equipslot) then
+		pPlayer:Notify(Fusion.inventory.maxerrors[data.equipslot])
+		return
+	end
+
+	pPlayer.inventory[data.equipslot][count + 1] = item
+	pPlayer:Give(data.weapon)
+
+	net.Start("Fusion.inventory.equip")
+		net.WriteString(data.equipslot)
+		net.WriteInt(count + 1, 16)
+		net.WriteInt(data.id, 16)
+	net.Send(pPlayer)
+
+	Fusion.inventory:Remove(pPlayer, data.id)
+	print("Slot: " .. count + 1)
+end)
+
+function Fusion.inventory:GetSlot(pPlayer, type, slot)
+	return pPlayer.inventory[type][slot] or false
+end
 
 
 function Fusion.inventory:AddQuantity(pPlayer, id, amount)
@@ -84,8 +163,9 @@ function Fusion.inventory:FullSync(pPlayer)
 		net.WriteTable(pPlayer.inventory or {})
 	net.Send(pPlayer)
 end
+
 hook.Add("Fusion.PlayerLoaded", function(ply)
-	Fusion.inventory:FullSync(ply)
+	Fusion.inventory.LoadPlayer(ply)
 end)
 
 function Fusion.inventory:Save(pPlayer)
@@ -103,7 +183,17 @@ end
 
 function Fusion.inventory.LoadPlayer(pPlayer)
 	local queryObj = mysql:Select("player_data");
-		queryObj:WhereEqual("steam_id", pPlayer:SteamID())
+	queryObj:Where("steam_id", pPlayer:SteamID())
+	queryObj:Callback(function(result, status, lastID)
+		if (type(result) == "table" and #result > 0) then
+			local inventory = result[1].inventory
+			local compiled = util.JSONToTable(inventory or {})
+			pPlayer.inventory = compiled
+			net.Start("Fusion.inventory.sync")
+				net.WriteTable(pPlayer.inventory or {})
+			net.Send(pPlayer)
+		end
+	end)
 	queryObj:Execute();
 end
 
@@ -155,9 +245,17 @@ end
 concommand.Add("inventory", function(pPlayer)
 	if not pPlayer.inventory then pPlayer.inventory = {} end
 
-	Fusion.inventory:Add(pPlayer, 1, 5)
-	Fusion.inventory:Add(pPlayer, 2, 5)
+	-- Fusion.inventory:Add(pPlayer, 1, 5)
+	-- Fusion.inventory:Add(pPlayer, 2, 5)
+	-- pPlayer.inventory = {}
+	Fusion.inventory:Add(pPlayer, 3, 5)
+	Fusion.inventory:Add(pPlayer, 4, 5)
+	Fusion.inventory:Add(pPlayer, 5, 5)
+	Fusion.inventory:Add(pPlayer, 6, 5)
+	pPlayer:StripWeapons()
 
 	print('loading inventory')
-	Fusion.inventory.LoadPlayer(pPlayer)
+	-- Fusion.inventory.LoadPlayer(pPlayer)
+
+	//print(Fusion.inventory:GetSlot(pPlayer, "equip", 1))
 end)
