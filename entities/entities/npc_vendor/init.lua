@@ -14,6 +14,15 @@ function ENT:Initialize ( )
 
 end
 
+function ENT:Think()
+	for p, ply in pairs( player.GetAll() ) do
+	if ( ply:EyePos():Distance( self:EyePos() ) <= 120 ) then
+		self:SetEyeTarget( ply:EyePos() )
+		break
+	end
+end
+end
+
 function ENT:AcceptInput( Name, Player, Caller)
 	if Name == "Use" and Caller:IsPlayer() then
 		self:UseShort(Caller);
