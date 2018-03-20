@@ -102,8 +102,6 @@ function Fusion.inventory:Save(pPlayer)
 end
 
 function Fusion.inventory.LoadPlayer(pPlayer)
-	MsgN(pPlayer:SteamID())
-
 	local queryObj = mysql:Select("player_data");
 		queryObj:WhereEqual("steam_id", pPlayer:SteamID())
 	queryObj:Execute();
@@ -123,6 +121,7 @@ function Fusion.inventory:Spawn(pPlayer, itemID)
 	if not itemID then return end
 
 	MsgN("Inventory ID: " .. itemID)
+	PrintTable(pPlayer.inventory)
 
 	if not pPlayer.inventory[itemID] then return end
 

@@ -31,6 +31,10 @@ function Fusion.inventory:FullSync(pPlayer, tbl)
 
 end
 
+function Fusion.inventory:GetInventory(pPlayer)
+	return pPlayer.inventory or {}
+end
+
 function Fusion.inventory:Sync(pPlayer, id, bool)
 	if not IsValid(pPlayer) then return end
 
