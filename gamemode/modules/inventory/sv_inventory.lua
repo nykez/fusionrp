@@ -30,8 +30,10 @@ net.Receive('Fusion.inventory.unequip', function(len, pPlayer)
 
 	if not item then return end
 
-	if pPlayer:HasWeapon(item.weapon) then
-		pPlayer:StripWeapon(item.weapon)
+	if item.weapon then
+		if pPlayer:HasWeapon(item.weapon) then
+			pPlayer:StripWeapon(item.weapon)
+		end
 	end
 
 	pPlayer.inventory[type][slot] = nil
@@ -71,7 +73,10 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 	end
 
 	pPlayer.inventory[data.equipslot][count + 1] = item
-	pPlayer:Give(data.weapon)
+
+	if data.weapon then
+		pPlayer:Give(data.weapon)
+	end
 
 	net.Start("Fusion.inventory.equip")
 		net.WriteString(data.equipslot)
@@ -245,7 +250,7 @@ concommand.Add("inventory", function(pPlayer)
 	Fusion.inventory:Add(pPlayer, 3, 5)
 	Fusion.inventory:Add(pPlayer, 4, 5)
 	Fusion.inventory:Add(pPlayer, 5, 5)
-	Fusion.inventory:Add(pPlayer, 6, 5)
+	Fusion.inventory:Add(pPlayer, 7, 5)
 	pPlayer:StripWeapons()
 
 	print('loading inventory')
