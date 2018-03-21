@@ -170,8 +170,8 @@ function PANEL:CreateWeapons()
 	self.weapons:SetSpaceY(5)
 
 	self.weapons.items = {}
+	self.weapons.misc = {}
 
-	local counter = 1;
 	for i=1, MAX_WEAPON do
 		self.weapons.items[i] = self.weapons:Add("DPanel")
 		self.weapons.items[i]:SetSize(64 + 24, 64 + 24)
@@ -188,18 +188,16 @@ function PANEL:CreateWeapons()
 				end
 			end
 		end, {} )
-		counter = counter + 1
 	end
 
 	for i=1, MAX_MISC do
-		self.weapons.items[counter] = self.weapons:Add("DPanel")
-		self.weapons.items[counter]:SetSize(64 + 24, 64 + 24)
-		self.weapons.items[counter]:TDLib():Background(Color(24, 24, 24)):Outline(Color(46, 204, 113, 100))
-		counter = counter + 1
-		//print("[AFTER] Slot Counter: " .. counter)
+		self.weapons.misc[i] = self.weapons:Add("DPanel")
+		self.weapons.misc[i]:SetSize(64 + 24, 64 + 24)
+		self.weapons.misc[i]:TDLib():Background(Color(24, 24, 24)):Outline(Color(46, 204, 113, 100))
 	end
 
 	self.OurWeapons = {}
+	self.OurWeaponsMisc = {}
 	if LocalPlayer().inventory and LocalPlayer().inventory.equip then
 		for k,v in pairs(LocalPlayer().inventory.equip) do
 			local data = Fusion.inventory:GetItem(v)
@@ -226,7 +224,7 @@ function PANEL:CreateWeapons()
 			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
 				net.Start('Fusion.inventory.unequip')
 					net.WriteString("equip")
-					net.WriteInt(k-2, 16)
+					net.WriteInt(k, 16)
 				net.SendToServer()
 				s:Remove()
 				timer.Simple(0.2, function()
@@ -240,12 +238,12 @@ function PANEL:CreateWeapons()
 		for k,v in pairs(LocalPlayer().inventory.misc) do
 			local data = Fusion.inventory:GetItem(v)
 			if not data then continue end
-			k = k + 2
-			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
-			self.OurWeapons[k]:Dock(FILL)
-			self.OurWeapons[k]:SetModel(data.model)
 
-			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			self.OurWeaponsMisc[k] = vgui.Create("DModelPanel", self.weapons.misc[k])
+			self.OurWeaponsMisc[k]:Dock(FILL)
+			self.OurWeaponsMisc[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeaponsMisc[k].Entity:GetRenderBounds()
 			local size = 0
 			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
 			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
@@ -255,11 +253,11 @@ function PANEL:CreateWeapons()
 			-- 	return
 			-- end
 
-			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
-			self.OurWeapons[k]:SetFOV( 45 )
-			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
-			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
-			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+			self.OurWeaponsMisc[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeaponsMisc[k]:SetFOV( 45 )
+			self.OurWeaponsMisc[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeaponsMisc[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeaponsMisc[k]:TDLib():On('OnMouseReleased', function(s)
 				net.Start('Fusion.inventory.unequip')
 					net.WriteString("misc")
 					net.WriteInt(k, 16)
@@ -283,6 +281,16 @@ function PANEL:ReBuildWeapons()
 		end
 	end
 
+	if self.OurWeaponsMisc then
+		for k,v in pairs(self.OurWeaponsMisc) do
+			if v then
+				v:Remove()
+			end
+		end
+	end
+
+	self.OurWeapons = {}
+	self.OurWeaponsMisc = {}
 	if LocalPlayer().inventory and LocalPlayer().inventory.equip then
 		for k,v in pairs(LocalPlayer().inventory.equip) do
 			local data = Fusion.inventory:GetItem(v)
@@ -309,7 +317,7 @@ function PANEL:ReBuildWeapons()
 			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
 				net.Start('Fusion.inventory.unequip')
 					net.WriteString("equip")
-					net.WriteInt(k-2, 16)
+					net.WriteInt(k, 16)
 				net.SendToServer()
 				s:Remove()
 				timer.Simple(0.2, function()
@@ -318,16 +326,17 @@ function PANEL:ReBuildWeapons()
 			end)
 		end
 	end
+
 	if LocalPlayer().inventory and LocalPlayer().inventory.misc then
 		for k,v in pairs(LocalPlayer().inventory.misc) do
 			local data = Fusion.inventory:GetItem(v)
 			if not data then continue end
-			k = k + 2
-			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
-			self.OurWeapons[k]:Dock(FILL)
-			self.OurWeapons[k]:SetModel(data.model)
 
-			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			self.OurWeaponsMisc[k] = vgui.Create("DModelPanel", self.weapons.misc[k])
+			self.OurWeaponsMisc[k]:Dock(FILL)
+			self.OurWeaponsMisc[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeaponsMisc[k].Entity:GetRenderBounds()
 			local size = 0
 			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
 			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
@@ -337,11 +346,11 @@ function PANEL:ReBuildWeapons()
 			-- 	return
 			-- end
 
-			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
-			self.OurWeapons[k]:SetFOV( 45 )
-			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
-			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
-			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+			self.OurWeaponsMisc[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeaponsMisc[k]:SetFOV( 45 )
+			self.OurWeaponsMisc[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeaponsMisc[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeaponsMisc[k]:TDLib():On('OnMouseReleased', function(s)
 				net.Start('Fusion.inventory.unequip')
 					net.WriteString("misc")
 					net.WriteInt(k, 16)
