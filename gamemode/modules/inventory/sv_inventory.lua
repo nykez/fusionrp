@@ -24,12 +24,17 @@ net.Receive('Fusion.inventory.unequip', function(len, pPlayer)
 	local type = net.ReadString()
 	local slot = net.ReadInt(16)
 
-	print(type, slot)
+	if type == "misc" then
+		slot = slot - 2
+	end
+
+	print("Slot Uneqipped: " ..slot)
 
 
 	local item = Fusion.inventory:GetSlot(pPlayer, type, slot)
 
 	print(item)
+
 	item = Fusion.inventory:GetItem(item)
 
 	if not item then return end
@@ -86,6 +91,7 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 
 	Fusion.inventory:Remove(pPlayer, data.id)
 	print("Slot: " .. count + 1)
+	PrintTable(pPlayer.inventory[data.equipslot])
 end)
 
 function Fusion.inventory:GetSlot(pPlayer, type, slot)
