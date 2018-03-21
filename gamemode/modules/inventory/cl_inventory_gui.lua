@@ -370,24 +370,39 @@ function PANEL:CreateHUD()
 	self.hud:SetSize(self:GetWide() * 0.2, self:GetTall() * 0.105)
 	self.hud:TDLib():Background(Color(32, 32, 32, 255)):Outline(Color(64, 64, 64))
 
+	local ourHealth = 50
 	local health = self.hud:Add("DPanel")
 	health:Dock(TOP)
 	health:DockMargin(5, 5, 5, 0)
 	health:SetTall(25)
-	health:TDLib():Background(Color(46, 204, 113)):Outline(Color(54, 54, 54))
+	health:TDLib():On("Paint", function(s)
+		ourHealth = Lerp(2 * FrameTime(), ourHealth, LocalPlayer():Health())
+		surface.SetDrawColor(46, 204, 113)
+		surface.DrawRect(0, 0, ourHealth * 3.1, self:GetTall())
+	end)
 
 	
 	local hungry = self.hud:Add("DPanel")
 	hungry:Dock(TOP)
 	hungry:DockMargin(5, 5, 5, 0)
 	hungry:SetTall(25)
-	hungry:TDLib():Background(Color(230, 126, 34)):Outline(Color(54, 54, 54))
+	hungry:TDLib():On("Paint", function(s)
+		ourHealth = Lerp(2 * FrameTime(), ourHealth, LocalPlayer():Health())
+		surface.SetDrawColor(230, 126, 34)
+		surface.DrawRect(0, 0, ourHealth * 3.1, self:GetTall())
+	end)
+
 
 	local thrist = self.hud:Add("DPanel")
 	thrist:Dock(TOP)
 	thrist:DockMargin(5, 5, 5, 0)
 	thrist:SetTall(25)
-	thrist:TDLib():Background(Color(52, 152, 219)):Outline(Color(54, 54, 54))
+	thrist:TDLib():On("Paint", function(s)
+		ourHealth = Lerp(2 * FrameTime(), ourHealth, LocalPlayer():Health())
+		surface.SetDrawColor(52, 152, 219)
+		surface.DrawRect(0, 0, ourHealth * 3.1, self:GetTall())
+	end)
+
 end
 
 
