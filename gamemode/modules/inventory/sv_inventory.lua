@@ -38,6 +38,13 @@ net.Receive('Fusion.inventory.unequip', function(len, pPlayer)
 
 	pPlayer.inventory[type][slot] = nil
 
+	if item.cosmeticslot then
+		if pPlayer.cosmetic and pPlayer.cosmetic[item.cosmeticslot] then
+			pPlayer.cosmetic[item.cosmeticslot] = nil
+			Fusion.cosmetic:Sync(pPlayer)
+		end
+	end
+
 	net.Start('Fusion.inventory.unequip')
 		net.WriteString(type)
 		net.WriteInt(slot, 16)
@@ -76,6 +83,17 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 
 	if data.weapon then
 		pPlayer:Give(data.weapon)
+	end
+
+	if data.cosmeticslot then
+		if !pPlayer.cosmetic then
+			pPlayer.cosmetic = {}
+		end
+
+
+		pPlayer.cosmetic[data.cosmeticslot] = {data.id, data.model}
+
+		Fusion.cosmetic:Sync(pPlayer)
 	end
 
 	net.Start("Fusion.inventory.equip")

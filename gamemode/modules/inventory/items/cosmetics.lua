@@ -12,4 +12,6 @@ item.cosmetic = true
 
 item.equipslot = Fusion.inventory.slots.cosmetic
 
+item.cosmeticslot = "hat"
+
 Fusion.inventory:RegisterItem(item)
