@@ -24,7 +24,7 @@ function PANEL:Init()
     self.panel = self:Add("DPanel")
     self.panel:SetSize(ScrW() * 0.5, ScrH() * 0.5)
     self.panel:SetPos(-self.panel:GetWide(), ScrH() / 2 - self.panel:GetTall() / 2)
-    self.panel:TDLib():Background(Color(24, 24, 24)):Gradient(Color(38, 38, 38))
+    self.panel:TDLib():Background(Color(30, 30, 30)):Gradient(Color(38, 38, 38))
 
     self.list = self.panel:Add("DScrollPanel")
     self.list:Dock(FILL)
@@ -38,14 +38,24 @@ end
 
 function PANEL:Populate()
     self.rows = {}
+    self.players = player.GetAll()
 
-    for k, v in pairs(player.GetAll()) do
+	table.sort(self.players, function(a, b)
+		return a:GetAccountLevel() > b:GetAccountLevel()
+	end)
+
+    for k, v in pairs(self.players) do
         self.rows[k] = self.list:Add("DPanel")
         self.rows[k]:SetWide(self.list:GetWide())
         self.rows[k]:SetTall(60)
         self.rows[k]:Dock(TOP)
         self.rows[k]:DockMargin(0, 4, 0, 0)
-        self.rows[k]:TDLib():Background(Color(14, 14, 14)):FadeHover(Color(20, 20, 20))
+
+        if v == LocalPlayer() then
+        	self.rows[k]:TDLib():Background(Color(64, 160, 255))
+        else
+        	self.rows[k]:TDLib():Background(Color(20, 20, 20))
+        end
 
         local icon = self.rows[k]:Add("DPanel")
         icon:Dock(LEFT)
@@ -53,9 +63,13 @@ function PANEL:Populate()
         icon:DockMargin(10, 4, 4, 4)
         icon:TDLib():CircleAvatar():SetPlayer(v, 46)
 
+        surface.SetFont("Fusion_Scoreboard_Name")
+        local nX, nY = surface.GetTextSize(v:Nick())
+
         local name = self.rows[k]:Add("DLabel")
         name:Dock(LEFT)
         name:DockMargin(10, 4, 4, 4)
+        name:SetWide(nX)
         name:SetText(v:Nick())
         name:SetFont("Fusion_Scoreboard_Name")
         name:SetTextColor(color_white)

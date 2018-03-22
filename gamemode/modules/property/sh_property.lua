@@ -6,7 +6,7 @@ Fusion.property.categories = Fusion.property.categories or {}
 Fusion.property.categories = {
 	apartment = {
 		id = 1,
-		name = "Apartments"
+		name = "Downtown Apartments"
 	},
 
 	sub_house = {
@@ -14,8 +14,50 @@ Fusion.property.categories = {
 		name = "Suburban Houses"
 	},
 
-	city_shop = {},
-	industrial = {}
+	downtown = {
+		id = 3,
+		name = "Downtown"
+	},
+
+	uptown = {
+		id = 4,
+		name = "Uptown"
+	},
+
+	industrial = {
+		id = 5,
+		name = "Industrial"
+	},
+
+	club = {
+		id = 6,
+		name = "Night Clubs"
+	},
+
+	uptown_business = {
+		id = 7,
+		name = "Uptown Businesses"
+	},
+
+	downtown_business = {
+		id = 8,
+		name = "Downtown Businesses"
+	},
+
+	mesa = {
+		id = 9,
+		name = "Mesa Apartments"
+	},
+
+	country = {
+		id = 10,
+		name = "Country Houses"
+	},
+
+	country_business = {
+		id = 11,
+		name = "Country Businesses"
+	}
 }
 
 function Fusion.property:Load()

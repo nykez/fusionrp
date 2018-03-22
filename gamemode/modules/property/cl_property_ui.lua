@@ -179,7 +179,7 @@ function PANEL:Load()
 	self.cats = {}
 	for k,v in pairs(data) do
 
-		if !self.cats[v.category.id] then
+		if !self.cats[v.category.id] and !v.government then
 			self.cats[v.category.id] = self.items:Add("DButton")
 			self.cats[v.category.id]:Dock(TOP)
 			self.cats[v.category.id]:SetText(v.category.name)
@@ -211,7 +211,7 @@ function PANEL:ShowCategory(cat)
 
 	self.props = {}
 	for k, v in pairs(data) do
-		if v.category.id == cat.id then
+		if v.category.id == cat.id and !v.government then
 			self.props[k] = self.items:Add("DButton")
 			self.props[k]:Dock(TOP)
 			self.props[k]:DockMargin(0, 0, 0, 5)
