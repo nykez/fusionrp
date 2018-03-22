@@ -52,6 +52,7 @@ function Fusion.inventory:GetMaxSlots(slot)
 	return Fusion.inventory.maxslots[slot] or false
 end
 
+
 concommand.Add("refresh_inventory", function()
 	Fusion.inventory:LoadItems()
 end)

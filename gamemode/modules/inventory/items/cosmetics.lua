@@ -14,4 +14,10 @@ item.equipslot = Fusion.inventory.slots.cosmetic
 
 item.cosmeticslot = "hat"
 
+item.data = {
+	bone = 'ValveBiped.Bip01_Head1',
+	pos = Vector(0, 0, 5),
+	ang = Angle(30, 90, 0),
+}
+
 Fusion.inventory:RegisterItem(item)

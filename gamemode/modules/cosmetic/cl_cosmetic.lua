@@ -22,10 +22,12 @@ local function DrawMe(ply)
 
 	if not ply.cosmetic then return end
 
-	local data = ply.cosmetic
 
-	for k,v in pairs(data) do
+	for k,v in pairs(ply.cosmetic) do
 		local draw = Fusion.inventory:GetItem(v[1])
+
+		local ourData = draw.data
+		if not ourData then return end
 
 		local class = k
 
@@ -41,7 +43,7 @@ local function DrawMe(ply)
 
 
 			local infoModel = ply.drawcos[class]
-			local infoBone = ply:LookupBone('ValveBiped.Bip01_Head1')
+			local infoBone = ply:LookupBone(ourData.bone)
 
 
 			if (infoBone and infoBone > 0) then
@@ -53,13 +55,13 @@ local function DrawMe(ply)
 					local Up 		= boneAng:Up()
 					local Forward 	= boneAng:Forward()
 
-					boneAng:RotateAroundAxis(Right, 0)
-					boneAng:RotateAroundAxis(Up, 90)
-					boneAng:RotateAroundAxis(Forward, 0)
+					boneAng:RotateAroundAxis(Right, ourData.ang[1])
+					boneAng:RotateAroundAxis(Up, ourData.ang[2])
+					boneAng:RotateAroundAxis(Forward, ourData.ang[3])
 
-					bonePos = bonePos + 5 * Right
-					bonePos = bonePos + 5 * Forward
-					bonePos = bonePos + 5 * Up
+					bonePos = bonePos + ourData.pos[1] * Right
+					bonePos = bonePos + ourData.pos[2] * Forward
+					bonePos = bonePos + ourData.pos[3] * Up
 
 					infoModel:SetRenderOrigin(bonePos)
 					infoModel:SetRenderAngles(boneAng)
@@ -84,10 +86,6 @@ local function DrawMe(ply)
 end
 hook.Add( "PostPlayerDraw", "DrawName", DrawMe )
 
-
--- function GM:PostPlayerDraw(ply ) 
--- 	DrawMe(ply)
--- end
 
 local function MyCalcView( ply, pos, angles, fov )
 	local view = {}
