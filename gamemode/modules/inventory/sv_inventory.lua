@@ -92,8 +92,6 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 
 		pPlayer.cosmetic[data.cosmeticslot] = {data.id, data.model}
 
-		PrintTable(pPlayer.cosmetic)
-
 		Fusion.cosmetic:Sync(pPlayer)
 	end
 
@@ -276,6 +274,7 @@ concommand.Add("inventory", function(pPlayer)
 	Fusion.inventory:Add(pPlayer, 4, 5)
 	Fusion.inventory:Add(pPlayer, 8, 5)
 	Fusion.inventory:Add(pPlayer, 7, 5)
+	Fusion.inventory:Add(pPlayer, 9, 5)
 	pPlayer:StripWeapons()
 
 	print('loading inventory')
