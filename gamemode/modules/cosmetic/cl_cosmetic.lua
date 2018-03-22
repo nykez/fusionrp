@@ -18,16 +18,9 @@ function Fusion.cosmetic:Process(pPlayer, tblData)
 end
 
 local function DrawMe(ply)
-	if not IsValid( ply ) or not ply:Alive() then return end
+	if not IsValid( ply ) then return end
 
 	if not ply.cosmetic then return end
-
-	local attach_id = ply:LookupAttachment( 'eyes' )
-	if not attach_id then return end
-
-	local attach = ply:GetAttachment( attach_id )
-
-	if not attach then return end
 
 	local data = ply.cosmetic
 
