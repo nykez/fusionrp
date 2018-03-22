@@ -48,8 +48,8 @@ function PANEL:Init()
 	self:TDLib():Background(Color(32, 32, 32, 210)):Gradient(Color(35, 35, 35, 255))
 
 	self:CreateModel()
-	self:CreateInventory()
 	self:CreateWearables()
+	self:CreateInventory()
 
 	self:CreateWeapons()
 
@@ -91,10 +91,11 @@ end
 
 function PANEL:CreateInventory()
 	self.inventory_items = self:Add("DIconLayout")
-	self.inventory_items:SetSize(self:GetWide() * 0.33, self:GetTall() * 0.55)
-	self.inventory_items:SetPos(self.modelpnl:GetWide() + 10, self:GetTall() * 0.35)
+	self.inventory_items:SetSize(475, self:GetTall() * 0.55)
+	self.inventory_items:SetPos(self.modelpnl:GetWide() + 10, self.modelpnl:GetTall() * 0.45)
 	self.inventory_items:SetSpaceX(5)
 	self.inventory_items:SetSpaceY(5)
+	self.inventory_items:TDLib():Outline(Color(255, 0, 0))
 	self.inventory_items.items = {}
 
 	local MAX_COUNTER = 25
