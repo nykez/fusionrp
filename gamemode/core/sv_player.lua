@@ -26,6 +26,9 @@ function PLAYER:LoadProfile()
                 self:SetOrganization(tonumber(vars.organization))
                 self:SetPlayTime(tonumber(vars.playtime))
 
+                self:SetModel(vars.model)
+                Fusion.character:BodyGroups(self, util.JSONToTable(vars.modeldata))
+
                 //self.inventory = Fusion.util:Table(tostring(vars.inventory))
                 self.vehicles = Fusion.util:Table(tostring(vars.vehicles))
 

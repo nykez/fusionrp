@@ -57,6 +57,10 @@ net.Receive('Fusion.inventory.unequip', function()
 	print(slot)
 
 	LocalPlayer().inventory[type][slot] = nil
+
+	if type == "cosmetic" then
+		LocalPlayer().draw = nil
+	end
 end)
 
 function Fusion.inventory:FullSync(pPlayer, tbl)

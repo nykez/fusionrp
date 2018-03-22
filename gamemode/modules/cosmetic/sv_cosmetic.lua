@@ -16,9 +16,4 @@ function Fusion.cosmetic:Sync(pPlayer)
 	net.Start("fusion.net.cosmetic")
 		net.WriteTable(data)
 	net.Send(pPlayer)
-
-	print('sync data')
-
-	pPlayer:SetModel("models/Humans/Group01/Female_04.mdl")
-
 end

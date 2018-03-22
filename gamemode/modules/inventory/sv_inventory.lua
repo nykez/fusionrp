@@ -79,21 +79,28 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 		return
 	end
 
-	pPlayer.inventory[data.equipslot][count + 1] = item
-
-	if data.weapon then
-		pPlayer:Give(data.weapon)
-	end
-
 	if data.cosmeticslot then
 		if !pPlayer.cosmetic then
 			pPlayer.cosmetic = {}
 		end
 
+		if pPlayer.cosmetic[data.cosmeticslot] then
+			pPlayer:Notify("You already have a cosmetic in that slot on.")
+			return
+		end
+
 
 		pPlayer.cosmetic[data.cosmeticslot] = {data.id, data.model}
 
+		PrintTable(pPlayer.cosmetic)
+
 		Fusion.cosmetic:Sync(pPlayer)
+	end
+
+	pPlayer.inventory[data.equipslot][count + 1] = item
+
+	if data.weapon then
+		pPlayer:Give(data.weapon)
 	end
 
 	net.Start("Fusion.inventory.equip")
@@ -267,7 +274,7 @@ concommand.Add("inventory", function(pPlayer)
 	-- pPlayer.inventory = {}
 	Fusion.inventory:Add(pPlayer, 3, 5)
 	Fusion.inventory:Add(pPlayer, 4, 5)
-	Fusion.inventory:Add(pPlayer, 5, 5)
+	Fusion.inventory:Add(pPlayer, 8, 5)
 	Fusion.inventory:Add(pPlayer, 7, 5)
 	pPlayer:StripWeapons()
 

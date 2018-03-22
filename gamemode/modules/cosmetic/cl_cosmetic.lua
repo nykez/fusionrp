@@ -71,13 +71,13 @@ local function DrawMe(ply)
 		end
 	end
 
-
-	if ply.draw then
-		for k,v in pairs(ply.draw) do
+	if ply.drawcos then
+		for k,v in pairs(ply.drawcos) do
 			if not ply.cosmetic then return end
 			
 			if not ply.cosmetic[k] then
 				print("removing ent")
+				ply.drawcos[k] = nil
 				v:Remove()
 			end
 		end
