@@ -64,7 +64,7 @@ function PANEL:CreateModel()
 	self.modelpnl = self:Add("DModelPanel")
 	self.modelpnl:SetSize(self:GetWide() * 0.3, self:GetTall() * 0.65)
 	self.modelpnl:SetPos(5, self:GetTall() * 0.07)
-	self.modelpnl:SetModel("models/player/gman_high.mdl")
+	self.modelpnl:SetModel(LocalPlayer():GetModel())
 	//self.modelpnl:SetAlpha(0)
 	local mn, mx = self.modelpnl.Entity:GetRenderBounds()
 	local size = 0
@@ -82,20 +82,15 @@ function PANEL:CreateModel()
 	self.modelpnl:SetFOV( 32 )
 	self.modelpnl:SetCamPos( Vector( size, size, size ) )
 	self.modelpnl:SetLookAt( ( mn + mx ) * 0.5 )
-	-- self.modelpnl:TDLib():On("Paint", function(s)
-	-- 	surface.SetDrawColor(color_white)
-	-- 	surface.DrawOutlinedRect(0, 0, s:GetWide(), s:GetTall())
-	-- end)
 
 end
 
 function PANEL:CreateInventory()
 	self.inventory_items = self:Add("DIconLayout")
-	self.inventory_items:SetSize(475, self:GetTall() * 0.55)
-	self.inventory_items:SetPos(self.modelpnl:GetWide() + 10, self.modelpnl:GetTall() * 0.45)
+	self.inventory_items:SetSize(self:GetWide() * 0.33, self:GetTall() * 0.55)
+	self.inventory_items:SetPos(self.modelpnl:GetWide() + 10, self:GetTall() * 0.35)
 	self.inventory_items:SetSpaceX(5)
 	self.inventory_items:SetSpaceY(5)
-	self.inventory_items:TDLib():Outline(Color(255, 0, 0))
 	self.inventory_items.items = {}
 
 	local MAX_COUNTER = 25
