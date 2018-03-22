@@ -157,7 +157,42 @@ function PANEL:CreateWearables()
 		self.wearables.items[i]:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
 	end
 
+	self.wearables.equips = {}
+	if LocalPlayer().inventory and LocalPlayer().inventory.cosmetic then
+		for k,v in pairs(LocalPlayer().inventory.cosmetic) do
+			local data = Fusion.inventory:GetItem(v)
+			if not data then continue end
 
+			self.wearables.equips[k] = vgui.Create("DModelPanel", self.wearables.items[k])
+			self.wearables.equips[k]:Dock(FILL)
+			self.wearables.equips[k]:SetModel(data.model)
+
+			local mn, mx = self.wearables.equips[k].Entity:GetRenderBounds()
+			local size = 0
+			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+			size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+			-- local function self.OurWeapons[k]:LayoutEntity( ent )
+			-- 	return
+			-- end
+
+			self.wearables.equips[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.wearables.equips[k]:SetFOV( 45 )
+			self.wearables.equips[k]:SetCamPos( Vector( size, size, size ) )
+			self.wearables.equips[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.wearables.equips[k]:TDLib():On('OnMouseReleased', function(s)
+				net.Start('Fusion.inventory.unequip')
+					net.WriteString("cosmetic")
+					net.WriteInt(k, 16)
+				net.SendToServer()
+				s:Remove()
+				timer.Simple(0.2, function()
+					self:RebuildInventory()
+				end)
+			end)
+		end
+	end
 end
 
 local MAX_WEAPON = 2
@@ -170,8 +205,8 @@ function PANEL:CreateWeapons()
 	self.weapons:SetSpaceY(5)
 
 	self.weapons.items = {}
+	self.weapons.misc = {}
 
-	local counter = 1;
 	for i=1, MAX_WEAPON do
 		self.weapons.items[i] = self.weapons:Add("DPanel")
 		self.weapons.items[i]:SetSize(64 + 24, 64 + 24)
@@ -188,18 +223,16 @@ function PANEL:CreateWeapons()
 				end
 			end
 		end, {} )
-		counter = counter + 1
 	end
 
 	for i=1, MAX_MISC do
-		self.weapons.items[counter] = self.weapons:Add("DPanel")
-		self.weapons.items[counter]:SetSize(64 + 24, 64 + 24)
-		self.weapons.items[counter]:TDLib():Background(Color(24, 24, 24)):Outline(Color(46, 204, 113, 100))
-		counter = counter + 1
-		//print("[AFTER] Slot Counter: " .. counter)
+		self.weapons.misc[i] = self.weapons:Add("DPanel")
+		self.weapons.misc[i]:SetSize(64 + 24, 64 + 24)
+		self.weapons.misc[i]:TDLib():Background(Color(24, 24, 24)):Outline(Color(46, 204, 113, 100))
 	end
 
 	self.OurWeapons = {}
+	self.OurWeaponsMisc = {}
 	if LocalPlayer().inventory and LocalPlayer().inventory.equip then
 		for k,v in pairs(LocalPlayer().inventory.equip) do
 			local data = Fusion.inventory:GetItem(v)
@@ -240,12 +273,12 @@ function PANEL:CreateWeapons()
 		for k,v in pairs(LocalPlayer().inventory.misc) do
 			local data = Fusion.inventory:GetItem(v)
 			if not data then continue end
-			k = k + 2
-			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
-			self.OurWeapons[k]:Dock(FILL)
-			self.OurWeapons[k]:SetModel(data.model)
 
-			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			self.OurWeaponsMisc[k] = vgui.Create("DModelPanel", self.weapons.misc[k])
+			self.OurWeaponsMisc[k]:Dock(FILL)
+			self.OurWeaponsMisc[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeaponsMisc[k].Entity:GetRenderBounds()
 			local size = 0
 			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
 			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
@@ -255,11 +288,11 @@ function PANEL:CreateWeapons()
 			-- 	return
 			-- end
 
-			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
-			self.OurWeapons[k]:SetFOV( 45 )
-			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
-			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
-			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+			self.OurWeaponsMisc[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeaponsMisc[k]:SetFOV( 45 )
+			self.OurWeaponsMisc[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeaponsMisc[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeaponsMisc[k]:TDLib():On('OnMouseReleased', function(s)
 				net.Start('Fusion.inventory.unequip')
 					net.WriteString("misc")
 					net.WriteInt(k, 16)
@@ -283,6 +316,22 @@ function PANEL:ReBuildWeapons()
 		end
 	end
 
+	if self.OurWeaponsMisc then
+		for k,v in pairs(self.OurWeaponsMisc) do
+			if v then
+				v:Remove()
+			end
+		end
+	end
+
+	if self.wearables.equips then
+		for k,v in pairs(self.wearables.equips) do
+			v:Remove()
+		end
+	end
+
+	self.OurWeapons = {}
+	self.OurWeaponsMisc = {}
 	if LocalPlayer().inventory and LocalPlayer().inventory.equip then
 		for k,v in pairs(LocalPlayer().inventory.equip) do
 			local data = Fusion.inventory:GetItem(v)
@@ -318,16 +367,17 @@ function PANEL:ReBuildWeapons()
 			end)
 		end
 	end
+
 	if LocalPlayer().inventory and LocalPlayer().inventory.misc then
 		for k,v in pairs(LocalPlayer().inventory.misc) do
 			local data = Fusion.inventory:GetItem(v)
 			if not data then continue end
-			k = k + 2
-			self.OurWeapons[k] = vgui.Create("DModelPanel", self.weapons.items[k])
-			self.OurWeapons[k]:Dock(FILL)
-			self.OurWeapons[k]:SetModel(data.model)
 
-			local mn, mx = self.OurWeapons[k].Entity:GetRenderBounds()
+			self.OurWeaponsMisc[k] = vgui.Create("DModelPanel", self.weapons.misc[k])
+			self.OurWeaponsMisc[k]:Dock(FILL)
+			self.OurWeaponsMisc[k]:SetModel(data.model)
+
+			local mn, mx = self.OurWeaponsMisc[k].Entity:GetRenderBounds()
 			local size = 0
 			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
 			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
@@ -337,11 +387,11 @@ function PANEL:ReBuildWeapons()
 			-- 	return
 			-- end
 
-			self.OurWeapons[k].Entity:SetAngles(Angle(-15, 40, 0))
-			self.OurWeapons[k]:SetFOV( 45 )
-			self.OurWeapons[k]:SetCamPos( Vector( size, size, size ) )
-			self.OurWeapons[k]:SetLookAt( ( mn + mx ) * 0.5 )
-			self.OurWeapons[k]:TDLib():On('OnMouseReleased', function(s)
+			self.OurWeaponsMisc[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.OurWeaponsMisc[k]:SetFOV( 45 )
+			self.OurWeaponsMisc[k]:SetCamPos( Vector( size, size, size ) )
+			self.OurWeaponsMisc[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.OurWeaponsMisc[k]:TDLib():On('OnMouseReleased', function(s)
 				net.Start('Fusion.inventory.unequip')
 					net.WriteString("misc")
 					net.WriteInt(k, 16)
@@ -353,32 +403,84 @@ function PANEL:ReBuildWeapons()
 			end)
 		end
 	end
+
+		for k,v in pairs(LocalPlayer().inventory.cosmetic) do
+			local data = Fusion.inventory:GetItem(v)
+			if not data then continue end
+
+			self.wearables.equips[k] = vgui.Create("DModelPanel", self.wearables.items[k])
+			self.wearables.equips[k]:Dock(FILL)
+			self.wearables.equips[k]:SetModel(data.model)
+
+			local mn, mx = self.wearables.equips[k].Entity:GetRenderBounds()
+			local size = 0
+			size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+			size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+			size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+			-- local function self.OurWeapons[k]:LayoutEntity( ent )
+			-- 	return
+			-- end
+
+			self.wearables.equips[k].Entity:SetAngles(Angle(-15, 40, 0))
+			self.wearables.equips[k]:SetFOV( 45 )
+			self.wearables.equips[k]:SetCamPos( Vector( size, size, size ) )
+			self.wearables.equips[k]:SetLookAt( ( mn + mx ) * 0.5 )
+			self.wearables.equips[k]:TDLib():On('OnMouseReleased', function(s)
+				net.Start('Fusion.inventory.unequip')
+					net.WriteString("cosmetic")
+					net.WriteInt(k, 16)
+				net.SendToServer()
+				s:Remove()
+				timer.Simple(0.2, function()
+					self:RebuildInventory()
+				end)
+			end)
+		end
+
 end
 
 function PANEL:CreateHUD()
 	self.hud = self:Add("DPanel")
 	self.hud:SetPos(10, self:GetTall() * 0.85)
-	self.hud:SetSize(self:GetWide() * 0.2, self:GetTall() * 0.105)
+	self.hud:SetSize(self:GetWide() * 0.19, self:GetTall() * 0.105)
 	self.hud:TDLib():Background(Color(32, 32, 32, 255)):Outline(Color(64, 64, 64))
 
+	local ourHealth = 35
 	local health = self.hud:Add("DPanel")
 	health:Dock(TOP)
 	health:DockMargin(5, 5, 5, 0)
 	health:SetTall(25)
-	health:TDLib():Background(Color(46, 204, 113)):Outline(Color(54, 54, 54))
+	health:TDLib():On("Paint", function(s)
+		ourHealth = Lerp(3 * FrameTime(), ourHealth, LocalPlayer():Health())
+		surface.SetDrawColor(46, 204, 113)
+		surface.DrawRect(0, 0, ourHealth * 3.1, self:GetTall())
+	end)
 
 	
+	local ourHunger = 50
 	local hungry = self.hud:Add("DPanel")
 	hungry:Dock(TOP)
 	hungry:DockMargin(5, 5, 5, 0)
 	hungry:SetTall(25)
-	hungry:TDLib():Background(Color(230, 126, 34)):Outline(Color(54, 54, 54))
+	hungry:TDLib():On("Paint", function(s)
+		ourHunger = Lerp(4 * FrameTime(), ourHunger, LocalPlayer():Health())
+		surface.SetDrawColor(230, 126, 34)
+		surface.DrawRect(0, 0, ourHunger * 3.1, self:GetTall())
+	end)
 
+
+	local ourThrist = 25
 	local thrist = self.hud:Add("DPanel")
 	thrist:Dock(TOP)
 	thrist:DockMargin(5, 5, 5, 0)
 	thrist:SetTall(25)
-	thrist:TDLib():Background(Color(52, 152, 219)):Outline(Color(54, 54, 54))
+	thrist:TDLib():On("Paint", function(s)
+		ourThrist = Lerp(5 * FrameTime(), ourThrist, LocalPlayer():Health())
+		surface.SetDrawColor(52, 152, 219)
+		surface.DrawRect(0, 0, ourThrist * 3.1, self:GetTall())
+	end)
+
 end
 
 
@@ -479,6 +581,25 @@ function PANEL:SetInfoModel(strItemID, model, parent)
 		self.actionpnl.buttons["Equip"]:TDLib():Background(Color(40, 40, 40)):Outline(Color(64, 64, 64))
 		self.actionpnl.buttons["Equip"]:SetTextColor(Color(255, 255, 255))
 		self.actionpnl.buttons["Equip"]:On('DoClick', function(s)
+			net.Start('Fusion.inventory.equip')
+				net.WriteInt(data.id, 16)
+			net.SendToServer()
+			timer.Simple(0.1, function()
+				self:ReBuildWeapons()
+				self:RebuildInventory()
+			end)
+		end)
+		self.actionpnl:SetTall(self.infopanel:GetTall() * 0.28)
+	end
+
+	if data.cosmetic then
+		self.actionpnl.buttons["Wear"] = self.actionpnl:Add("DButton")
+		self.actionpnl.buttons["Wear"]:Dock(TOP)
+		self.actionpnl.buttons["Wear"]:DockMargin(5, 5, 5, 0)
+		self.actionpnl.buttons["Wear"]:SetText("Wear")
+		self.actionpnl.buttons["Wear"]:TDLib():Background(Color(40, 40, 40)):Outline(Color(64, 64, 64))
+		self.actionpnl.buttons["Wear"]:SetTextColor(Color(255, 255, 255))
+		self.actionpnl.buttons["Wear"]:On('DoClick', function(s)
 			net.Start('Fusion.inventory.equip')
 				net.WriteInt(data.id, 16)
 			net.SendToServer()

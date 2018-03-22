@@ -24,21 +24,26 @@ net.Receive('Fusion.inventory.unequip', function(len, pPlayer)
 	local type = net.ReadString()
 	local slot = net.ReadInt(16)
 
-	print(type, slot)
-
-
 	local item = Fusion.inventory:GetSlot(pPlayer, type, slot)
 
-	print(item)
 	item = Fusion.inventory:GetItem(item)
 
 	if not item then return end
 
-	if pPlayer:HasWeapon(item.weapon) then
-		pPlayer:StripWeapon(item.weapon)
+	if item.weapon then
+		if pPlayer:HasWeapon(item.weapon) then
+			pPlayer:StripWeapon(item.weapon)
+		end
 	end
 
 	pPlayer.inventory[type][slot] = nil
+
+	if item.cosmeticslot then
+		if pPlayer.cosmetic and pPlayer.cosmetic[item.cosmeticslot] then
+			pPlayer.cosmetic[item.cosmeticslot] = nil
+			Fusion.cosmetic:Sync(pPlayer)
+		end
+	end
 
 	net.Start('Fusion.inventory.unequip')
 		net.WriteString(type)
@@ -46,7 +51,6 @@ net.Receive('Fusion.inventory.unequip', function(len, pPlayer)
 	net.Send(pPlayer)
 
 	Fusion.inventory:Add(pPlayer, item.id, 1)
-	print("sent data")
 end)
 
 
@@ -75,8 +79,27 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 		return
 	end
 
+	if data.cosmeticslot then
+		if !pPlayer.cosmetic then
+			pPlayer.cosmetic = {}
+		end
+
+		if pPlayer.cosmetic[data.cosmeticslot] then
+			pPlayer:Notify("You already have a cosmetic in that slot on.")
+			return
+		end
+
+
+		pPlayer.cosmetic[data.cosmeticslot] = {data.id, data.model}
+
+		Fusion.cosmetic:Sync(pPlayer)
+	end
+
 	pPlayer.inventory[data.equipslot][count + 1] = item
-	pPlayer:Give(data.weapon)
+
+	if data.weapon then
+		pPlayer:Give(data.weapon)
+	end
 
 	net.Start("Fusion.inventory.equip")
 		net.WriteString(data.equipslot)
@@ -85,7 +108,6 @@ net.Receive('Fusion.inventory.equip',function (len, pPlayer)
 	net.Send(pPlayer)
 
 	Fusion.inventory:Remove(pPlayer, data.id)
-	print("Slot: " .. count + 1)
 end)
 
 function Fusion.inventory:GetSlot(pPlayer, type, slot)
@@ -250,8 +272,9 @@ concommand.Add("inventory", function(pPlayer)
 	-- pPlayer.inventory = {}
 	Fusion.inventory:Add(pPlayer, 3, 5)
 	Fusion.inventory:Add(pPlayer, 4, 5)
-	Fusion.inventory:Add(pPlayer, 5, 5)
-	Fusion.inventory:Add(pPlayer, 6, 5)
+	Fusion.inventory:Add(pPlayer, 8, 5)
+	Fusion.inventory:Add(pPlayer, 7, 5)
+	Fusion.inventory:Add(pPlayer, 9, 5)
 	pPlayer:StripWeapons()
 
 	print('loading inventory')

@@ -371,8 +371,12 @@ end
 
 vgui.Register("FusionCharMenu", PANEL, "EditablePanel")
 
-concommand.Add("char", function(player)
-	player:Notify("You can't do that right now. Try again later.")
+concommand.Add("newchar", function(player)
+	if fusionchar then
+		fusionchar:Remove()
+	end
+
+	fusionchar = vgui.Create("FusionCharMenu")
 end)
 
 net.Receive("Fusion.new.character", function()

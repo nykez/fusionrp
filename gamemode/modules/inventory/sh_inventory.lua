@@ -39,7 +39,10 @@ hook.Add("PostGamemodeLoaded", "FusionRP.LoadItems", Fusion.inventory.LoadItems)
 
 function Fusion.inventory:RegisterItem(itemTable)
 	if !itemTable or !itemTable.id then return end
-	if Fusion.inventory.cache[itemTable.id] then return end
+
+	// ENABLE THIS TO DISABLE LUA ITEM REFRESHING //
+	
+	//if Fusion.inventory.cache[itemTable.id] then return end
 
 	Fusion.inventory.cache[itemTable.id] = itemTable
 end
@@ -52,6 +55,10 @@ function Fusion.inventory:GetMaxSlots(slot)
 	return Fusion.inventory.maxslots[slot] or false
 end
 
+
 concommand.Add("refresh_inventory", function()
 	Fusion.inventory:LoadItems()
 end)
+
+
+Fusion.inventory:LoadItems()

@@ -8,9 +8,7 @@ net.Receive("Fusion.character.create",function(len, pPlayer)
 	local data = net.ReadTable()
 
 	if not data then return end
-	if not pPlayer.IsNew then return end
-
-	PrintTable(data)
+	//if not pPlayer.IsNew then return end
 
 	Fusion.character:CreateCharacter(pPlayer, data)
 
@@ -47,6 +45,7 @@ function Fusion.character:CreateCharacter(pPlayer, tblData)
 		ourModelData = util.TableToJSON(tblData.bodygroups)
 	end
 
+	print(model)
 	local updateObj = mysql:Update("player_data");
 		updateObj:Where("steam_id", pPlayer:SteamID());
 		updateObj:Update("model", model);
