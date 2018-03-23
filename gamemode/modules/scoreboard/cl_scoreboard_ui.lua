@@ -19,7 +19,6 @@ local PANEL = {}
 function PANEL:Init()
     self:SetSize(ScrW(), ScrH())
     self:Center()
-    self:ParentToHUD()
     self:SetZPos(400)
     self:SetMouseInputEnabled(true)
 
@@ -103,6 +102,11 @@ function PANEL:Populate()
         name:SetText(v:Nick())
         name:SetFont("Fusion_Scoreboard_Name")
         name:SetTextColor(color_white)
+
+        local test = self.rows[k]:Add("DButton")
+        test:Dock(RIGHT)
+        test:DockMargin(4, 4, 4, 4)
+        test:TDLib():ClearPaint():Circle(Color(25, 25, 25)):Text("X", "Trebuchet")
     end
 end
 
