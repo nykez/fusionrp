@@ -107,6 +107,15 @@ function PANEL:Populate()
         test:Dock(RIGHT)
         test:DockMargin(4, 4, 4, 4)
         test:TDLib():ClearPaint():Circle(Color(25, 25, 25)):Text("X", "Trebuchet")
+        test:On("OnCursorEntered", function(s)
+            self.rows[k]:SizeTo(-1, 75, 0.2, 0, 0.4, function() end)
+            self.rows[k]:Background(Color(36, 36, 36))
+        end)
+         test:On("OnCursorExited", function(s)
+            self.rows[k]:SizeTo(-1, 60, 0.2, 0, 0.4, function() end)
+            self.rows[k]:Background(Color(30, 30, 30))
+        end)
+
     end
 end
 
