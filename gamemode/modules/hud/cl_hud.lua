@@ -35,6 +35,8 @@ function GM:HUDAmmoPickedUp(Name) return false; end
 function GM:HUDDrawPickupHistory() return false; end
 
 local avatar
+
+local over = Material("gui/vignette.png")
 function DrawHUD()
 	if Fusion.property.panel then
         avatar:SetVisible(false)
@@ -101,5 +103,9 @@ function DrawHUD()
     ammo.y = stam.y + stam.h + 5
 
     draw.RoundedBox(6, ammo.x, ammo.y, ammo.w, ammo.h, Color(16, 16, 16))
+
+    -- surface.SetDrawColor(255, 255, 255, 255)
+    -- surface.SetMaterial(over)
+    -- surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
 end
 hook.Add("HUDPaint", "Fusion.HUDPaint", DrawHUD)

@@ -13,4 +13,5 @@ function Fusion.util:AddDownloads(strFolder)
 end
 
 Fusion.util:AddDownloads("f_phone")
+Fusion.util:AddDownloads("gui")
 ///
