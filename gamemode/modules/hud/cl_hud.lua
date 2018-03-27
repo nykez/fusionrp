@@ -104,8 +104,10 @@ function DrawHUD()
 
     draw.RoundedBox(6, ammo.x, ammo.y, ammo.w, ammo.h, Color(16, 16, 16))
 
-    -- surface.SetDrawColor(255, 255, 255, 255)
-    -- surface.SetMaterial(over)
-    -- surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+    if !Fusion.scoreboard.panel then
+        surface.SetDrawColor(255, 255, 255, 255)
+        surface.SetMaterial(over)
+        surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+    end
 end
 hook.Add("HUDPaint", "Fusion.HUDPaint", DrawHUD)
