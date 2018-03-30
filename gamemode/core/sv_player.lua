@@ -29,7 +29,7 @@ function PLAYER:LoadProfile()
                 self:SetModel(vars.model)
                 Fusion.character:BodyGroups(self, util.JSONToTable(vars.modeldata))
 
-                //self.inventory = Fusion.util:Table(tostring(vars.inventory))
+                self.inventory = Fusion.util:Table(tostring(vars.inventory))
                 self.vehicles = Fusion.util:Table(tostring(vars.vehicles))
 
                 hook.Run("Fusion.PlayerLoaded", self)
