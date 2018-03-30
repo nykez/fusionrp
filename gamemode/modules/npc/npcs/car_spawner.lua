@@ -13,7 +13,7 @@ npc.spawn = {
 	},
 
 	["rp_rockford_v2b"] = {
-		Vector(-4198, -669, 0)
+		Vector(-4199.316406, -684.886230, 0)
 	}
 }
 
@@ -30,9 +30,18 @@ npc.angle = {
 npc.use = function()
 	Fusion.dialog.Canvas:SetTitle('Car Dealer')
 
-	Fusion.dialog.Canvas:AddButton("I'm looking for a car.", Fusion.dialog.Close)
+	Fusion.dialog.Canvas:AddButton("I'm looking for a car.", npc.buy)
+	Fusion.dialog.Canvas:AddButton("What, do I look rich to you??", Fusion.dialog.Close)
 
 	Fusion.dialog.Canvas:Show()
+end
+
+npc.buy = function()
+	Fusion.dialog:Close()
+
+	if !Fusion.vehicles.panel then
+		Fusion.vehicles.panel = vgui.Create("FusionVehicles")
+	end
 end
 
 

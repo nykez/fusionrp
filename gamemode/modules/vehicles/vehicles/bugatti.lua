@@ -13,4 +13,4 @@ veh.model = "models/tdmcars/bug_veyronss.mdl"
 
 veh.script = "scripts/vehicles/TDMCars/veyronss.txt"
 
-Fusion.vehicles:RegisterVehicle(veh)
+Fusion.vehicles:Register(veh)

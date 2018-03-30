@@ -18,6 +18,20 @@ function ENT:Think()
 	for p, ply in pairs( player.GetAll() ) do
 	if ( ply:EyePos():Distance( self:EyePos() ) <= 120 ) then
 		self:SetEyeTarget( ply:EyePos() )
+
+		/* too instensive :(
+		local MyPos = self:GetPos()
+		local TargetPos = ply:EyePos()
+
+		local MyAng = self:GetAngles()
+		local TargetAng = ( MyPos - TargetPos ):Angle()
+		local AngDiff = math.AngleDifference( MyAng.y, TargetAng.y )
+
+		MyAng:RotateAroundAxis( self:GetUp(), (AngDiff - MyAng.y) - 180 )
+
+		self:ManipulateBoneAngles( self:LookupBone("ValveBiped.Bip01_Head1"), Angle(0,0,-MyAng.y) )
+		*/
+
 		break
 	end
 end

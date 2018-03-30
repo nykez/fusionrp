@@ -42,7 +42,7 @@ function PANEL:Init()
 
 	self:SetSize(ScrW(), ScrH())
 
-	self:MakePopup()
+	//self:MakePopup()
 	self:Center()
 
 	self:TDLib():Background(Color(32, 32, 32, 210)):Gradient(Color(35, 35, 35, 255))
@@ -690,5 +690,9 @@ concommand.Add("inventory_gui", function()
 		inventory:Remove()
 	end
 
-	inventory = vgui.Create("FusionInventory")
+	inventory = vgui.Create("FusionMenu")
 end)
+
+local data = {name = "Inventory", panel = "FusionInventory"}
+
+Fusion.menu:Add(data)

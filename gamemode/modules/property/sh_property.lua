@@ -114,6 +114,14 @@ function ENTITY:IsDoor()
 	return false
 end
 
+function PLAYER:HasProperty(id)
+	if Fusion.property.owners[id] == self then
+		return true
+	end
+
+	return false
+end
+
 hook.Add("InitPostEntity", "Fusion.InitPropertyDoors", function()
 	if SERVER then
 		timer.Simple(5, function()

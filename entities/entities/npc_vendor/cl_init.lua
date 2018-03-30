@@ -45,6 +45,7 @@ function ENT:DrawTranslucent()
 
 
 	cam.Start3D2D( pos, Angle( 0, ang.y, 90 ), 0.14 )
+	
 		surface.SetDrawColor(32,32,32,130)
 		surface.DrawRect(-(dX+32)/2,-dY-16,dX+32,dY+32)
 
