@@ -78,11 +78,11 @@ function PANEL:Populate()
             end
         end)
         self.rows[k]:On("OnCursorEntered", function(s)
-            s:SizeTo(-1, 75, 0.2, 0, 0.4, function() end)
+            s:SizeTo(-1, ScrH() * .047, 0.2, 0, 0.4, function() end)
             s:Background(Color(36, 36, 36))
         end)
         self.rows[k]:On("OnCursorExited", function(s)
-            s:SizeTo(-1, 60, 0.2, 0, 0.4, function() end)
+            s:SizeTo(-1, ScrH() * .041, 0.2, 0, 0.4, function() end)
             s:Background(Color(30, 30, 30))
         end)
 
@@ -102,23 +102,6 @@ function PANEL:Populate()
         name:SetText(v:Nick())
         name:SetFont("Fusion_Scoreboard_Name")
         name:SetTextColor(color_white)
-<<<<<<< HEAD
-=======
-
-        local test = self.rows[k]:Add("DButton")
-        test:Dock(RIGHT)
-        test:DockMargin(4, 4, 4, 4)
-        test:TDLib():ClearPaint():Circle(Color(25, 25, 25)):Text("X", "Trebuchet")
-        test:On("OnCursorEntered", function(s)
-            self.rows[k]:SizeTo(-1, 75, 0.2, 0, 0.4, function() end)
-            self.rows[k]:Background(Color(36, 36, 36))
-        end)
-         test:On("OnCursorExited", function(s)
-            self.rows[k]:SizeTo(-1, 60, 0.2, 0, 0.4, function() end)
-            self.rows[k]:Background(Color(30, 30, 30))
-        end)
-
->>>>>>> db2efa101aee495ff4f01a1e4d07c102b7b82c39
     end
 end
 
