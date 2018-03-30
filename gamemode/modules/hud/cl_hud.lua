@@ -37,7 +37,6 @@ function GM:HUDDrawPickupHistory() return false; end
 local avatar
 
 local over = Material("gui/vignette.png")
-<<<<<<< HEAD
 function DrawHUD()
 	if Fusion.property.panel then
         avatar:SetVisible(false)
@@ -110,12 +109,12 @@ function DrawHUD()
         surface.SetMaterial(over)
         surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
     end
-=======
+end
+
 local function DrawHUD()
     //surface.SetDrawColor(255, 255, 255, 255)
     //surface.SetMaterial(over)
     //surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
->>>>>>> 9700c4a9ad2c81e044303c3da803a28a7cf7d722
 end
 hook.Add("HUDPaint", "Fusion.PaintHUD", DrawHUD)
 

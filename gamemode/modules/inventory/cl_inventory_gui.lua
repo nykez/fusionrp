@@ -693,6 +693,8 @@ concommand.Add("inventory_gui", function()
 	inventory = vgui.Create("FusionMenu")
 end)
 
-local data = {name = "Inventory", panel = "FusionInventory"}
+local data = {name = "Inventory", panel = "FusionInventory", icon = {inventorypng, "gui/inventory.png" }}
 
 Fusion.menu:Add(data)
+
+////
