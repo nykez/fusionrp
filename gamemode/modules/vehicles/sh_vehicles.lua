@@ -24,11 +24,13 @@ function Fusion.vehicles:Register(tbl)
 	if !tbl.id then return end
 	Fusion.vehicles.cache[tbl.id] = tbl
 
-	if !Fusion.vehicles.make[tbl.make] then
-		Fusion.vehicles.make[tbl.make] = {}
+	local make = string.lower(tbl.make)
+
+	if !Fusion.vehicles.make[make] then
+		Fusion.vehicles.make[make] = {}
 	end
-	
-	Fusion.vehicles.make[tbl.make][tbl.id] = tbl
+
+	Fusion.vehicles.make[make][tbl.id] = tbl
 end
 
 function Fusion.vehicles:GetTable(id)
