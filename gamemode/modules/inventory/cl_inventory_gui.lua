@@ -690,7 +690,7 @@ concommand.Add("inventory_gui", function()
 		inventory:Remove()
 	end
 
-	inventory = vgui.Create("FusionMenu")
+	//inventory = vgui.Create("FusionMenu")
 end)
 
 local data = {name = "Inventory", panel = "FusionInventory", icon = {inventorypng, "gui/inventory.png" }}

@@ -79,9 +79,9 @@ function PANEL:Init()
 			surface.SetDrawColor(255, 255, 255, s.alpha)
 			surface.SetMaterial(v[1].icon[1])
 			surface.DrawTexturedRect(s:GetWide()*0.7-64, s:GetTall()*0.7-64, 64, 64)
+
 		end)
 		self.buttons[k]:On("OnCursorEntered", function(s)
-			print("yes")
 			s.alpha = 170
 		end)
 		self.buttons[k]:On("OnCursorExited", function(s)
@@ -89,11 +89,11 @@ function PANEL:Init()
 		end)
 	end
 
-	self.closebutton = self.container:Add('DButton')
-	self.closebutton:SetText("Close")
-	self.closebutton:TDLib():Background(Color(35, 35, 35))
-	self.closebutton:DockMargin(0, 10, 0, 0)
-	self.closebutton:SetSize(self.cache_container_w, 25)
+	-- self.closebutton = self.container:Add('DButton')
+	-- self.closebutton:SetText("Close")
+	-- self.closebutton:TDLib():Background(Color(35, 35, 35))
+	-- self.closebutton:DockMargin(0, 10, 0, 0)
+	-- self.closebutton:SetSize(self.cache_container_w, 25)
 end
 
 function PANEL:HidePanels()
@@ -101,7 +101,7 @@ function PANEL:HidePanels()
 		v:SetVisible(false)
 	end
 
-	self.closebutton:SetVisible(false)
+	-- self.closebutton:SetVisible(false)
 
 	self.mycontainer:SizeTo(1, self.container:GetTall(), 0.3, 0, 4, function()
 		self.mycontainer:SetVisible(false)
@@ -116,7 +116,7 @@ function PANEL:ShowPanels()
 	self.backbtn:SetVisible(false)
 
 
-	self.closebutton:SetVisible(true)
+	-- self.closebutton:SetVisible(true)
 
 	self.mycontainer:SetVisible(true)
 
@@ -145,11 +145,11 @@ function PANEL:CreateButton()
 end
 
 function PANEL:BuildPanel(ID, panel)
-	self:HidePanels()
-
 	if self.Active then
 		self.Active:SetVisible(false)
 	end
+	
+	self:HidePanels()
 
 	if self.PanelsBuilt[ID] then
 		self.PanelsBuilt[ID]:SetVisible(true)
@@ -179,3 +179,25 @@ Fusion.menu:Add(data)
 
 local data = {name = "Settings", panel = "FusionInventory", icon = {inventorypng, "gui/settings.png" }}
 Fusion.menu:Add(data)
+
+
+hook.Add( "OnSpawnMenuOpen", "SpawnMenuWhitelist", function()
+	if IsValid(mainmenu) then
+		mainmenu:SetVisible(true)
+		return
+	end
+
+	mainmenu = vgui.Create("FusionMenu")
+end )
+
+hook.Add( "OnSpawnMenuClose", "SpawnMenuWhitelist", function()
+	if IsValid(mainmenu) then
+		mainmenu:SetVisible(false)
+	else
+		mainmenu = nil
+	end
+end )
+
+concommand.Add("refreshmenu", function()
+	mainmenu = nil
+end)
