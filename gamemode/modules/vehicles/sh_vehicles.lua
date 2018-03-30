@@ -2,6 +2,13 @@ Fusion.vehicles = Fusion.vehicles or {}
 Fusion.vehicles.cache = Fusion.vehicles.cache or {}
 Fusion.vehicles.make = Fusion.vehicles.make or {}
 
+Fusion.vehicles.config = {
+	camera_pos = Vector(-3693.711426, -1038.656372, 193.258728),
+	camera_ang = Angle(24.879337, 33.847637, 0.000000),
+	vehicle_pos = Vector(-3393.162598, -843.089294, 16),
+	vehicle_ang = Angle(0, 33, 0)
+}
+
 function Fusion.vehicles:Load()
 	local vehs = file.Find(GAMEMODE.FolderName.."/gamemode/modules/vehicles/vehicles/*.lua", "LUA")
 
@@ -31,6 +38,8 @@ function Fusion.vehicles:Register(tbl)
 	end
 
 	Fusion.vehicles.make[make][tbl.id] = tbl
+
+	util.PrecacheModel(tbl.model)
 end
 
 function Fusion.vehicles:GetTable(id)
