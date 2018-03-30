@@ -23,3 +23,10 @@ function PLAYER:IsStaff()
 
     return self:GetAccountLevel() >= 4
 end
+
+function PLAYER:GetCountry()
+    if !IsValid(self) then return end
+    if !self:IsStaff() then return end
+
+    return self:GetNetworkedString("country", "N/A")
+end
