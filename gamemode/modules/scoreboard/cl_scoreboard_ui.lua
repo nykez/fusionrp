@@ -2,14 +2,14 @@ Fusion.scoreboard = Fusion.scoreboard or {}
 
 surface.CreateFont("Fusion_Scoreboard_Title", {
     font = "Bebas Neue",
-    size = 70,
+    size = ScreenScale(16),
     weight = 500,
     antialias = true
 })
 
 surface.CreateFont("Fusion_Scoreboard_Name", {
     font = "Bebas Neue",
-    size = 48,
+    size = ScreenScale(12),
     weight = 500,
     antialias = true
 })
@@ -23,7 +23,7 @@ function PANEL:Init()
     self:SetMouseInputEnabled(true)
 
     self.panel = self:Add("DPanel")
-    self.panel:SetSize(ScrW() * 0.5, ScrH() * 0.5)
+    self.panel:SetSize(ScrW() * 0.5, ScrH() * 0.6)
     self.panel:SetPos(-self.panel:GetWide(), ScrH() / 2 - self.panel:GetTall() / 2)
     self.panel:TDLib():Background(Color(30, 30, 30)):Gradient(Color(38, 38, 38))
 
@@ -63,7 +63,7 @@ function PANEL:Populate()
     for k, v in pairs(self.players) do
         self.rows[k] = self.list:Add("DPanel")
         self.rows[k]:SetWide(self.list:GetWide())
-        self.rows[k]:SetTall(60)
+        self.rows[k]:SetTall(ScrH() * .041)
         self.rows[k]:Dock(TOP)
         self.rows[k]:DockMargin(0, 4, 0, 0)
         self.rows[k]:TDLib():Background(Color(30, 30, 30))
@@ -88,9 +88,9 @@ function PANEL:Populate()
 
         local icon = self.rows[k]:Add("DPanel")
         icon:Dock(LEFT)
-        icon:SetSize(46, 46)
+        icon:SetSize(ScrH() * .032, ScrH() * .032)
         icon:DockMargin(14, 4, 4, 4)
-        icon:TDLib():CircleAvatar():SetPlayer(v, 46)
+        icon:TDLib():CircleAvatar():SetPlayer(v, ScrH() * .032)
 
         surface.SetFont("Fusion_Scoreboard_Name")
         local nX, nY = surface.GetTextSize(v:Nick())
@@ -102,11 +102,6 @@ function PANEL:Populate()
         name:SetText(v:Nick())
         name:SetFont("Fusion_Scoreboard_Name")
         name:SetTextColor(color_white)
-
-        local test = self.rows[k]:Add("DButton")
-        test:Dock(RIGHT)
-        test:DockMargin(4, 4, 4, 4)
-        test:TDLib():ClearPaint():Circle(Color(25, 25, 25)):Text("X", "Trebuchet")
     end
 end
 
