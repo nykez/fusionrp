@@ -58,6 +58,10 @@ function PANEL:Init()
 	self:CreateInfoPanel()
 
 	//self:CreateView()
+
+	self.OnFocusChanged = function(bool)
+		print(bool)
+	end
 end
 
 function PANEL:CreateModel()

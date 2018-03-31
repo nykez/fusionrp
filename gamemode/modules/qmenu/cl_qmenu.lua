@@ -4,6 +4,7 @@ Fusion.menu = Fusion.menu or {}
 Fusion.menu.items = Fusion.menu.items or {}
 
 
+
 function Fusion.menu:Add(tblData)
 	Fusion.menu.items[tblData.name] = {
 		tblData
@@ -25,8 +26,9 @@ function Fusion.menu:GetByID(id)
 end
 
 
-local PANEL = {}
+local PANEL = {} 
 
+local arrow = Material("gui/right-arrow.png", "noclamp smooth")
 
 function PANEL:Init()
 	self:SetSize(ScrW(), ScrH())
@@ -135,12 +137,18 @@ function PANEL:CreateButton()
 	end
 
 	self.backbtn = self:Add('DButton')
-	self.backbtn:SetSize(130, 25)
+	self.backbtn:SetSize(64, 32)
 	self.backbtn:SetPos(1, 1)
 	self.backbtn:MoveToFront()
-	self.backbtn:SetText("<--")
+	self.backbtn.Paint = function() end
+	self.backbtn:SetText(" ")
 	self.backbtn:TDLib():On('DoClick', function()
 		self:ShowPanels()
+	end)
+	self.backbtn:On('Paint', function(s)
+		surface.SetDrawColor(255, 255, 255)
+		surface.SetMaterial(arrow)
+		surface.DrawTexturedRect(0, 0, s:GetWide(), s:GetTall())
 	end)
 end
 
@@ -148,7 +156,7 @@ function PANEL:BuildPanel(ID, panel)
 	if self.Active then
 		self.Active:SetVisible(false)
 	end
-	
+
 	self:HidePanels()
 
 	if self.PanelsBuilt[ID] then
@@ -183,8 +191,7 @@ Fusion.menu:Add(data)
 
 hook.Add( "OnSpawnMenuOpen", "SpawnMenuWhitelist", function()
 	if IsValid(mainmenu) then
-		mainmenu:SetVisible(true)
-		return
+		mainmenu:Remove()
 	end
 
 	mainmenu = vgui.Create("FusionMenu")
@@ -192,7 +199,8 @@ end )
 
 hook.Add( "OnSpawnMenuClose", "SpawnMenuWhitelist", function()
 	if IsValid(mainmenu) then
-		mainmenu:SetVisible(false)
+		mainmenu:Remove()
+		mainmenu = nil
 	else
 		mainmenu = nil
 	end
