@@ -33,6 +33,19 @@ function Fusion.inventory:LoadItems()
 		include(path)
 	end
 
+	local cars = file.Find(GAMEMODE.FolderName.."/gamemode/modules/shops/shop/*.lua", "LUA")
+
+	for k, v in pairs(cars) do
+		local path = GAMEMODE.FolderName.."/gamemode/modules/shops/shop/"..v
+
+
+		if SERVER then
+			AddCSLuaFile(path)
+		end
+
+		include(path)
+	end
+
 	MsgN("[Fusion RP] Loaded all items")
 end
 hook.Add("PostGamemodeLoaded", "FusionRP.LoadItems", Fusion.inventory.LoadItems)
@@ -59,6 +72,3 @@ end
 concommand.Add("refresh_inventory", function()
 	Fusion.inventory:LoadItems()
 end)
-
-
-Fusion.inventory:LoadItems()

@@ -182,6 +182,11 @@ end
 
 vgui.Register("FusionMenu", PANEL, "EditablePanel")
 
+local data = {name = "Inventory", panel = "FusionInventory", icon = {inventorypng, "gui/inventory.png" }}
+
+Fusion.menu:Add(data)
+
+
 local data = {name = "Organization", panel = "FusionInventory", icon = {inventorypng, "gui/gang.png" }}
 Fusion.menu:Add(data)
 
