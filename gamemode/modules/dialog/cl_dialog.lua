@@ -24,7 +24,9 @@ function PANEL:Init()
 	self:SetWide(ScrW() * 0.3)
 	self:SetTall(ScrW() * 0.12)
 
-	self:Center()
+	self:Dock(BOTTOM)
+	local sizeW = self:GetWide()
+	self:DockMargin(sizeW+50, 0, sizeW+50, ScrH()*0.1)
 
 	self.background = self:Add("DPanel")
 	self.background:TDLib():Background(Color(30, 30, 30, 255)):Gradient(Color(35, 35, 35))
