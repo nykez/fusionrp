@@ -93,7 +93,7 @@ veh.name = "Mercedes-Benz GL-450"
 
 veh.price = 15
 
-veh.model = "models/skyautomotive/mercedes/mb_gl450.mdl"
+veh.model = "models/skyautomotive/mb_gl450.mdl"
 
 veh.script = "scripts/vehicles/skyautos/mb_gl450.txt"
 

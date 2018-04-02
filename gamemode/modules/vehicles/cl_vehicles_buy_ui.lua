@@ -103,6 +103,12 @@ function PANEL:ShowCategory(tbl, name)
             end)
         end
 
+        if IsValid(self.confirm) then
+            self.confirm:MoveTo(ScrW() / 2 - self.confirm:GetWide() / 2, ScrH(), 0.4, 0, 0.2, function()
+                self.confirm:Remove()
+            end)
+        end
+
         self.details:MoveTo(-self.details:GetWide(), ScrH() - self.details:GetTall(), 0.4, 0, 0.2, function()
             for k, v in pairs(self.veh) do
                 v:Remove()
@@ -117,6 +123,7 @@ function PANEL:ShowCategory(tbl, name)
     end)
 
     for k, v in pairs(tbl) do
+        //if LocalPlayer():HasVehicle(v.id) then continue end
         self.veh[k] = self.panel:Add("DButton")
         self.veh[k]:TDLib():ClearPaint()
         self.veh[k]:SetTall(ScrH() * .027)
@@ -129,6 +136,7 @@ function PANEL:ShowCategory(tbl, name)
             self.selected = v
             self:MakeVehicle(self.selected)
             self:ShowCustomization()
+            self:ShowBuy(s.vehicle.price)
         end)
     end
 end
@@ -165,6 +173,38 @@ function PANEL:ShowCustomization()
     self.paint:DockMargin(5, 5, 5, 0)
     self.paint:SetAlphaBar(false)
     self.paint:SetColor(Color(255, 255, 255))
+end
+
+function PANEL:ShowBuy(price)
+    if IsValid(self.confirm) then
+        self.confirm:Remove()
+    end
+
+    self.confirm = self:Add("DPanel")
+    self.confirm:SetSize(ScrW() * .078, ScrH() * .069)
+    self.confirm:SetPos(ScrW() / 2 - self.confirm:GetWide() / 2, ScrH())
+    self.confirm:TDLib():ClearPaint():Background(Color(30, 30, 30))
+    self.confirm:MoveTo(ScrW() / 2 - self.confirm:GetWide() / 2, ScrH() - self.confirm:GetTall(), 0.4, 0, 0.2, function() end)
+
+    self.buy = self.confirm:Add("DButton")
+    self.buy:Dock(FILL)
+    self.buy:DockMargin(5, 5, 5, 5)
+    self.buy:SetText("")
+    self.buy:TDLib():ClearPaint():Background(Color(20, 20, 20)):FadeHover(Color(25, 25, 25))
+    self.buy:DualText("Purchase", "Fusion_Dealer_Title", Color(255, 255, 255), "$" .. price, "Fusion_Dealer_Button", Color(80, 255, 80), TEXT_ALIGN_CENTER)
+    self.buy:On("DoClick", function(s)
+        net.Start("Fusion.vehicles.buy")
+            net.WriteString(self.selected.id)
+
+            if IsValid(self.paint) then
+                net.WriteColor(self.paint:GetColor())
+            else
+                net.WriteColor(Color(255, 255, 255))
+            end
+        net.SendToServer()
+
+        self:Close()
+    end)
 end
 
 function PANEL:MakeVehicle(tbl)
@@ -211,15 +251,19 @@ function PANEL:Think()
     end
 
 	if (input.IsKeyDown(KEY_F1)) then
-		self:Remove()
-		Fusion.vehicles.panel = nil
-        isViewingCar = nil
-
-        if self.vehicle then
-            self.vehicle:Remove()
-            self.vehicle = nil
-        end
+		self:Close()
 	end
+end
+
+function PANEL:Close()
+    self:Remove()
+    Fusion.vehicles.panel = nil
+    isViewingCar = nil
+
+    if IsValid(self.vehicle) then
+        self.vehicle:Remove()
+        self.vehicle = nil
+    end
 end
 
 vgui.Register("FusionVehicles", PANEL, "EditablePanel")
