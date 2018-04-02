@@ -64,3 +64,20 @@ veh.model = "models/crsk_autos/honda/nsx_2017.mdl"
 veh.script = "scripts/vehicles/crsk_autos/crsk_honda_nsx_2017.txt"
 
 Fusion.vehicles:Register(veh)
+
+
+local veh = {}
+
+veh.id = "hon_cbr"
+
+veh.make = 'Honda'
+
+veh.name = "Honda CBR 600"
+
+veh.price = 15
+
+veh.model = "models/tdmcars/honda_motorcycle.mdl"
+
+veh.script = "scripts/vehicles/fpv/hondacbrr.txt"
+
+Fusion.vehicles:Register(veh)
