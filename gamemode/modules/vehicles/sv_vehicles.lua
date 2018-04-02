@@ -1,28 +1,39 @@
 Fusion.vehicles = Fusion.vehicles or {}
 Fusion.vehicles.cache = Fusion.vehicles.cache or {}
+Fusion.vehicles.make = Fusion.vehicles.make or {}
 
 util.AddNetworkString("Fusion.vehicles.sync")
+util.AddNetworkString("Fusion.vehicles.buy")
 
 function Fusion.vehicles:Purchase(ply, id, color)
 	if not ply then return end
 	if not id then return end
 
 	local veh = Fusion.vehicles:GetTable(id)
-
 	if not veh then return end
 
-	if ply.vehicles[id] then return end
+	local price = veh.price
 
-	if ply:GetWallet() < veh.price then return end
+	if color != Color(255, 255, 255) then
+		price = price + self.config.paint_price
+	end
+
+	if ply:HasVehicle(id) then return end
+
+	if ply:GetBank() < price then return end
 
 	ply.vehicles[id] = {
-		color = Color(255, 255, 255),
+		color = color,
 		skin = 0,
 		bodygroups = {}
 	}
 
-	self:Sync(pPlayer)
-	self:Save(pPlayer)
+	ply:TakeBank(price)
+
+	ply:Notify("You bought the " .. veh.name .. " for $" .. price .. "!")
+
+	self:Sync(ply)
+	self:Save(ply)
 end
 
 function Fusion.vehicles:Sell(ply, id)
@@ -32,7 +43,7 @@ function Fusion.vehicles:Sell(ply, id)
 	local veh = Fusion.vehicles:GetTable(id)
 	if !veh then return end
 
-	if ply.vehicles[id] then return end
+	if !ply:HasVehicle(id) then return end
 
 	ply:AddBank(math.Round(veh.price / 2))
 
@@ -63,3 +74,11 @@ function Fusion.vehicles:Save(pPlayer)
 		updateObj:Where("steam_id", pPlayer:SteamID())
 	updateObj:Execute();
 end
+
+net.Receive("Fusion.vehicles.buy", function(len, ply)
+	Fusion.vehicles:Purchase(ply, net.ReadString(), net.ReadColor())
+end)
+
+net.Receive("Fusion.vehicles.sell", function(len, ply)
+	Fusion.vehicles:Sell(ply, net.ReadInt(16))
+end)

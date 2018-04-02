@@ -6,7 +6,8 @@ Fusion.vehicles.config = {
 	camera_pos = Vector(-3693.711426, -1038.656372, 193.258728),
 	camera_ang = Angle(24.879337, 33.847637, 0.000000),
 	vehicle_pos = Vector(-3393.162598, -843.089294, 16),
-	vehicle_ang = Angle(0, 33, 0)
+	vehicle_ang = Angle(0, 33, 0),
+	paint_price = 1000
 }
 
 function Fusion.vehicles:Load()
@@ -48,6 +49,14 @@ end
 
 function Fusion.vehicles:GetAll()
 	return Fusion.vehicles.cache or {}
+end
+
+function PLAYER:HasVehicle(id)
+	if self.vehicles[id] then
+		return true
+	end
+
+	return false
 end
 
 function ENTITY:GetVehicleOwner()
