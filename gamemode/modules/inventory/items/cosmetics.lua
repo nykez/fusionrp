@@ -14,6 +14,8 @@ item.equipslot = Fusion.inventory.slots.cosmetic
 
 item.cosmeticslot = "hat"
 
+item.price = 50
+
 item.data = {
 	bone = 'ValveBiped.Bip01_Head1',
 	pos = Vector(0, 3, 0),
@@ -38,6 +40,8 @@ item.equipslot = Fusion.inventory.slots.cosmetic
 
 item.cosmeticslot = "hat"
 
+item.price = 50
+
 item.data = {
 	bone = 'ValveBiped.Bip01_Head1',
 	pos = Vector(0, 3, 0),
@@ -58,6 +62,8 @@ item.model = "models/gmod_tower/jetpack.mdl"
 item.desc = "This will make you very cool... lol."
 
 item.cosmetic = true
+
+item.price = 50
 
 item.equipslot = Fusion.inventory.slots.cosmetic
 

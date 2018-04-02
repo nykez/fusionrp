@@ -14,4 +14,6 @@ item.weapon = "weapon_ar2"
 
 item.equipslot = Fusion.inventory.slots.weapon
 
+item.price = 50
+
 Fusion.inventory:RegisterItem(item)
