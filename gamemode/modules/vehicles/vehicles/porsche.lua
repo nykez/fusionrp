@@ -42,7 +42,7 @@ veh.name = "Porsche 918"
 
 veh.price = 15
 
-veh.model = "models/senrty/918.mdl"
+veh.model = "models/sentry/918.mdl"
 
 veh.script = "scripts/vehicles/sentry/918.txt"
 
@@ -59,7 +59,7 @@ veh.name = "Porsche GT4 911"
 
 veh.price = 15
 
-veh.model = "models/senrty/gt4.mdl"
+veh.model = "models/sentry/gt4.mdl"
 
 veh.script = "scripts/vehicles/sentry/997.txt"
 
