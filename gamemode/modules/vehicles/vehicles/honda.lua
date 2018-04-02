@@ -17,23 +17,6 @@ Fusion.vehicles:Register(veh)
 
 local veh = {}
 
-veh.id = "hon_97tyr"
-
-veh.make = 'Honda'
-
-veh.name = "Honda '97 Civic Type R"
-
-veh.price = 15
-
-veh.model = "models/tdmcars/hon_civic97.mdl"
-
-veh.script = "scripts/vehicles/tdmcars/civic97.txt"
-
-Fusion.vehicles:Register(veh)
-
-
-local veh = {}
-
 veh.id = "hon_typer"
 
 veh.make = 'Honda'

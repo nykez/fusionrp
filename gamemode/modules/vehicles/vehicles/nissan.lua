@@ -98,3 +98,20 @@ veh.model = "models/tdmcars/nissan_gtr.mdl"
 veh.script = "scripts/vehicles/tdmcars/gtr.txt"
 
 Fusion.vehicles:Register(veh)
+
+
+local veh = {}
+
+veh.id = "nissan_sileighty"
+
+veh.make = 'Nissan'
+
+veh.name = "Nissan Sileighty"
+
+veh.price = 15
+
+veh.model = "models/lonewolfie/nissan_sileighty.mdl"
+
+veh.script = "scripts/vehicles/lwcars/nissan_sileighty.txt"
+
+Fusion.vehicles:Register(veh)
