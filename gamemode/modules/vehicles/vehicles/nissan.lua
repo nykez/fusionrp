@@ -8,9 +8,9 @@ veh.name = "Nissan Skyline R32"
 
 veh.price = 15
 
-veh.model = "models/crsk_autos/nissan/skyline_r32_gtr_custom.mdl"
+veh.model = "models/lonewolfie/nis_skyline_r32.mdl"
 
-veh.script = "scripts/vehicles/crsk_autos/crsk_nissan_skyline_r32_gtr_custom.txt"
+veh.script = "scripts/vehicles/lwcars/nis_skyline_r32.txt"
 
 Fusion.vehicles:Register(veh)
 
