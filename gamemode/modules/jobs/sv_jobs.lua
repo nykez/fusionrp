@@ -24,6 +24,8 @@ function Fusion.jobs:Join(ply, id)
         return
     end
 
+    job.onJoin(ply)
+
     ply.playerModel = ply:GetModel()
     ply.jobModel = job.models[1]
 
@@ -35,6 +37,11 @@ end
 function Fusion.jobs:Quit(ply)
     if !ply:Alive() then return end
     if !ply:Employed() then return end
+
+    local job = Fusion.jobs.cache[id]
+    if not job then return end
+    
+    job.onQuit(ply)
 
     ply:SetModel(ply.playerModel)
     ply:SetTeam(TEAM_CITIZEN)
