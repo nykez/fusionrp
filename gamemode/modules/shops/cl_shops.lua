@@ -33,6 +33,11 @@ function PANEL:Init()
 	self.container = self:Add("DScrollPanel")
 	self.container:Dock(FILL)
 
+	local sbar = self.container:GetVBar()
+	sbar:TDLib():Background(Color(54, 54, 54))
+	sbar.btnGrip:TDLib():Background(Color(75, 75, 75))
+
+
 	self.cart = self:Add("DScrollPanel")
 	self.cart:Dock(RIGHT)
 	self.cart:SetWide(self:GetWide()*0.3)
@@ -44,6 +49,22 @@ function PANEL:Init()
 	self.purchase:SetText("Purchase")
 	self.purchase:TDLib():Background(Color(231, 76, 60))
 	self.purchase:SetTextColor(color_white)
+	self.purchase:On('DoClick', function(s)
+		if self.cost and !LocalPlayer():CanAfford(self.cost) then
+			LocalPlayer():Notify("You can't afford this cart.")
+			return
+		end
+
+		if !self.checkout then return end
+		
+		net.Start("Fusion.shops.purchase")
+			net.WriteTable(self.checkout)
+			net.WriteInt(self.id, 16)
+		net.SendToServer()
+
+		self:Remove()
+		shopmenu = nil
+	end)
 
 	self.cart:DockMargin(0, 0, 0, self:GetTall() * (1 - 0.944))
 
@@ -60,17 +81,18 @@ function PANEL:LoadItems(dataItems)
 		self.items[k]:Dock(TOP)
 		self.items[k]:SetTall(65)
 		self.items[k]:DockMargin(5, 5, 5, 0)
-		self.items[k]:TDLib():Background(Color(40, 40, 40))
-		self.items[k]:Text(item.name)
+		self.items[k]:TDLib():Background(Color(40, 40, 40)):Outline(Color(65, 65, 65))
+		self.items[k]:DualText(item.name, nil, color_white, item.desc, nil, Color(100, 100, 100))
 
 
 		self.items[k].addbtn = self.items[k]:Add("DButton")
 		self.items[k].addbtn:Dock(RIGHT)
+		self.items[k].addbtn:DockMargin(0, 5, 5, 5)
 		self.items[k].addbtn:SetText("Add")
 		self.items[k].addbtn:TDLib():Background(Color(30, 30, 30)):FadeHover(Color(35, 35, 35))
 		self.items[k].addbtn:SetTextColor(Color(72, 72, 72))
 		self.items[k].addbtn:On("DoClick", function(s)
-			self:AddItem(k, math.random(25, 500))
+			self:AddItem(k, item.price, item.name)
 		end)
 
 		self.items[k].model = self.items[k]:Add("DModelPanel")
@@ -80,21 +102,37 @@ function PANEL:LoadItems(dataItems)
 	end
 end
 
-function PANEL:AddItem(id, intCost)
+function PANEL:AddItem(id, intCost, ourItem)
 	if (!self.first) then
 		self.purchase:TDLib():Background(Color(46, 204, 113))
 		self.first = true
 	end
 
+	table.insert(self.checkout, id)
+
+	local id = #self.checkout
+
 	local item = self.cart:Add("DPanel")
 	item:Dock(TOP)
 	item:DockMargin(5, 0, 5, 5)
-	item:SetTall(40)
+	item:SetTall(50)
+	item:TDLib():Background(Color(27, 27, 27)):Outline(Color(72, 72, 72)):Text(ourItem)
+	item.ourID = id
+	item.cost = intCost
+	item:On('OnMouseReleased', function(s)
+		self.checkout[s.ourID] = nil
+		self.cost = self.cost - s.cost
+		self.purchase:SetText("Purchase ($"..self.cost..")")
+		s:Remove()
+	end)
 
 	self.cost = self.cost + intCost
 
 	self.purchase:SetText("Purchase ($"..self.cost..")")
 
+	if not LocalPlayer():CanAfford(self.cost) then
+		self.purchase:SetTextColor(Color(255, 0, 0))
+	end
 end
 
 function PANEL:Think()
@@ -107,7 +145,6 @@ vgui.Register("FusionShopMenu", PANEL, "EditablePanel")
 
 
 concommand.Add("shop", function()
-	PrintTable(Fusion.shops.database)
 	if IsValid(shopmenu) then
 		shopmenu:Remove()
 		shopmenu = nil

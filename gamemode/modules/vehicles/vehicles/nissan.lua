@@ -76,7 +76,7 @@ veh.name = "Nissan Silvia S15"
 
 veh.price = 15
 
-veh.model = "models/senrty/silvia.mdl"
+veh.model = "models/sentry/silvia.mdl"
 
 veh.script = "scripts/vehicles/senrty/silvia.txt"
 
