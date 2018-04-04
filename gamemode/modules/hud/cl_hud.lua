@@ -163,7 +163,23 @@ local function DoorHUD()
 				ownText = "Unknown"
 			end
 
-			draw.SimpleTextOutlined(ownText, "Fusion_HUDFont", x, y + 30, Color(255, 251, 98, (255 - distM * 12.75)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(20, 20, 20, (255 - distM * 12.75)))
+            if ownText == "For Rent" then
+               draw.SimpleTextOutlined("Hold 'E' for more options", "Fusion_HUDFont", x, y + 30, Color(255, 251, 98, (255 - distM * 12.75)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(20, 20, 20, (255 - distM * 12.75)))
+                if LocalPlayer():KeyDown(IN_USE) then
+                   if inContext then return end
+                    inContext = vgui.Create("FusionContext")
+                elseif LocalPlayer():KeyReleased(IN_USE) then
+                    if (inContext) then
+                        inContext:Remove()
+                        inContext = nil
+                        print("context closed")
+                    end
+                    //
+               end
+            else
+                draw.SimpleTextOutlined(ownText, "Fusion_HUDFont", x, y + 30, Color(255, 251, 98, (255 - distM * 12.75)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(20, 20, 20, (255 - distM * 12.75)))
+            end
+
 		end
 	end
 end
