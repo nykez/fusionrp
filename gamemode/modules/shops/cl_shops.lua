@@ -36,6 +36,8 @@ function PANEL:Init()
 	local sbar = self.container:GetVBar()
 	sbar:TDLib():Background(Color(54, 54, 54))
 	sbar.btnGrip:TDLib():Background(Color(75, 75, 75))
+	sbar.btnUp:TDLib():Background(Color(125, 125, 125)):Text("^", nil, nil, 0, 5)
+	sbar.btnDown:TDLib():Background(Color(125, 125, 125))
 
 
 	self.cart = self:Add("DScrollPanel")
@@ -142,13 +144,3 @@ function PANEL:Think()
 end
 
 vgui.Register("FusionShopMenu", PANEL, "EditablePanel")
-
-
-concommand.Add("shop", function()
-	if IsValid(shopmenu) then
-		shopmenu:Remove()
-		shopmenu = nil
-	end
-
-	shopmenu = vgui.Create("FusionShopMenu")
-end)
