@@ -123,7 +123,7 @@ function PANEL:ShowCategory(tbl, name)
     end)
 
     for k, v in pairs(tbl) do
-        //if LocalPlayer():HasVehicle(v.id) then continue end
+        //if (LocalPlayer():HasVehicle(v.id)) then continue end
         self.veh[k] = self.panel:Add("DButton")
         self.veh[k]:TDLib():ClearPaint()
         self.veh[k]:SetTall(ScrH() * .027)
@@ -152,6 +152,7 @@ function PANEL:ShowCustomization()
     self.cust:SetPos(ScrW(), ScrH() - self.cust:GetTall())
     self.cust:Background(Color(30, 30, 30))
     self.cust:MoveTo(ScrW() - self.cust:GetWide(), ScrH() - self.cust:GetTall(), 0.4, 0, 0.2, function() end)
+    self.cust.bodygroups = {}
 
     self.c_title = self.cust:Add("DLabel")
     self.c_title:Dock(TOP)
@@ -173,6 +174,45 @@ function PANEL:ShowCustomization()
     self.paint:DockMargin(5, 5, 5, 0)
     self.paint:SetAlphaBar(false)
     self.paint:SetColor(Color(255, 255, 255))
+
+    if IsValid(self.vehicle) then
+        local bodygroups = self.vehicle:GetBodyGroups()
+
+        self.bodybuttons = {}
+
+        for k, v in pairs(bodygroups) do
+            if v.num <= 1 then continue end
+
+            self.bodybuttons[k] = self.c_panel:Add("DComboBox")
+            self.bodybuttons[k]:Dock(TOP)
+            self.bodybuttons[k]:DockMargin(5, 5, 5, 0)
+            self.bodybuttons[k]:SetValue(v.name)
+            self.bodybuttons[k]:AddChoice("Default")
+            self.bodybuttons[k].bg = v.id
+
+            for a, b in pairs(v.submodels) do
+                self.bodybuttons[k]:AddChoice(b)
+            end
+
+            self.bodybuttons[k].OnSelect = function(panel, index, value)
+                self.bodybuttons[k].selected = index - 2
+
+                local ourBodygroups = {}
+
+                for k, v in pairs(self.bodybuttons) do
+                    if !v.selected or !v.bg then continue end
+
+                    ourBodygroups[v.bg] = v.selected
+                end
+
+                for k, v in pairs(ourBodygroups) do
+                    self.vehicle:SetBodygroup(k, v)
+                end
+
+                self.cust.bodygroups = ourBodygroups
+            end
+        end
+    end
 end
 
 function PANEL:ShowBuy(price)

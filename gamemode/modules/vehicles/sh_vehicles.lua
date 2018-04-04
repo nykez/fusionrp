@@ -52,7 +52,7 @@ function Fusion.vehicles:GetAll()
 end
 
 function PLAYER:HasVehicle(id)
-	if self.vehicles[id] then
+	if IsValid(self.vehicles[id]) then
 		return true
 	end
 
