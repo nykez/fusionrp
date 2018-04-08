@@ -5,10 +5,6 @@ Fusion.vehicles.make = Fusion.vehicles.make or {}
 util.AddNetworkString("Fusion.vehicles.sync")
 util.AddNetworkString("Fusion.vehicles.buy")
 
-concommand.Add("vehbod", function(ply, cmd, args)
-	PrintTable()
-end)
-
 function Fusion.vehicles:Purchase(ply, id, color)
 	if not ply then return end
 	if not id then return end
@@ -17,10 +13,6 @@ function Fusion.vehicles:Purchase(ply, id, color)
 	if not veh then return end
 
 	local price = veh.price
-
-	if color != Color(255, 255, 255) then
-		price = price + self.config.paint_price
-	end
 
 	if ply:HasVehicle(id) then return end
 
@@ -80,9 +72,13 @@ function Fusion.vehicles:Save(pPlayer)
 end
 
 net.Receive("Fusion.vehicles.buy", function(len, ply)
-	Fusion.vehicles:Purchase(ply, net.ReadString(), net.ReadColor())
+	Fusion.vehicles:Purchase(ply, net.ReadString(), net.ReadTable())
 end)
 
 net.Receive("Fusion.vehicles.sell", function(len, ply)
 	Fusion.vehicles:Sell(ply, net.ReadInt(16))
+end)
+
+concommand.Add("printcars", function(ply, cmd, args)
+	PrintTable(ply.vehicles)
 end)
