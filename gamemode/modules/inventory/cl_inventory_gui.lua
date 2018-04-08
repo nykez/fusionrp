@@ -35,6 +35,25 @@ surface.CreateFont( "Fusion_Label_Inventory2", {
 	outline = false,
 } )
 
+surface.CreateFont( "Fusion_Label_InventoryPages", {
+	font = "Arial",
+	extended = true,
+	size = 14,
+	weight = 300,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+} )
+
+
 
 local PANEL = {}
 
@@ -56,6 +75,8 @@ function PANEL:Init()
 	self:CreateHUD()
 
 	self:CreateInfoPanel()
+	
+	self:CreatePages()
 
 	//self:CreateView()
 
@@ -140,6 +161,21 @@ function PANEL:CreateInventory()
 
 
 		count = count + 1
+	end
+end
+
+function PANEL:CreatePages()
+	self.pages = self:Add("DIconLayout")
+	self.pages:SetSize(self.inventory_items:GetWide(), 35)
+	self.pages:SetPos(self.modelpnl:GetWide() + 10, self:GetTall() * 0.32)
+	self.pages:SetSpaceX(5)
+	self.pages:SetSpaceY(5)
+
+	self.tabs = {}
+	for i=1, 4 do 
+		self.tabs[i] = self.pages:Add("DPanel")
+		self.tabs[i]:SetSize(16, 16)
+		self.tabs[i]:TDLib():Background(Color(70, 70, 70)):Outline(Color(24, 24, 24)):Text(i, "Fusion_Label_InventoryPages")
 	end
 end
 
@@ -488,7 +524,7 @@ function PANEL:CreateInfoPanel()
 	self.infopanel = self:Add("DPanel")
 	self.infopanel:SetSize(self:GetWide() * 0.30, self:GetTall() * 0.25)
 	self.infopanel:SetPos(self.modelpnl:GetWide(), self:GetTall() * 0.05)
-	self.infopanel:TDLib():Background(Color(35, 35, 35, 255))
+	self.infopanel:TDLib():Background(Color(35, 35, 35, 255)):Outline(Color(64, 64, 64))
 
 	self.infomodel = self.infopanel:Add("DModelPanel")
 	self.infomodel:SetPos(5, 1)

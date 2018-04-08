@@ -259,10 +259,16 @@ function Fusion.inventory:Spawn(pPlayer, itemID)
 	self:Remove(pPlayer, item.id)
 end
 
+hook.Add("Fusion.PlayerLoaded", "Fusion.PlayerLoadedInventory", function(pPlayer)
+	Fusion.inventory:FullSync(pPlayer)
+end)
+
 local PLAYER = FindMetaTable("Player")
 function PLAYER:GetInventory()
 	return self.inventory or {}
 end
+
+
 
 concommand.Add("inventory", function(pPlayer)
 	if not pPlayer.inventory then pPlayer.inventory = {} end
