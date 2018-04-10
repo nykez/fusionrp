@@ -14,8 +14,10 @@ surface.CreateFont("Fusion_Dealer_Button", {
     antialias = true
 })
 
-local vPos = LocalPlayer():EyePos()
-local vAng = LocalPlayer():GetAngles()
+hook.Add("InitPostEntity", "Fusion.SetAnglesCD", function()
+    local vPos = LocalPlayer():EyePos()
+    local vAng = LocalPlayer():GetAngles()
+end)
 
 function PANEL:Init()
     self:SetSize(ScrW(), ScrH())
