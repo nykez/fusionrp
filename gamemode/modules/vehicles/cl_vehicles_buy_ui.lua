@@ -14,12 +14,20 @@ surface.CreateFont("Fusion_Dealer_Button", {
     antialias = true
 })
 
+hook.Add("InitPostEntity", "Fusion.SetAnglesCD", function()
+    local vPos = LocalPlayer():EyePos()
+    local vAng = LocalPlayer():GetAngles()
+end)
+
 function PANEL:Init()
     self:SetSize(ScrW(), ScrH())
     self:MakePopup()
 
     self.selected = nil
     self.vehicle = nil
+
+    vPos = LocalPlayer():EyePos()
+    vAng = LocalPlayer():GetAngles()
 
     self.details = self:Add("DPanel")
     self.details:SetSize(ScrW() * .156, ScrH() * .555)
@@ -171,10 +179,11 @@ function PANEL:ShowCustomization()
 
     self.paint = self.c_panel:Add("DColorMixer")
     self.paint:Dock(TOP)
-    self.paint:DockMargin(5, 5, 5, 0)
+    self.paint:DockMargin(5, 5, 5, 5)
     self.paint:SetAlphaBar(false)
     self.paint:SetColor(Color(255, 255, 255))
 
+    /*
     if IsValid(self.vehicle) then
         local bodygroups = self.vehicle:GetBodyGroups()
 
@@ -213,6 +222,7 @@ function PANEL:ShowCustomization()
             end
         end
     end
+    */
 end
 
 function PANEL:ShowBuy(price)
@@ -231,15 +241,22 @@ function PANEL:ShowBuy(price)
     self.buy:DockMargin(5, 5, 5, 5)
     self.buy:SetText("")
     self.buy:TDLib():ClearPaint():Background(Color(20, 20, 20)):FadeHover(Color(25, 25, 25))
-    self.buy:DualText("Purchase", "Fusion_Dealer_Title", Color(255, 255, 255), "$" .. price, "Fusion_Dealer_Button", Color(80, 255, 80), TEXT_ALIGN_CENTER)
+    self.buy.color = Color(80, 255, 80)
+
+    if LocalPlayer():GetBank() < price then
+        self.buy.color = Color(255, 80, 80)
+        self.buy:SetEnabled(false)
+    end
+
+    self.buy:DualText("Purchase", "Fusion_Dealer_Title", Color(255, 255, 255), "$" .. price, "Fusion_Dealer_Button", self.buy.color, TEXT_ALIGN_CENTER)
     self.buy:On("DoClick", function(s)
         net.Start("Fusion.vehicles.buy")
             net.WriteString(self.selected.id)
 
             if IsValid(self.paint) then
-                net.WriteColor(self.paint:GetColor())
+                net.WriteTable(self.paint:GetColor())
             else
-                net.WriteColor(Color(255, 255, 255))
+                net.WriteTable(Color(255, 255, 255))
             end
         net.SendToServer()
 
@@ -267,8 +284,10 @@ end
 hook.Add("CalcView", "ViewCarView", function(ply, pos, angles, fov)
 	if isViewingCar then
 		local view = {}
-		view.origin = Fusion.vehicles.config.camera_pos
-	   	view.angles = Fusion.vehicles.config.camera_ang
+        vPos = LerpVector(FrameTime() * 3, vPos, Fusion.vehicles.config.camera_pos)
+        vAng = LerpAngle(FrameTime() * 3, vAng, Fusion.vehicles.config.camera_ang)
+		view.origin = vPos
+	   	view.angles = vAng
 	   	view.fov = 75
 	   	view.drawviewer = true
 
@@ -307,13 +326,3 @@ function PANEL:Close()
 end
 
 vgui.Register("FusionVehicles", PANEL, "EditablePanel")
-
-local function open()
-    if Fusion.vehicles.panel then
-        Fusion.vehicles.panel:Remove()
-        Fusion.vehicles.panel = nil
-    end
-
-    Fusion.vehicles.panel = vgui.Create("FusionVehicles")
-end
-concommand.Add("cars", function() open() end)
