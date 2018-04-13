@@ -40,7 +40,7 @@ function Fusion.jobs:Quit(ply)
 
     local job = Fusion.jobs.cache[id]
     if not job then return end
-    
+
     job.onQuit(ply)
 
     ply:SetModel(ply.playerModel)

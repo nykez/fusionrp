@@ -9,7 +9,7 @@ local mysql_data = {
 	database = "pgrpdev_fusionrp",
 
 	// Supports sqlite, tmysql4, mysqloo
-	module = "mysqloo"
+	module = "sqlite"
 }
 
 
@@ -60,25 +60,26 @@ local function populateTables()
 	players:PrimaryKey("id")
 	players:Execute()
 
-	-- local vehicles = mysql:Create("player_vehicles")
-	-- vehicles:Create("id", INT_NOT_NULL_AUTO_INCR)
-	-- vehicles:Create("steam_id", VARCHAR_NOT_NULL)
-	-- vehicles:Create("car_id", INT_NOT_NULL)
-	-- vehicles:Create("bodygroups", VARCHAR_NOT_NULL)
-	-- vehicles:Create("col_r", INT_NOT_NULL)
-	-- vehicles:Create("col_g", INT_NOT_NULL)
-	-- vehicles:Create("col_b", INT_NOT_NULL)
-	-- vehicles:PrimaryKey("id")
-	-- vehicles:Execute()
+	local vehicles = mysql:Create("player_vehicles")
+	vehicles:Create("id", INT_NOT_NULL_AUTO_INCR)
+	vehicles:Create("steam_id", VARCHAR_NOT_NULL)
+	vehicles:Create("car_id", INT_NOT_NULL)
+	vehicles:Create("bodygroups", VARCHAR_NOT_NULL)
+	vehicles:Create("col_r", INT_NOT_NULL)
+	vehicles:Create("col_g", INT_NOT_NULL)
+	vehicles:Create("col_b", INT_NOT_NULL)
+	vehicles:PrimaryKey("id")
+	vehicles:Execute()
 
-	-- local orgs = mysql:Create("player_orgs")
-	-- orgs:Create("id", INT_NOT_NULL_AUTO_INCR)
-	-- orgs:Create("org_id", INT_NOT_NULL)
-	-- orgs:Create("owner_id", VARCHAR_NOT_NULL)
-	-- orgs:Create("name", VARCHAR_NOT_NULL)
-	-- orgs:Create("description", VARCHAR_NOT_NULL)
-	-- orgs:PrimaryKey("id")
-	-- orgs:Execute()
+	local orgs = mysql:Create("player_orgs")
+	orgs:Create("id", INT_NOT_NULL_AUTO_INCR)
+	orgs:Create("org_id", INT_NOT_NULL)
+	orgs:Create("owner_id", VARCHAR_NOT_NULL)
+	orgs:Create("name", VARCHAR_NOT_NULL)
+	orgs:Create("description", VARCHAR_NOT_NULL)
+	orgs:Create("ranks", VARCHAR_NOT_NULL)
+	orgs:PrimaryKey("id")
+	orgs:Execute()
 
 	print("[Fusion RP] Completed!")
 	print("[Fusion RP] Database connected.")

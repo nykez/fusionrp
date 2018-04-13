@@ -6,14 +6,14 @@ net.Receive('fusion.net.cosmetic', function()
 	local data = net.ReadTable()
 
 	if not data then return end
-	
+
 	Fusion.cosmetic:Process(LocalPlayer(), data)
 end)
 
 
 function Fusion.cosmetic:Process(pPlayer, tblData)
 	if not IsValid(pPlayer) then return end
-	
+
 	pPlayer.cosmetic = tblData
 end
 
@@ -74,7 +74,7 @@ local function DrawMe(ply)
 	if ply.drawcos then
 		for k,v in pairs(ply.drawcos) do
 			if not ply.cosmetic then return end
-			
+
 			if not ply.cosmetic[k] then
 				print("removing ent")
 				ply.drawcos[k] = nil
@@ -98,4 +98,4 @@ local function MyCalcView( ply, pos, angles, fov )
 	return view
 end
 
-hook.Add( "CalcView", "MyCalcView", MyCalcView )
+//hook.Add( "CalcView", "MyCalcView", MyCalcView )
