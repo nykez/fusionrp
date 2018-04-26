@@ -37,5 +37,5 @@ end
 function Fusion.skills:WriteSkills(pPlayer)
 	local tbl = Fusion.util:JSON(pPlayer.skills)
 
-	Fusion.file:Write("skills_"..pPlayer:SteamID64().., tbl)
+	Fusion.file:Write("skills_"..pPlayer:SteamID64(),  tbl)
 end
