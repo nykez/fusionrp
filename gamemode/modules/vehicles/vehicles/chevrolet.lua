@@ -195,7 +195,7 @@ veh.name = "Corvette Stingray 427"
 
 veh.price = 15
 
-veh.model = "models/tdmcars/shev_stingray427.mdl"
+veh.model = "models/tdmcars/chev_stingray427.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/chevstingray427.txt"
 
