@@ -4,7 +4,7 @@ veh.id = "ford_focusrs"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Focus RS '16"
+veh.name = "Focus RS '16"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "ford_focussvt"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Focus RS '16"
+veh.name = "Focus RS '16"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "ford_raptor"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Raptor"
+veh.name = "Raptor"
 
 veh.price = 15
 
@@ -55,7 +55,7 @@ veh.id = "ford_gt05"
 
 veh.make = 'Ford'
 
-veh.name = "Ford GT '05"
+veh.name = "GT '05"
 
 veh.price = 15
 
@@ -72,7 +72,7 @@ veh.id = "ford_transit"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Transit"
+veh.name = "Transit"
 
 veh.price = 15
 
@@ -89,7 +89,7 @@ veh.id = "ford_f450"
 
 veh.make = 'Ford'
 
-veh.name = "Ford F-450 Super Duty Dually"
+veh.name = "F-450 Super Duty Dually"
 
 veh.price = 15
 
@@ -106,7 +106,7 @@ veh.id = "ford_gt17"
 
 veh.make = 'Ford'
 
-veh.name = "Ford GT '17"
+veh.name = "GT '17"
 
 veh.price = 15
 
@@ -123,7 +123,7 @@ veh.id = "ford_boss302"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Boss 302"
+veh.name = "Boss 302"
 
 veh.price = 15
 
@@ -140,7 +140,7 @@ veh.id = "ford_boss429"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Boss 429"
+veh.name = "Boss 429"
 
 veh.price = 15
 
@@ -157,7 +157,7 @@ veh.id = "ford_squire"
 
 veh.make = 'Ford'
 
-veh.name = "Ford County Squire"
+veh.name = "County Squire"
 
 veh.price = 15
 
@@ -174,7 +174,7 @@ veh.id = "ford_falcon"
 
 veh.make = 'Ford'
 
-veh.name = "Ford Falcon XB"
+veh.name = "Falcon XB"
 
 veh.price = 15
 

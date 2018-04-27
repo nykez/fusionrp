@@ -4,7 +4,7 @@ veh.id = "nissan_r32"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan Skyline R32"
+veh.name = "Skyline R32"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "nissan_r34"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan Skyline R34"
+veh.name = "Skyline R34"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "nissan_leaf"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan Leaf"
+veh.name = "Leaf"
 
 veh.price = 15
 
@@ -55,7 +55,7 @@ veh.id = "nissan_350"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan 350Z"
+veh.name = "350Z"
 
 veh.price = 15
 
@@ -72,7 +72,7 @@ veh.id = "nissan_s15"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan Silvia S15"
+veh.name = "Silvia S15"
 
 veh.price = 15
 
@@ -89,7 +89,7 @@ veh.id = "nissan_gtrblack"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan GTR Black Edition"
+veh.name = "GTR Black Edition"
 
 veh.price = 15
 
@@ -106,7 +106,7 @@ veh.id = "nissan_sileighty"
 
 veh.make = 'Nissan'
 
-veh.name = "Nissan Sileighty"
+veh.name = "Sileighty"
 
 veh.price = 15
 
