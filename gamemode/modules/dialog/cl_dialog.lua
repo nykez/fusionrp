@@ -1,3 +1,4 @@
+/*
 local PANEL = PANEL or {}
 
 surface.CreateFont( "Fusion_Dialog_Title", {
@@ -99,3 +100,4 @@ function PANEL:Hide()
 end
 
 vgui.Register("FusionDialog", PANEL, "EditablePanel")
+*/
