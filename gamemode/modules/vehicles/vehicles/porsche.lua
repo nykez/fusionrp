@@ -4,7 +4,7 @@ veh.id = "porsche_944"
 
 veh.make = 'Porsche'
 
-veh.name = "Porsche 944"
+veh.name = "944"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "porsche_91174"
 
 veh.make = 'Porsche'
 
-veh.name = "Porsche 911 RSR '74"
+veh.name = "911 RSR '74"
 
 veh.price = 15
 
@@ -38,11 +38,11 @@ veh.id = "porsche_918"
 
 veh.make = 'Porsche'
 
-veh.name = "Porsche 918"
+veh.name = "918"
 
 veh.price = 15
 
-veh.model = "models/sentry/918.mdl"
+veh.model = "models/senrty/918.mdl"
 
 veh.script = "scripts/vehicles/sentry/918.txt"
 
@@ -55,11 +55,11 @@ veh.id = "porsche_gt4"
 
 veh.make = 'Porsche'
 
-veh.name = "Porsche GT4 911"
+veh.name = "GT4 911"
 
 veh.price = 15
 
-veh.model = "models/sentry/gt4.mdl"
+veh.model = "models/senrty/gt4.mdl"
 
 veh.script = "scripts/vehicles/sentry/997.txt"
 

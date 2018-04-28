@@ -4,7 +4,7 @@ veh.id = "bent_cont"
 
 veh.make = 'Bentley'
 
-veh.name = "Bentley PM Continental GT"
+veh.name = "PM Continental GT"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "bent_blower"
 
 veh.make = 'Bentley'
 
-veh.name = "Bentley Bentley 4 1/2 Litre 'Blower'"
+veh.name = "4 1/2 Litre 'Blower'"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "bent_arnage"
 
 veh.make = 'Bentley'
 
-veh.name = "Bentley Arnage T"
+veh.name = "Arnage T"
 
 veh.price = 15
 
@@ -55,7 +55,7 @@ veh.id = "bent_exp"
 
 veh.make = 'Bentley'
 
-veh.name = "Bentley EXP 10"
+veh.name = "EXP 10"
 
 veh.price = 15
 

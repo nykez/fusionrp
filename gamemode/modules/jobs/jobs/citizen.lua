@@ -10,16 +10,16 @@ job.level = 0
 
 job.pay = 5
 
-job.onJoin = function(pPlayer)
-	pPlayer:Notify("You have joined this job.")
+-- job.onJoin = function(pPlayer)
+-- 	pPlayer:Notify("You have joined this job.")
 
-	pPlayer:StripWeapons()
+-- 	pPlayer:StripWeapons()
 
-end
+-- end
 
-join.onQuit = function(pPlayer)
-	pPlayer:Notify("You quit your job.")
+-- join.onQuit = function(pPlayer)
+-- 	pPlayer:Notify("You quit your job.")
 
-end
+-- end
 
 Fusion.jobs:Register(job)

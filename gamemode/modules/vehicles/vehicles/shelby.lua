@@ -4,7 +4,7 @@ veh.id = "shelby_cobra"
 
 veh.make = 'Shelby'
 
-veh.name = "Shelby Cobra 427 '65"
+veh.name = "Cobra 427 '65"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "shelby_500kr"
 
 veh.make = 'Shelby'
 
-veh.name = "Shelby GT500 KR"
+veh.name = "GT500 KR"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "shelby_glhs"
 
 veh.make = 'Shelby'
 
-veh.name = "Shelby GLHS"
+veh.name = "GLHS"
 
 veh.price = 15
 

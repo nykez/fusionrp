@@ -4,7 +4,7 @@ veh.id = "hon_crx"
 
 veh.make = 'Honda'
 
-veh.name = "Honda CR-X SiR"
+veh.name = "CR-X SiR"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "hon_typer"
 
 veh.make = 'Honda'
 
-veh.name = "Honda Civic Type R"
+veh.name = "Civic Type R"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "hon_s2000"
 
 veh.make = 'Honda'
 
-veh.name = "Honda S2000"
+veh.name = "S2000"
 
 veh.price = 15
 
@@ -55,7 +55,7 @@ veh.id = "hon_nsx"
 
 veh.make = 'Honda'
 
-veh.name = "Honda 17' NSX"
+veh.name = "17' NSX"
 
 veh.price = 15
 
@@ -72,7 +72,7 @@ veh.id = "hon_cbr"
 
 veh.make = 'Honda'
 
-veh.name = "Honda CBR 600"
+veh.name = "CBR 600"
 
 veh.price = 15
 

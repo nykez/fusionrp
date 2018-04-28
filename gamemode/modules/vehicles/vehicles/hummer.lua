@@ -4,7 +4,7 @@ veh.id = "hummer_hx"
 
 veh.make = 'Hummer'
 
-veh.name = "Hummer HX V8"
+veh.name = "HX V8"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "hummer_h3"
 
 veh.make = 'Hummer'
 
-veh.name = "Hummer H3 V8"
+veh.name = "H3 V8"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "hummer_h1"
 
 veh.make = 'Hummer'
 
-veh.name = "Hummer H1 Alpha"
+veh.name = "H1 Alpha"
 
 veh.price = 15
 
@@ -55,7 +55,7 @@ veh.id = "hummer_h1off"
 
 veh.make = 'Hummer'
 
-veh.name = "Hummer H1 Alpha Offroad Edition"
+veh.name = "H1 Alpha Offroad Edition"
 
 veh.price = 15
 

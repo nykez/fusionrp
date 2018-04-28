@@ -2,8 +2,6 @@ Fusion.cosmetic = Fusion.cosmetic or {}
 
 util.AddNetworkString("fusion.net.cosmetic")
 
-
-
 function Fusion.cosmetic:Sync(pPlayer)
 	if not IsValid(pPlayer) then return end
 	

@@ -4,7 +4,7 @@ veh.id = "mer_slsamg"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz SLS AMG"
+veh.name = "SLS AMG"
 
 veh.price = 15
 
@@ -21,7 +21,7 @@ veh.id = "mer_sl65"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz SL 65"
+veh.name = "SL 65"
 
 veh.price = 15
 
@@ -38,7 +38,7 @@ veh.id = "mer_300sl"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz 300SL Gull Wing Coupe"
+veh.name = "300SL Gull Wing Coupe"
 
 veh.price = 15
 
@@ -55,7 +55,7 @@ veh.id = "mer_300mclaren"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz McLaren SLR"
+veh.name = "McLaren SLR"
 
 veh.price = 15
 
@@ -72,7 +72,7 @@ veh.id = "mer_a45"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz A45"
+veh.name = "A45"
 
 veh.price = 15
 
@@ -89,7 +89,7 @@ veh.id = "mer_gl450"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz GL-450"
+veh.name = "GL-450"
 
 veh.price = 15
 
@@ -106,7 +106,7 @@ veh.id = "mer_svan"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz Sprinter Van"
+veh.name = "Sprinter Van"
 
 veh.price = 15
 
@@ -123,7 +123,7 @@ veh.id = "mer_sbox"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz Sprinter Box Truck"
+veh.name = "Sprinter Box Truck"
 
 veh.price = 15
 
@@ -140,7 +140,7 @@ veh.id = "mer_c63"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz C-63 AMG Black Series"
+veh.name = "C-63 AMG Black Series"
 
 veh.price = 15
 
@@ -157,7 +157,7 @@ veh.id = "mer_190e"
 
 veh.make = 'Mercedes-Benz'
 
-veh.name = "Mercedes-Benz 190E Evo II"
+veh.name = "190E Evo II"
 
 veh.price = 15
 
