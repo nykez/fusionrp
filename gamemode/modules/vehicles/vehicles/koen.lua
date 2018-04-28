@@ -38,11 +38,11 @@ veh.id = "koen_one1"
 
 veh.make = "Koenigsegg"
 
-veh.name "One:1"
+veh.name = "One:1"
 
 veh.price = 15
 
-veh.model "models/sentry/one1.mdl"
+veh.model = "models/sentry/one1.mdl"
 
 veh.script = "scripts/vehicles/sentry/one1.txt"
 
@@ -55,12 +55,12 @@ veh.id = "koen_ccx"
 
 veh.make = "Koenigsegg"
 
-veh.name "CCX"
+veh.name = "CCX"
 
 veh.price = 15
 
-veh.model "models/sentry/ccx.mdl"
+veh.model = "models/sentry/ccx.mdl"
 
-veh.script = "scripts/vehclies/sentry/ccx.txt"
+veh.script = "scripts/vehicles/sentry/ccx.txt"
 
 Fusion.vehicles:Register(veh)

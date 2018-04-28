@@ -42,7 +42,7 @@ veh.name = "918"
 
 veh.price = 15
 
-veh.model = "models/senrty/918.mdl"
+veh.model = "models/sentry/918.mdl"
 
 veh.script = "scripts/vehicles/sentry/918.txt"
 
@@ -51,15 +51,15 @@ Fusion.vehicles:Register(veh)
 
 local veh = {}
 
-veh.id = "porsche_gt4"
+veh.id = "porsche_911turbo"
 
 veh.make = 'Porsche'
 
-veh.name = "GT4 911"
+veh.name = "911 Turbo"
 
 veh.price = 15
 
-veh.model = "models/senrty/gt4.mdl"
+veh.model = "models/sentry/997.mdl"
 
 veh.script = "scripts/vehicles/sentry/997.txt"
 

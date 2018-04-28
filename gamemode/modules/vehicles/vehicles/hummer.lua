@@ -8,9 +8,9 @@ veh.name = "HX V8"
 
 veh.price = 15
 
-veh.model = "models/talonvehicles/hummerhx.mdl"
+veh.model = "models/fusion/hummerhx.mdl"
 
-veh.script = "scripts/vehicles/tah_humhx_v8.txt"
+veh.script = "scripts/vehicles/fusion/fusion_hx.txt"
 
 Fusion.vehicles:Register(veh)
 

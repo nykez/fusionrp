@@ -64,20 +64,3 @@ veh.model = "models/crsk_autos/aston_martin/db11_2017.mdl"
 veh.script = "scripts/vehicles/crsk_autos/crsk_aston_db11_2017.txt"
 
 Fusion.vehicles:Register(veh)
-
-
-local veh = {}
-
-veh.id = "aston_db11"
-
-veh.make = 'Aston Martin'
-
-veh.name = "DB11"
-
-veh.price = 15
-
-veh.model = "models/crsk_autos/aston_martin/vantagev600_1998.mdl"
-
-veh.script = "scripts/vehicles/crsk_autos/crsk_aston_vantage600_1998.txt"
-
-Fusion.vehicles:Register(veh)

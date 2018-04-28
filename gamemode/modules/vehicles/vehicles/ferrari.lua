@@ -145,7 +145,7 @@ veh.name = "F430"
 
 veh.price = 15
 
-veh.model = "models/tdmcars/fer_430.mdl"
+veh.model = "models/tdmcars/fer_f430.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/fer_f430.txt"
 

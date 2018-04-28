@@ -76,7 +76,7 @@ veh.name = "Galant"
 
 veh.price = 15
 
-veh.model = "models/crsk_autos/galante39a_1987.mdl"
+veh.model = "models/crsk_autos/mitsubishi/galante39a_1987.mdl"
 
 veh.script = "scripts/vehicles/crsk_autos/crsk_mitsubishi_galante39a.txt"
 

@@ -59,7 +59,7 @@ veh.name = "Miura P400"
 
 veh.price = 15
 
-veh.model = "models/tdmcars/lambo_miura_p400.mdl"
+veh.model = "models/tdmcars/lam_miura_p400.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/lam_miura_p400.txt"
 
@@ -110,7 +110,7 @@ veh.name = "Murcielago SV"
 
 veh.price = 15
 
-veh.model = "models/tdmcars/lamo_murcielagosv.mdl"
+veh.model = "models/tdmcars/lambo_murcielagosv.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/murcielagosv.txt"
 
