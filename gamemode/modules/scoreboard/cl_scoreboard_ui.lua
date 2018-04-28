@@ -132,18 +132,9 @@ end
 vgui.Register("FusionScoreboard", PANEL, "EditablePanel")
 
 function GM:ScoreboardShow()
-    if Fusion.scoreboard.panel then
-        Fusion.scoreboard.panel:Remove()
-        Fusion.scoreboard.panel = nil
-    end
-
-    Fusion.scoreboard.panel = vgui.Create("FusionScoreboard")
+    Fusion.menus:Create("FusionScoreboard")
 end
 
 function GM:ScoreboardHide()
-    if Fusion.scoreboard.panel then
-        Fusion.scoreboard.panel:Remove()
-        Fusion.scoreboard.panel = nil
-        gui.EnableScreenClicker(false)
-    end
+    Fusion.menus:Remove("FusionScoreboard")
 end

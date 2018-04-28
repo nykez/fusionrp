@@ -17,7 +17,7 @@ function PANEL:Init()
 
 	if not data then
 		self:Remove()
-		shopmenu = nil
+		Fusion.menus:Remove("FusionShop")
 		LocalPlayer():Notify("Invalid shop. Removing.")
 		return
 	end
@@ -58,20 +58,19 @@ function PANEL:Init()
 		end
 
 		if !self.checkout then return end
-		
+
 		net.Start("Fusion.shops.purchase")
 			net.WriteTable(self.checkout)
 			net.WriteInt(self.id, 16)
 		net.SendToServer()
 
 		self:Remove()
-		shopmenu = nil
+		Fusion.menus:Remove("FusionShop")
 	end)
 
 	self.cart:DockMargin(0, 0, 0, self:GetTall() * (1 - 0.944))
 
 	self:LoadItems(data.items)
-
 end
 
 function PANEL:LoadItems(dataItems)
@@ -143,4 +142,8 @@ function PANEL:Think()
 	end
 end
 
-vgui.Register("FusionShopMenu", PANEL, "EditablePanel")
+vgui.Register("FusionShop", PANEL, "EditablePanel")
+
+concommand.Add("openshop", function(ply, cmd, args)
+	Fusion.menus:Create("FusionShop")
+end)
