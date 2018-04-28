@@ -8,9 +8,9 @@ surface.CreateFont("Fusion_Dealer_Title", {
 })
 
 surface.CreateFont("Fusion_Dealer_Button", {
-    font = "Bebas Neue",
+    font = "GeosansLight",
     size = ScreenScale(8),
-    weight = 500,
+    weight = 400,
     antialias = true
 })
 
@@ -39,9 +39,10 @@ function PANEL:Init()
     self.title:SetFont("Fusion_Dealer_Title")
     self.title:SetText("Vehicle Dealership")
     self.title:SetTextColor(color_white)
+    self.title:SetContentAlignment(5)
     self.title:SizeToContents()
     self.title:Dock(TOP)
-    self.title:DockMargin(5, 5, 5, 0)
+    self.title:DockMargin(5, 7, 5, 0)
 
     self.panel = self.details:Add("DScrollPanel")
     self.panel:Dock(FILL)

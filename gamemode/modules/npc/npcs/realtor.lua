@@ -19,12 +19,12 @@ npc.angle = {
 }
 
 npc.use = function()
-	Fusion.dialog.Canvas:SetTitle('Realtor Office')
+	Fusion.dialog.canvas:SetTitle('Realtor Office')
 
-	Fusion.dialog.Canvas:AddButton("I'm looking to buy a property!", npc.property)
-    Fusion.dialog.Canvas:AddButton("Nevermind, I'm too poor for this.", Fusion.dialog.Close)
+	Fusion.dialog.canvas:AddButton("I'm looking to buy a property!", npc.property)
+    Fusion.dialog.canvas:AddButton("Nevermind, I'm too poor for this.", Fusion.dialog.Close)
 
-	Fusion.dialog.Canvas:Show()
+	Fusion.dialog.canvas:Show()
 end
 
 npc.property = function()

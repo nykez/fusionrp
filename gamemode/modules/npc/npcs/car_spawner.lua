@@ -28,12 +28,12 @@ npc.angle = {
 }
 
 npc.use = function()
-	Fusion.dialog.Canvas:SetTitle('Car Dealer')
+	Fusion.dialog.canvas:SetTitle('Car Dealer')
 
-	Fusion.dialog.Canvas:AddButton("I'm looking for a car.", npc.buy)
-	Fusion.dialog.Canvas:AddButton("What, do I look rich to you??", Fusion.dialog.Close)
+	Fusion.dialog.canvas:AddButton("I'm looking for a car.", npc.buy)
+	Fusion.dialog.canvas:AddButton("What, do I look rich to you??", Fusion.dialog.Close)
 
-	Fusion.dialog.Canvas:Show()
+	Fusion.dialog.canvas:Show()
 end
 
 npc.buy = function()

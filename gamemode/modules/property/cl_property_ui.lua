@@ -1,20 +1,19 @@
 
 surface.CreateFont("Fusion_Property_Title", {
 	font = "Bebas Neue",
-	size = 46,
+	size = ScreenScale(14),
 	weight = 500,
 	antialias = true
 })
 
-surface.CreateFont("Fusion_Property_Price", {
-	font = "Bebas Neue",
-	size = 28,
-	weight = 500,
+surface.CreateFont("Fusion_Property_Button", {
+	font = "GeosansLight",
+	size = ScreenScale(7),
+	weight = 400,
 	antialias = true
 })
 
 local PANEL = {}
-
 
 function PANEL:Init()
 
@@ -80,7 +79,7 @@ function PANEL:Init()
 	self.list:SetSize(self:GetWide() * 0.2, self:GetTall())
 	self.list:TDLib():Background(Color(40, 40, 40)):Outline(Color(16, 16, 16)):Gradient(Color(28, 28, 28))
 	self.list:On('Paint', function(s)
-		draw.DrawText(self.title, "Fusion_Property_Title", 10, 10, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT)
+		draw.DrawText(self.title, "Fusion_Property_Title", s:GetWide() / 2, 10, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER)
 	end)
 
 	self.list:SetPos(-self.list:GetWide(), 0)
@@ -90,14 +89,15 @@ function PANEL:Init()
 	local tX, tY = surface.GetTextSize(self.title)
 
 	self.items = self.list:Add("DScrollPanel")
+	self.items:TDLib():ClearPaint():Background(Color(20, 20, 20))
 	self.items:Dock(FILL)
-	self.items:DockMargin(8, tY + 20, 8, 0)
+	self.items:DockMargin(8, tY + 20, 8, 8)
 
 	self.back = self.list:Add("DButton")
 	self.back:Dock(BOTTOM)
-	self.back:DockMargin(5, 5, 5, 5)
+	self.back:DockMargin(8, 0, 8, 8)
 	self.back:SetText("")
-	self.back:TDLib():Background(Color(24, 24, 24)):Text("Back", "Fusion_Dialog_Title"):FadeHover(Color(37, 37, 37))
+	self.back:TDLib():Background(Color(20, 20, 20)):Text("Back", "Fusion_Property_Button"):FadeHover(Color(25, 25, 25))
 	self.back:SetTall(40)
 	self.back:SetVisible(false)
 	self.back:On("DoClick", function(s)
@@ -106,12 +106,12 @@ function PANEL:Init()
 
 	self.action = self.list:Add("DButton")
 	self.action:Dock(BOTTOM)
-	self.action:DockMargin(5, 5, 5, 0)
+	self.action:DockMargin(8, 0, 8, 5)
 	self.action:SetText("")
 	self.action:SetTall(40)
 	self.action.text = "NULL"
 	self.action.color = Color(255, 255, 255)
-	self.action:TDLib():Background(Color(24, 24, 24)):Text(self.action.text, "Fusion_Dialog_Title", self.action.color):FadeHover(Color(37, 37, 37))
+	self.action:TDLib():Background(Color(20, 20, 20)):Text(self.action.text, "Fusion_Property_Button", self.action.color):FadeHover(Color(25, 25, 25))
 	self.action:SetVisible(false)
 	self.action:On("DoClick", function(s)
 		if self.selected then
@@ -137,7 +137,7 @@ function PANEL:Init()
 			self.action.color = Color(100, 255, 100)
 		end
 
-		self.action:Text(self.action.text, "Fusion_Dialog_Title", self.action.color)
+		self.action:Text(self.action.text, "Fusion_Property_Button", self.action.color)
 	end)
 
 
@@ -183,9 +183,9 @@ function PANEL:Load()
 			self.cats[v.category.id] = self.items:Add("DButton")
 			self.cats[v.category.id]:Dock(TOP)
 			self.cats[v.category.id]:SetText(v.category.name)
-			self.cats[v.category.id]:DockMargin(0, 0, 0, 5)
+			self.cats[v.category.id]:DockMargin(5, 5, 5, 0)
 			self.cats[v.category.id].ourcat = v.category
-			self.cats[v.category.id]:TDLib():Background(Color(30, 30, 30)):Text(v.category.name, "Fusion_Dialog_Title"):BarHover(Color(64, 160, 255, 255), 3)
+			self.cats[v.category.id]:TDLib():Background(Color(30, 30, 30)):Text(v.category.name, "Fusion_Property_Button"):BarHover(Color(64, 160, 255, 255), 3)
 			self.cats[v.category.id]:SetTall(60)
 			self.cats[v.category.id]:On("DoClick", function(s)
 				self.list:MoveTo(-self.list:GetWide(), 0, 0.4, 0, 0.2, function()
@@ -214,9 +214,9 @@ function PANEL:ShowCategory(cat)
 		if v.category.id == cat.id and !v.government then
 			self.props[k] = self.items:Add("DButton")
 			self.props[k]:Dock(TOP)
-			self.props[k]:DockMargin(0, 0, 0, 5)
+			self.props[k]:DockMargin(5, 5, 5, 0)
 			self.props[k]:SetText("")
-			self.props[k]:TDLib():Background(Color(24, 24, 24)):Text(v.name, "Fusion_Dialog_Title"):BarHover(Color(64, 160, 255, 255), 3)
+			self.props[k]:TDLib():Background(Color(30, 30, 30)):Text(v.name, "Fusion_Property_Button"):BarHover(Color(64, 160, 255, 255), 3)
 			self.props[k]:SetTall(60)
 			self.props[k].data = v
 			self.props[k]:On("DoClick", function(s)
@@ -224,9 +224,9 @@ function PANEL:ShowCategory(cat)
 			end)
 			self.props[k]:On("Think", function(s)
 				if self.selected and self.selected == s.data then
-					s:Background(Color(30, 30, 30))
+					s:Background(Color(36, 36, 36))
 				else
-					s:Background(Color(24, 24, 24))
+					s:Background(Color(30, 30, 30))
 				end
 
 				if Fusion.property.owners[s.data.id] == LocalPlayer() then
