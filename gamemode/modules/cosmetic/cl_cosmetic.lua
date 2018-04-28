@@ -85,17 +85,3 @@ local function DrawMe(ply)
 
 end
 hook.Add( "PostPlayerDraw", "DrawName", DrawMe )
-
-
-local function MyCalcView( ply, pos, angles, fov )
-	local view = {}
-
-	view.origin = pos-( angles:Forward()*100 )
-	view.angles = angles
-	view.fov = fov
-	view.drawviewer = true
-
-	return view
-end
-
-//hook.Add( "CalcView", "MyCalcView", MyCalcView )
