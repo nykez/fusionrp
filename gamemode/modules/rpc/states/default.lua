@@ -17,7 +17,6 @@ local presences = {
 }
 
 -- default gamemode presence
-////
 local gameStart = os.time()
 function presences.sandbox:GetActivity()
 	local GAMEMODE = GM or GAMEMODE
@@ -104,7 +103,7 @@ function default:Init()
 		local data = util.JSONToTable(body)
 		if data then
 			for _, asset in next, data do
-				if asset.type then
+				if istable(asset) and asset.type then
 					if asset.type == 2 then
 						self.assets.large_image[asset.name] = true
 					elseif asset.type == 1 then
@@ -118,7 +117,7 @@ function default:Init()
 			activeGamemode:Init()
 		end
 
-		timer.Create("discordrpc_state_default", 5, 0, function()
+		timer.Create("discordrpc_state_default", 15, 0, function()
 			discordrpc.SetActivity(self:GetActivity(), discordrpc.Print)
 		end)
 	end, function(err)

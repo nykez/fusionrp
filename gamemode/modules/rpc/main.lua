@@ -1,9 +1,7 @@
-discordrpc = discordrpc or {}
 
 if not discordrpc then ErrorNoHalt("DiscordRPC: missing???") return end
 
-discordrpc.state = "default" -- This is the default state when you first load in.
-discordrpc.clientID = "432014303915409409"
+discordrpc.state = "default"
 
 if not game.SinglePlayer() then
 	local httpLoaded = false
@@ -35,7 +33,6 @@ hook.Add("httpLoaded", "discordrpc_init", function()
 	discordrpc.Print("HTTP loaded, trying to init")
 	discordrpc.Init(function(succ, err)
 		if succ then
-			discordrpc.LoadStates()
 			if discordrpc.state then
 				local state = discordrpc.states[discordrpc.state]
 				if state.Init then

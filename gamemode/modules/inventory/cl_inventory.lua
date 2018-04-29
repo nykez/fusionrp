@@ -90,6 +90,4 @@ function Fusion.inventory:Sync(pPlayer, id, bool)
 			pPlayer.inventory[id].quantity = 1
 		end
 	end
-
-	PrintTable(pPlayer.inventory)
 end

@@ -5,12 +5,12 @@
 
 discordrpc = discordrpc or {}
 discordrpc.enabled = CreateClientConVar("discordrpc_enabled", "1", true, false)
-discordrpc.debug = CreateClientConVar("discordrpc_debug", "1", true, false) -- alternatively, use the "developer" convar?
+discordrpc.debug = CreateClientConVar("discordrpc_debug", "0", true, false) -- alternatively, use the "developer" convar?
 discordrpc.port = discordrpc.port
 
 discordrpc.states = discordrpc.states or {}
 
--- discordrpc.clientID (string) should be set in main.lua
+discordrpc.clientID = "432014303915409409" -- don't change this value, change it in your state's Init function
 -- discordrpc.state (string) should be set later in main.lua as the starting state
 
 function discordrpc.Print(...)
@@ -31,39 +31,39 @@ function discordrpc.Print(...)
 	end
 	print(unpack(args))
 end
+
+local function try(port, callback)
+	if port > 6473 then discordrpc.Print("Error: couldn't find Discord RPC server.") return end
+
+	http.Fetch(("http://127.0.0.1:%s"):format(port), function(body)
+		if body:match("Authorization Required") then
+			discordrpc.Print(("Connection success on port %s! "):format(port))
+			discordrpc.port = port
+
+			discordrpc.SetActivity({ state = "Initializing" }, function(body, err)
+				if body == false then
+					discordrpc.Print("Error: First SetActivity test was unsuccessful: " .. err)
+					if err:match("Not authenticated or invalid scope") then
+						discordrpc.Print("Make sure you're using Discord Canary!")
+					end
+				else
+					discordrpc.Print("First SetActivity test was successful, ready to work!")
+				end
+				discordrpc.Print(body, err)
+
+				if callback then -- idk if we should cancel calling the call back if we error
+					callback(body, err)
+				end
+			end)
+		end
+	end, function()
+		try(port + 1, callback)
+	end)
+end
 function discordrpc.Init(callback)
 	if not discordrpc.port then
 		discordrpc.Print("Finding port")
-		local validPort
-		for port = 6463, 6473 do
-			local success = function(body)
-				if body:match("Authorization Required") and not validPort then
-					discordrpc.Print(("Connection success on port %s! "):format(port))
-					validPort = port
-					discordrpc.port = validPort
-
-					discordrpc.SetActivity({ state = "Initializing" }, function(body, err)
-						if body == false then
-							discordrpc.Print("Error: First SetActivity test was unsuccessful: " .. err)
-							if err:match("Not authenticated or invalid scope") then
-								discordrpc.Print("Make sure you're using Discord Canary!")
-							end
-						else
-							discordrpc.Print("First SetActivity test was successful, ready to work!")
-						end
-						discordrpc.Print(body, err)
-
-						if callback then -- idk if we should cancel calling the call back if we error
-							callback(body, err)
-						end
-					end)
-				end
-			end
-			local failed = function(...)
-				-- discordrpc.Print("port " .. port .. " is probably invalid: ", ...)
-			end
-			http.Fetch(("http://127.0.0.1:%s"):format(port), success, failed)
-		end
+		try(6463, callback)
 	end
 end
 
@@ -83,7 +83,7 @@ function discordrpc.SetActivity(activity, callback, pid)
 
 	HTTP{
 		method = "POST",
-		url = ("http://127.0.0.1:%s/rpc?v=1&client_id=%s"):format(discordrpc.port, "432014303915409409"),
+		url = ("http://127.0.0.1:%s/rpc?v=1&client_id=%s"):format(discordrpc.port, discordrpc.clientID),
 
 		type = "application/json",
 		body = util.TableToJSON{

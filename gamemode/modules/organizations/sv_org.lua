@@ -23,9 +23,9 @@ function Fusion.organizations:Create(ply, name, desc)
         query:Callback(function(result, status, lastID)
             if !IsValid(result) then
                 bFound = false
-                break
+                return
             else
-                continue
+                return
             end
         end)
         query:Execute()
