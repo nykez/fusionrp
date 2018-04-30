@@ -90,5 +90,4 @@ function Fusion.character:BodyGroups(pPlayer, data)
 	for k,v in pairs(data) do
 		pPlayer:SetBodygroup(k, v)
 	end
-
 end
