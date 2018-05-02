@@ -285,8 +285,10 @@ end
 hook.Add("CalcView", "ViewCarView", function(ply, pos, angles, fov)
 	if isViewingCar then
 		local view = {}
+
         vPos = LerpVector(FrameTime() * 3, vPos, Fusion.vehicles.config.camera_pos)
         vAng = LerpAngle(FrameTime() * 3, vAng, Fusion.vehicles.config.camera_ang)
+
 		view.origin = vPos
 	   	view.angles = vAng
 	   	view.fov = 75
@@ -306,7 +308,9 @@ end
 
 function PANEL:Think()
     if IsValid(self.vehicle) then
-        self.vehicle:SetAngles(self.vehicle:GetAngles() + Angle(0, 0.1, 0))
+        local Sin = math.sin(CurTime() * 0.7) * 75
+       // vAngle = Angle(0, 45 + Sin, 0)
+        self.vehicle:SetAngles(Angle(0, 90 + Sin, 0))
         self.vehicle:SetColor(self.paint:GetColor())
     end
 
