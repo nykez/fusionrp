@@ -40,7 +40,7 @@ if (SERVER) then
 
 			if (!client) then return end
 
-			local character = Fusion.character.New(tblData, charID, client)
+			local character = Fusion.character.New(tblData, charID, client, tblData.steamid)
 
 			Fusion.character.loaded[charID] = character
 
@@ -140,7 +140,7 @@ if (SERVER) then
 // end serverside code
 end
 
-function Fusion.character.New(tblData, id, pPlayer)
+function Fusion.character.New(tblData, id, pPlayer, steamID)
 
 	if (tblData.name) then
 		tblData.name = tblData.name:gsub("#", "#​")
@@ -161,7 +161,10 @@ function Fusion.character.New(tblData, id, pPlayer)
 
 	character.id = id
 	character.player = pPlayer
-	character.steamid = util.SteamIDTo64(pPlayer:SteamID()) 
+	if (IsValid(pPlayer) or steamID) then
+		character.steamid = IsValid(pPlayer) and pPlayer:SteamID64() or steamID
+		character.steamID = IsValid(pPlayer) and pPlayer:SteamID64() or steamID
+	end
 
 	return character
 
