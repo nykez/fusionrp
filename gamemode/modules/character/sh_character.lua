@@ -130,7 +130,7 @@ if (SERVER) then
 
 				Fusion.character.cache[steamid] = characters
 			else
-				return
+				func({})
 			end
 
 		end)

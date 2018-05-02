@@ -98,6 +98,18 @@ hook.Add("PlayerDisconnected", "PlayerDesync", function(client)
 	client:clearNetVars()
 end)
 
+netstream.Hook("fusion_CreateCharacter", function(client, tblData)
+	tblData.steamid = client:SteamID64()
+	tblData.money = 10000
+	tblData.data = {}
+	tblData.inventory = {}
+	tblData.name = tblData.fname .." " .. tblData.lname
+
+	Fusion.character.Create(tblData, function(charID)
+		print("created characeter with: " .. charID)
+	end)
+	//
+end)
 // Config menu networking ////
 netstream.Hook("fusion_setConfig", function(client, key, value)
 	if !Fusion.config.canopen(client) then

@@ -352,11 +352,12 @@ function PANEL:CreateName()
 			return
 		end
 
-		net.Start("Fusion.character.create")
-			net.WriteTable(self.data)
-		net.SendToServer()
+		netstream.Start("fusion_CreateCharacter", self.data)
 
 		self:Remove()
+		timer.Simple(0.1, function()
+			vgui.Create('CharacterMainMenu')
+		end)
 	end
 
 
@@ -379,10 +380,10 @@ concommand.Add("newchar", function(player)
 	fusionchar = vgui.Create("FusionCharMenu")
 end)
 
-net.Receive("Fusion.new.character", function()
-	if fusionchar then
-		fusionchar:Remove()
-	end
+-- net.Receive("Fusion.new.character", function()
+-- 	if fusionchar then
+-- 		fusionchar:Remove()
+-- 	end
 
-	fusionchar = vgui.Create("FusionCharMenu")
-end)
+-- 	fusionchar = vgui.Create("FusionCharMenu")
+-- end)
