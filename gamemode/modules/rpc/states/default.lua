@@ -30,7 +30,7 @@ function presences.sandbox:GetActivity()
 			start = gameStart
 		},
 		assets = {
-			large_image = 'fusion_logo',,
+			large_image = 'fusion_logo',
 			small_image = 'dfg_small',
 
 		},
