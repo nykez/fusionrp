@@ -24,7 +24,7 @@ function presences.sandbox:GetActivity()
 	local small_icon = 'default'
 	local ip = game.GetIPAddress() == "loopback" and "local server" or game.GetIPAddress()
 	return {
-		details = "purchasing a vehicle",
+		details = "Fusion Roleplay",
 		state = "Dev Server",
 		timestamps = {
 			start = gameStart

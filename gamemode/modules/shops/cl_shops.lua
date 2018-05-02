@@ -30,6 +30,16 @@ function PANEL:Init()
 	self.navbar:TDLib():Background(Color(26, 26, 26)):Gradient(Color(30, 30, 30))
 	self.navbar:Text(data.name)
 
+	self.exit = self:Add("DButton")
+	self.exit:SetSize(32, 32)
+	self.exit:SetPos(self:GetWide() - 38, 2)
+	self.exit:SetText('X')
+	self.exit:TDLib():Background(Color(231, 76, 60)):FadeHover()
+	self.exit:SetTextColor(color_white)
+	self.exit:On('DoClick', function()
+		self:Remove()
+	end)
+
 	self.container = self:Add("DScrollPanel")
 	self.container:Dock(FILL)
 
@@ -56,6 +66,8 @@ function PANEL:Init()
 			LocalPlayer():Notify("You can't afford this cart.")
 			return
 		end
+
+		if table.Count(self.checkout ) <= 0 then return end
 
 		if !self.checkout then return end
 
@@ -99,6 +111,17 @@ function PANEL:LoadItems(dataItems)
 		self.items[k].model = self.items[k]:Add("DModelPanel")
 		self.items[k].model:Dock(LEFT)
 		self.items[k].model:SetModel(item.model)
+		local models = self.items[k].model
+
+		local mn, mx = models.Entity:GetRenderBounds()
+		local size = 0
+		size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+		size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+		size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+
+		models:SetFOV( 50 )
+		models:SetCamPos( Vector( size, size, size ) )
+		models:SetLookAt( ( mn + mx ) * 0.5 )
 
 	end
 end
