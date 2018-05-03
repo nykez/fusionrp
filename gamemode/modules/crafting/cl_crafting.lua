@@ -1,4 +1,0 @@
-
-local function lol()
-
-end

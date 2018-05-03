@@ -5,7 +5,7 @@
 
 discordrpc = discordrpc or {}
 discordrpc.enabled = CreateClientConVar("discordrpc_enabled", "1", true, false)
-discordrpc.debug = CreateClientConVar("discordrpc_debug", "0", true, false) -- alternatively, use the "developer" convar?
+discordrpc.debug = CreateClientConVar("discordrpc_debug", "1", true, false) -- alternatively, use the "developer" convar?
 discordrpc.port = discordrpc.port
 
 discordrpc.states = discordrpc.states or {}
@@ -14,22 +14,22 @@ discordrpc.clientID = "432014303915409409" -- don't change this value, change it
 -- discordrpc.state (string) should be set later in main.lua as the starting state
 
 function discordrpc.Print(...)
-	local header = "[Discord RPC%s] "
-	local args = {...}
-	if type(args[1]) ~= "string" then
-		if not discordrpc.debug:GetBool() then return end -- we are entering debug message land, don't show them if we don't want them to
-		header = header:format(" DEBUG")
-	else
-		header = header:format("")
-	end
+	-- local header = "[Discord RPC%s] "
+	-- local args = {...}
+	-- if type(args[1]) ~= "string" then
+	-- 	if not discordrpc.debug:GetBool() then return end -- we are entering debug message land, don't show them if we don't want them to
+	-- 	header = header:format(" DEBUG")
+	-- else
+	-- 	header = header:format("")
+	-- end
 
-	MsgC(Color(114, 137, 218), header)
-	for k, v in next, args do
-		if istable(v) then
-			args[k] = table.ToString(v)
-		end
-	end
-	print(unpack(args))
+	-- MsgC(Color(114, 137, 218), header)
+	-- for k, v in next, args do
+	-- 	if istable(v) then
+	-- 		args[k] = table.ToString(v)
+	-- 	end
+	-- end
+	-- print(unpack(args))
 end
 
 local function try(port, callback)

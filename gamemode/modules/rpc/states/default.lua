@@ -17,7 +17,7 @@ local presences = {
 }
 
 -- default gamemode presence
-local gameStart = os.time()
+local gameStart = gameStart or os.time()
 function presences.sandbox:GetActivity()
 	local GAMEMODE = GM or GAMEMODE
 	local large_icon = 'default'

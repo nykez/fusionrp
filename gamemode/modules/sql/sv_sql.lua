@@ -9,9 +9,8 @@ local mysql_data = {
 	database = "pgrpdev_fusionrp",
 
 	// Supports sqlite, tmysql4, mysqloo
-	module = "sqlite"
+	module = "mysqloo"
 }
-
 
 local function connectDatabase()
 	mysql:SetModule(mysql_data.module)
@@ -39,39 +38,33 @@ local function populateTables()
 	local VARCHAR_NOT_NULL = "VARCHAR(255) NOT NULL"
 	local LONGTEXT_NOT_NULL = "LONGTEXT NOT NULL"
 
-	local players = mysql:Create("player_data")
-	players:Create("id", INT_NOT_NULL_AUTO_INCR)
-	players:Create("steam_id", VARCHAR_NOT_NULL)
-	players:Create("rp_first", VARCHAR_NOT_NULL)
-	players:Create("rp_last", VARCHAR_NOT_NULL)
-	players:Create("xp", INT_NOT_NULL)
-	players:Create("level", INT_NOT_NULL)
-	players:Create("account_level", INT_NOT_NULL)
-	players:Create("inventory", "LONGTEXT")
-	players:Create("skills", LONGTEXT_NOT_NULL)
-	players:Create("money", INT_NOT_NULL)
-	players:Create("bank", INT_NOT_NULL)
-	players:Create("organization", INT_NOT_NULL)
-	players:Create("model", VARCHAR_NOT_NULL)
-	players:Create("modeldata", "LONGTEXT")
-	players:Create("playtime", INT_NOT_NULL)
-	players:Create("nick", VARCHAR_NOT_NULL)
-	players:Create("vehicles", "LONGTEXT")
-	players:PrimaryKey("id")
-	players:Execute()
+	local players = mysql:Create("fusion_players")
+    players:Create("id", "INT NOT NULL AUTO_INCREMENT")
+    players:Create("steam_id", "VARCHAR(255) NOT NULL") -- steam 64
+    players:Create("nick", "VARCHAR(255) NOT NULL")
+    players:Create("playtime", "INT NOT NULL")
+    players:Create("currentip", "VARCHAR(255) NOT NULL")
+    players:Create("lastip", "VARCHAR(255) NOT NULL")
+    players:PrimaryKey("id")
+    players:Execute()
 
-	local vehicles = mysql:Create("player_vehicles")
-	vehicles:Create("id", INT_NOT_NULL_AUTO_INCR)
-	vehicles:Create("steam_id", VARCHAR_NOT_NULL)
-	vehicles:Create("car_id", INT_NOT_NULL)
-	vehicles:Create("bodygroups", VARCHAR_NOT_NULL)
-	vehicles:Create("col_r", INT_NOT_NULL)
-	vehicles:Create("col_g", INT_NOT_NULL)
-	vehicles:Create("col_b", INT_NOT_NULL)
-	vehicles:PrimaryKey("id")
-	vehicles:Execute()
+    //
 
-	local orgs = mysql:Create("player_orgs")
+    local chars = mysql:Create("fusion_characters")
+    chars:Create("id", "INT NOT NULL AUTO_INCREMENT")
+    chars:Create("inventory", "LONGTEXT")
+    chars:Create("whitelist", "LONGTEXT")
+    chars:Create("data", "LONGTEXT")
+    chars:Create("name", "VARCHAR(255) NOT NULL")
+    chars:Create("steamid", "VARCHAR(255) NOT NULL")
+    chars:Create("model", "VARCHAR(255) NOT NULL")
+    chars:Create("money", "INT NOT NULL")
+    chars:Create("create_time", INT_NOT_NULL)
+    chars:Create("description", "varchar(50) NOT NULL")
+    chars:PrimaryKey("id")
+    chars:Execute()
+
+	local orgs = mysql:Create("fusion_orgs")
 	orgs:Create("id", INT_NOT_NULL_AUTO_INCR)
 	orgs:Create("org_id", INT_NOT_NULL)
 	orgs:Create("owner_id", VARCHAR_NOT_NULL)
