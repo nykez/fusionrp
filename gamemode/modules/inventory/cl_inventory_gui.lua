@@ -72,7 +72,7 @@ function PANEL:Init()
 
 	self:CreateWeapons()
 
-	self:CreateHUD()
+	//self:CreateHUD()
 
 	self:CreateInfoPanel()
 	
@@ -87,7 +87,7 @@ end
 
 function PANEL:CreateModel()
 	self.modelpnl = self:Add("DModelPanel")
-	self.modelpnl:SetSize(self:GetWide() * 0.3, self:GetTall() * 0.65)
+	self.modelpnl:SetSize(self:GetWide() * 0.3, self:GetTall() * 0.65 + 100)
 	self.modelpnl:SetPos(5, self:GetTall() * 0.07)
 	self.modelpnl:SetModel(LocalPlayer():GetModel())
 	//self.modelpnl:SetAlpha(0)
@@ -101,6 +101,73 @@ function PANEL:CreateModel()
 		self.modelpnl.Entity:ResetSequence( self.modelpnl.Entity:LookupSequence("pose_standing_02") )
 		self.modelpnl:RunAnimation()
 		return
+	end
+
+	function self.modelpnl.PostDrawModel( ent )
+		local ply = LocalPlayer()
+		if not IsValid( ply ) then return end
+
+		if not ply.cosmetic then return end
+
+
+	for k,v in pairs(ply.cosmetic) do
+		local draw = Fusion.inventory:GetItem(v[1])
+
+		local ourData = draw.data
+		if not ourData then return end
+
+		local class = k
+
+		if (draw) then
+			ent.drawcos = ent.drawcos or {}
+
+			if (!ent.drawcos[class] or !IsValid(ent.drawcos[class])) then
+				ent.drawcos[class] = ClientsideModel(draw.model, RENDERGROUP_TRANSLUCENT)
+				if ent.drawcos[class] then
+					ent.drawcos[class]:SetNoDraw(true)
+				end
+			end
+
+
+			local infoModel = ent.drawcos[class]
+			local infoBone = self.modelpnl.Entity:LookupBone(ourData.bone)
+
+			if (infoBone and infoBone > 0) then
+
+				local bonePos, boneAng = self.modelpnl.Entity:GetBonePosition(infoBone)
+
+				if (plywep_class != class and infoModel and IsValid(infoModel)) then
+					local Right 	= boneAng:Right()
+					local Up 		= boneAng:Up()
+					local Forward 	= boneAng:Forward()
+
+					boneAng:RotateAroundAxis(Right, ourData.ang[1])
+					boneAng:RotateAroundAxis(Up, ourData.ang[2])
+					boneAng:RotateAroundAxis(Forward, ourData.ang[3])
+
+					bonePos = bonePos + ourData.pos[1] * Right
+					bonePos = bonePos + ourData.pos[2] * Forward
+					bonePos = bonePos + ourData.pos[3] * Up
+
+					infoModel:SetRenderOrigin(bonePos)
+					infoModel:SetRenderAngles(boneAng)
+					infoModel:DrawModel()
+				end
+			end
+		end
+	end
+
+	if ent.drawcos then
+		for k,v in pairs(ent.drawcos) do
+			if not ply.cosmetic then return end
+
+			if not ply.cosmetic[k] then
+				ent.drawcos[k] = nil
+				v:Remove()
+			end
+		end
+	end
+
 	end
 
 	self.modelpnl.Entity:SetAngles(Angle(-15, 40, 0))
