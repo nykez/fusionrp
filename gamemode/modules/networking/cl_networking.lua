@@ -76,7 +76,7 @@ local PLAYER = FindMetaTable('Player')
 local ENTITY = FindMetaTable('Entity')
 
 function PLAYER:getNetVar(key, default)
-	local index = self:GetEntIndex()
+	local index = self:EntIndex()
 
 	if Fusion.net[index] and Fusion.net[index][key] then
 		return Fusion.net[index][key]
