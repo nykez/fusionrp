@@ -29,19 +29,25 @@ function char:getPlayer()
 end
 
 if SERVER then
+
 	function char:Save(callback)
-		if (self.isBot) then return end
 		
 		local data = {}
 
 		for k,v in pairs(Fusion.character.vars) do
 			if (v.field and self.vars[k] != nil) then
 				data[v.field] = self.vars[k]
+				if (type(v.field) == "table") then
+				end
 			end
 		end
 
+
 		local updateObj = mysql:Update("fusion_characters");
 			for k, v in pairs(data) do
+				if type(v) == "table" then
+					v = util.TableToJSON(v)
+				end
 				updateObj:Update(k, v)
 			end
 		updateObj:Where("id", self.id)
@@ -50,7 +56,7 @@ if SERVER then
 	end
 
 	function char:Sync(rec)
-		print("syncing")
+		print('syncing')
 		if (rec == nil) then
 			for k,v in pairs(player.GetAll()) do
 				self:Sync(v)

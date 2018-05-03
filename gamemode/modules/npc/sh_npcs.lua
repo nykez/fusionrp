@@ -1,7 +1,7 @@
 Fusion.npcs = Fusion.npcs or {}
 Fusion.npcs.cache = Fusion.npcs.cache or {}
 
-function Fusion.npcs:LoadNPC()
+function Fusion.npcs.LoadNPC()
 	local cars = file.Find(GAMEMODE.FolderName.."/gamemode/modules/npc/npcs/*.lua", "LUA")
 
 	for k, v in pairs(cars) do
@@ -62,7 +62,7 @@ hook.Add("OnReloaded", "Fusion.NPCReload", function()
 		end
 	end
 
-	Fusion.npcs:LoadNPC()
+	Fusion.npcs.LoadNPC()
 end)
 
 concommand.Add("flushnpc", function()
@@ -74,5 +74,5 @@ concommand.Add("flushnpc", function()
 		v:Remove()
 	end
 
-	Fusion.npcs:LoadNPC()
+	Fusion.npcs.LoadNPC()
 end)
