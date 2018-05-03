@@ -62,7 +62,7 @@ function PANEL:BuildCharacters()
 			char.DoClick = function()
 				Derma_Query("Are you sure you want to load this character?","Character Selection", 'Yes',
 					function()
-						netstream.Start("fuse_spawnChar", v)
+						netstream.Start("fusion_spawnChar", v)
 						self:Remove()
 					end,
 					"No"

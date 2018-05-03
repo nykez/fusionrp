@@ -1,21 +1,32 @@
-local PLAYER = FindMetaTable("Player")
 
-function PLAYER:GetWallet()
-	return self:GetNW2Int("money", 0)
+local character = Fusion.meta.character
+
+function character:hasMoney(amount)
+	if (amount < 0) then return end
+	
+	return self:getMoney() >= amount
 end
+character.CanAfford = character.HasMoney
 
-function PLAYER:GetBank()
-	return self:GetNW2Int("bank", 0)
-end
+if SERVER then
 
-function PLAYER:GetMoney(strType)
-	if strType == "wallet" then
-		return self:GetWallet()
-	else
-		return self:GetBank()
+	function character:giveMoney(amount)
+		self:setMoney(self:getMoney() + amount)
+
+		return true
 	end
-end
 
-function PLAYER:CanAfford(intPrice)
-	return self:GetWallet() >= intPrice and true or false
+	function character:takeMoney(amount)
+		amount = math.abs(amount)
+		self:giveMoney(-amount)
+	end
+
+	function Fusion.util.SpawnMoney(position, angle, amount)
+		if (!pos) then return end
+		if (!amount or amount < 0) then return end
+		
+		
+
+	end
+
 end
