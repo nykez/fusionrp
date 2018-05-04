@@ -137,6 +137,21 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 	ent.Owner = pPlayer
 	pPlayer.vehicle = ent
 
+	local data = pPlayer:getChar():getData('vehicles', {})
+
+	if data[id] then
+		
+		if data[id].bodygroups then
+			for k,v in pairs(data[id].bodygroups) do
+				ent:SetBodygroup(k, v)
+			end
+		end
+
+		if data[id].color then
+			ent:SetColor(data[id].color)
+		end
+	end
+
 	hook.Call("PlayerSpawnedVehicle", GAMEMODE, pPlayer, ent)
 
 end
