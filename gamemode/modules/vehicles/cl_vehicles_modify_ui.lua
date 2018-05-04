@@ -261,7 +261,7 @@ function PANEL:Think()
 
 end
 
-hook.Add("CalcView", "ViewCarView", function(ply, pos, angles, fov)
+hook.Add("CalcView", "ViewCarModify", function(ply, pos, angles, fov)
 	if isViewingCarModify then
 		local view = {}
 
