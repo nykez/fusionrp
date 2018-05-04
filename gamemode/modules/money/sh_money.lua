@@ -15,7 +15,7 @@ if SERVER then
 
 		return true
 	end
-	characeter.AddMoney = character.giveMoney
+	character.AddMoney = character.giveMoney
 
 	function character:takeMoney(amount)
 		amount = math.abs(amount)
