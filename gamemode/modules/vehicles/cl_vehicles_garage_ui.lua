@@ -28,7 +28,7 @@ function PANEL:Init()
 	self.container = self:Add("DScrollPanel")
 	self.container:Dock(FILL)
 
-	local vehicles = LocalPlayer():getChar():getData('vehicles', {})
+	local vehicles = LocalPlayer():getChar():getVehicles({})
 
 	for k,v in pairs(vehicles) do
 		local ourVehicle = Fusion.vehicles:GetTable(k)

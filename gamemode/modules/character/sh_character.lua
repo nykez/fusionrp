@@ -28,6 +28,7 @@ if (SERVER) then
 		insertObj:Insert("name", tblData.name)
 		insertObj:Insert("whitelist", "[]")
 		insertObj:Insert("inventory", "[]")
+		insertObj:Insert("vehicles", "[]")
 		insertObj:Insert("description", tblData.desc or "nil")
 		insertObj:Callback(function(result, status, charID)
 			local client = nil

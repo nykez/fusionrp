@@ -73,4 +73,6 @@ Fusion.character:CharVariable("description", {
 Fusion.character:CharVariable("vehicles", {
 	field = "vehicles",
 	index = 6,
+	default = {},
+	isLocal = true,
 })

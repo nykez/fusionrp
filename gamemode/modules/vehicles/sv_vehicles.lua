@@ -50,13 +50,13 @@ function Fusion.vehicles.Purchase(pPlayer, id, color)
 		return
 	end
 	
-	local vehicle_data = character:getData('vehicles', {})
+	local vehicle_data = character:getVehicles({})
 	vehicle_data[id] = {
 		color = color,
 		skin = 0,
 		bodygroups = {}
 	}
-	character:setData("vehicles", vehicle_data)
+	character:setVehicles(vehicle_data)
 
 	character:takeMoney(price)
 
@@ -74,14 +74,14 @@ function Fusion.vehicles.Sell(pPlayer, id)
 	local veh = Fusion.vehicles:GetTable(id)
 	if not veh then return end
 
-	local data = character:getData("vehicles", {})
+	local data = character:getVehicles({})
 	if not data[id] then return end
 	
 	// 30%
 	character:AddMoney(veh.price * 0.30)
 	data[id] = nil
 
-	character:setData("vehicles", data)
+	character:setData(data)
 
 	pPlayer:Notify("You have sold your vehicle.")
 
@@ -137,7 +137,7 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 	ent.Owner = pPlayer
 	pPlayer.vehicle = ent
 
-	local data = pPlayer:getChar():getData('vehicles', {})
+	local data = pPlayer:getChar():getVehicles({})
 
 	if data[id] then
 		
@@ -165,7 +165,7 @@ function Fusion.vehicles.Modify(pPlayer, id, bodygroups, color)
 	local veh = Fusion.vehicles:GetTable(id)
 	if not veh then return end
 
-	local data = character:getData("vehicles", {})
+	local data = character:getVehicles({})
 	if not data[id] then return end
 
 	if bodygroups then
@@ -176,7 +176,7 @@ function Fusion.vehicles.Modify(pPlayer, id, bodygroups, color)
 		data[id].color = color
 	end
 
-	character:setData("vehicles", data)
+	character:setVehicles(data)
 
 	pPlayer:Notify("You succesfully modified your vehicle.")
 

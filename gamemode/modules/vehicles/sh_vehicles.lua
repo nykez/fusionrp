@@ -53,7 +53,8 @@ end
 
 function PLAYER:HasVehicle(id)
 	local character = self:getChar()
-	local data = character:getData('vehicles', {})
+
+	local data = character:getVehicles({})
 
 	return data and data[id] and true or false
 end
