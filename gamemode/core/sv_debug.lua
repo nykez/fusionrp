@@ -16,6 +16,12 @@ concommand.Add("fs_xp_print", function(ply, cmd, args)
     end
 end)
 
+concommand.Add("fs_npc", function(ply, cmd, args)
+    print(ply:GetPos())
+    print(ply:GetAngles())
+end)
+
+
 concommand.Add("fs_doorprint", function(ply, cmd, args)
     ply:ChatPrint(Fusion.property.cache[tonumber(args[1])].name)
 end)

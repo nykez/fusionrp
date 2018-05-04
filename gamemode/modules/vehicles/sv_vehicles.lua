@@ -1,9 +1,12 @@
 Fusion.vehicles = Fusion.vehicles or {}
 Fusion.vehicles.cache = Fusion.vehicles.cache or {}
 Fusion.vehicles.make = Fusion.vehicles.make or {}
-
-util.AddNetworkString("Fusion.vehicles.sync")
-util.AddNetworkString("Fusion.vehicles.buy")
+Fusion.vehicles.Spawns = {
+	["rp_rockford_v2b"] = {
+		Vector(-5536.057617, -7347.047852, 64.031250),
+		Vector(-5526.431152, -7597.670410, 64.031250),
+	}
+}
 
 netstream.Hook("FusionVehicleSync", function(pPlayer, id, color, type)
 	if type == "buy" then
@@ -13,11 +16,16 @@ netstream.Hook("FusionVehicleSync", function(pPlayer, id, color, type)
 	end
 end)
 
+netstream.Hook("FusionVehicleSpawn", function(pPlayer, id )
+	Fusion.vehicles.Spawn(pPlayer, id)
+end)
+
 function Fusion.vehicles.Purchase(pPlayer, id, color)
 	if not IsValid(pPlayer) then return end
 	
 	local character = pPlayer:getChar()
 	if not character then return end
+
 	
 	local veh = Fusion.vehicles:GetTable(id)
 	if not veh then return end
@@ -70,6 +78,56 @@ function Fusion.vehicles.Sell(pPlayer, id)
 	pPlayer:Notify("You have sold your vehicle.")
 
 end
+
+function Fusion.vehicles.Spawn(pPlayer, id)
+	if !IsValid(pPlayer) then return end 
+	local character = pPlayer:getChar()
+	if not character then return end
+
+	local veh = Fusion.vehicles:GetTable(id)
+	if not veh then return end
+
+	local Vectors = Fusion.vehicles.Spawns[game.GetMap()]
+	if not Vectors then return end
+
+	if !pPlayer:HasVehicle(id) then
+		return
+	end
+	
+	local spawnPos = nil
+	for k,v in pairs(Vectors) do
+		local hasEnt = false
+
+		for _, ent in pairs(ents.FindInSphere(v, 25)) do
+			if ent and ent:IsVehicle() or ent:IsPlayer() then
+				continue
+			end
+
+			if !hasEnt then
+				spawnPos = v
+				break
+			end
+		end
+	end
+
+	if (!spawnPos) then
+		pPlayer:Notify('All spots are taken. Try again later.')
+		return//
+	end
+
+
+	local ent = ents.Create("prop_vehicle_jeep")
+	ent:SetPos(spawnPos)
+	ent:SetAngles(Angle(0, 90, 0))
+	ent:SetModel(veh.model)
+	ent:SetKeyValue("vehiclescript", veh.script)
+	ent:Spawn()
+	ent.Owner = pPlayer
+
+	hook.Call("PlayerSpawnedVehicle", GAMEMODE, pPlayer, ent)
+
+end
+
 
 
 concommand.Add("printcars", function(ply, cmd, args)
