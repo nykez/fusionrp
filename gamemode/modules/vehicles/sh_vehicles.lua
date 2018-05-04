@@ -52,11 +52,10 @@ function Fusion.vehicles:GetAll()
 end
 
 function PLAYER:HasVehicle(id)
-	if IsValid(self.vehicles[id]) then
-		return true
-	end
+	local character = self:getChar()
+	local data = character:getData('vehicles', {})
 
-	return false
+	return data and data[id] and true or false
 end
 
 function ENTITY:GetVehicleOwner()

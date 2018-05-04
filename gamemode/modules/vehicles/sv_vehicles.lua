@@ -5,6 +5,14 @@ Fusion.vehicles.make = Fusion.vehicles.make or {}
 util.AddNetworkString("Fusion.vehicles.sync")
 util.AddNetworkString("Fusion.vehicles.buy")
 
+netstream.Hook("FusionVehicleSync", function(pPlayer, id, color, type)
+	if type == "buy" then
+		Fusion.vehicles.Purchase(pPlayer, id, color)
+	elseif type == "sell" then
+		Fusion.vehicles.Sell(pPlayer, id)
+	end
+end)
+
 function Fusion.vehicles.Purchase(pPlayer, id, color)
 	if not IsValid(pPlayer) then return end
 	
@@ -16,19 +24,29 @@ function Fusion.vehicles.Purchase(pPlayer, id, color)
 
 	local price = veh.price
 
-	if !character:HasMoney(price) then return end
+	if !character:hasMoney(price) then 
+		pPlayer:Notify("You can't afford this vehicle.")
+		return 
+	end
+
+	if pPlayer:HasVehicle(id) then
+		pPlayer:Notify("You already own this vehicle!")
+		return
+	end
 	
-	local vehicle_data = pPlayer:getData('vehicles', {})
+	local vehicle_data = character:getData('vehicles', {})
 	vehicle_data[id] = {
 		color = color,
 		skin = 0,
 		bodygroups = {}
 	}
-	pPlayer:setData("vehicles", vehicle_data)
+	character:setData("vehicles", vehicle_data)
 
 	character:takeMoney(price)
 
 	pPlayer:Notify("You bought the " .. veh.name .. " for $" .. price .. "!")
+
+	character:Save()
 end
 
 function Fusion.vehicles.Sell(pPlayer, id)

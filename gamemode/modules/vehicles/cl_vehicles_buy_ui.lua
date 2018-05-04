@@ -244,22 +244,19 @@ function PANEL:ShowBuy(price)
     self.buy:TDLib():ClearPaint():Background(Color(20, 20, 20)):FadeHover(Color(25, 25, 25))
     self.buy.color = Color(80, 255, 80)
 
-    if LocalPlayer():GetBank() < price then
+    if LocalPlayer():getChar():getMoney() < price then
         self.buy.color = Color(255, 80, 80)
         self.buy:SetEnabled(false)
     end
 
     self.buy:DualText("Purchase", "Fusion_Dealer_Title", Color(255, 255, 255), "$" .. price, "Fusion_Dealer_Button", self.buy.color, TEXT_ALIGN_CENTER)
     self.buy:On("DoClick", function(s)
-        net.Start("Fusion.vehicles.buy")
-            net.WriteString(self.selected.id)
+        local color = Color(255, 255, 255)
+        if IsValid(self.paint) then
+            color = self.paint:GetColor()
+        end
 
-            if IsValid(self.paint) then
-                net.WriteTable(self.paint:GetColor())
-            else
-                net.WriteTable(Color(255, 255, 255))
-            end
-        net.SendToServer()
+        netstream.Start("FusionVehicleSync", self.selected.id, color, "buy")
 
         self:Close()
     end)
