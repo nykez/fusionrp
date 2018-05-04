@@ -115,6 +115,10 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 		return//
 	end
 
+	if pPlayer.vehicle and IsValid(pPlayer.vehicle) then
+		pPlayer.vehicle:Remove()
+	end
+
 
 	local ent = ents.Create("prop_vehicle_jeep")
 	ent:SetPos(spawnPos)
@@ -123,13 +127,8 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 	ent:SetKeyValue("vehiclescript", veh.script)
 	ent:Spawn()
 	ent.Owner = pPlayer
+	pPlayer.vehicle = ent
 
 	hook.Call("PlayerSpawnedVehicle", GAMEMODE, pPlayer, ent)
 
 end
-
-
-
-concommand.Add("printcars", function(ply, cmd, args)
-	PrintTable(ply.vehicles)
-end)
