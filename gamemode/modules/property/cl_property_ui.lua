@@ -25,6 +25,19 @@ function PANEL:Init()
 	self:MakePopup()
 	self:Center()
 
+	self.exit = self:Add("DButton")
+	self.exit:SetSize(32, 32)
+	self.exit:SetPos(self:GetWide() - 38, 2)
+	self.exit:SetText('X')
+	self.exit:TDLib():Background(Color(231, 76, 60)):FadeHover()
+	self.exit:SetTextColor(color_white)
+	self.exit:On('DoClick', function()
+		isViewing = nil
+		self:Remove()
+		Fusion.property.panel = nil
+	end)
+
+
 	self.a_back = self:Add("DButton")
 	self.a_back:SetSize(50, 50)
 	self.a_back:SetPos(ScrW() / 2 - 50 / 2 - 5, 10)
@@ -278,13 +291,7 @@ hook.Add("CalcView", "PropertyView", function(ply, pos, angles, fov)
 	end
 end)
 
-function PANEL:Think()
-	if (input.IsKeyDown(KEY_F1)) then
-		isViewing = nil
-		self:Remove()
-		Fusion.property.panel = nil
-	end
-end
+
 
 vgui.Register("FusionProperty", PANEL, "EditablePanel")
 
