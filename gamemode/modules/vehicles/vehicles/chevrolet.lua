@@ -49,21 +49,22 @@ veh.script = "scripts/vehicles/fusion/fusion_c7.txt"
 Fusion.vehicles:Register(veh)
 
 
-local veh = {}
+-- Another one of SGM's fucking autism fits
+--local veh = {}
 
-veh.id = "chevrolet_impalass"
+--veh.id = "chevrolet_impalass"
 
-veh.make = 'Chevrolet'
+--veh.make = 'Chevrolet'
 
-veh.name = "1964 Impala SS"
+--veh.name = "1964 Impala SS"
 
-veh.price = 15
+--veh.price = 15
 
-veh.model = "models/sentry/impala.mdl"
+--veh.model = "models/sentry/impala.mdl"
 
-veh.script = "scripts/vehicles/sentry/impala.txt"
+--veh.script = "scripts/vehicles/sentry/impala.txt"
 
-Fusion.vehicles:Register(veh)
+--Fusion.vehicles:Register(veh)
 
 
 local veh = {}
@@ -100,21 +101,22 @@ veh.script = "scripts/vehicles/sentry/elcamino.txt"
 Fusion.vehicles:Register(veh)
 
 
-local veh = {}
+-- Will reenable when SMG fixes his shit
+--local veh = {}
 
-veh.id = "chevrolet_grandsport"
+--veh.id = "chevrolet_grandsport"
 
-veh.make = 'Chevrolet'
+--veh.make = 'Chevrolet'
 
-veh.name = "Corvette Grand Sport"
+--veh.name = "Corvette Grand Sport"
 
-veh.price = 15
+--veh.price = 15
 
-veh.model = "models/sentry/96grandsport.mdl"
+--veh.model = "models/sentry/96grandsport.mdl"
 
-veh.script = "scripts/vehicles/sentry/96grandsport.txt"
+--veh.script = "scripts/vehicles/sentry/96grandsport.txt"
 
-Fusion.vehicles:Register(veh)
+--Fusion.vehicles:Register(veh)
 
 
 local veh = {}

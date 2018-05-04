@@ -134,19 +134,20 @@ veh.script = "scripts/vehicles/tdmcars/reventonr.txt"
 Fusion.vehicles:Register(veh)
 
 
-local veh = {}
+-- Broken will reenable when SGM fixes it
+--local veh = {}
 
-veh.id = "lam_aventador"
+--veh.id = "lam_aventador"
 
-veh.make = 'Lamborghini'
+--veh.make = 'Lamborghini'
 
-veh.name = "Aventador"
+--veh.name = "Aventador"
 
-veh.price = 15
+--veh.price = 15
 
-veh.model = "models/sentry/aventador_new.mdl"
+--veh.model = "models/sentry/aventador_new.mdl"
 
-veh.script = "scripts/vehicles/sentry/aventador_new.txt"
+--veh.script = "scripts/vehicles/sentry/aventador_new.txt"
 
 
 Fusion.vehicles:Register(veh)
