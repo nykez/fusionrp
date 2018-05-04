@@ -10,9 +10,9 @@
 --     ply:Give("weapon_doorfinder")
 -- end
 
--- function GM:PlayerNoClip(ply)
---     return ply:GetAccountLevel() > 3
--- end
+function GM:PlayerNoClip(ply)
+    return true
+end
 
 
 -- function GM:Shutdown()

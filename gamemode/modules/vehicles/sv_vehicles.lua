@@ -20,6 +20,14 @@ netstream.Hook("FusionVehicleSpawn", function(pPlayer, id )
 	Fusion.vehicles.Spawn(pPlayer, id)
 end)
 
+netstream.Hook("FusionVehicleModify", function(pPlayer, id, bodygroups, color)
+	if color then
+		Fusion.vehicles.Modify(pPlayer, id, bodygroups, color)
+	else
+		Fusion.vehicles.Modify(pPlayer, id, bodygroups)
+	end
+end)
+
 function Fusion.vehicles.Purchase(pPlayer, id, color)
 	if not IsValid(pPlayer) then return end
 	
@@ -131,4 +139,31 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 
 	hook.Call("PlayerSpawnedVehicle", GAMEMODE, pPlayer, ent)
 
+end
+
+function Fusion.vehicles.Modify(pPlayer, id, bodygroups, color)
+	if not IsValid(pPlayer) then return end
+
+	local character = pPlayer:getChar()
+	if not character then return end
+
+	local veh = Fusion.vehicles:GetTable(id)
+	if not veh then return end
+
+	local data = character:getData("vehicles", {})
+	if not data[id] then return end
+
+	if bodygroups then
+		data[id].bodygroups = bodygroups
+	end
+
+	if color then
+		data[id].color = color
+	end
+
+	character:setData("vehicles", data)
+
+	pPlayer:Notify("You succesfully modified your vehicle.")
+
+	character:Save()
 end
