@@ -14,7 +14,6 @@ if SERVER then
 		if Fusion.util.fonts[strFont] then return end
 		resource.AddFile("resource/fonts/"..strFont..".ttf")
 		Fusion.util.fonts[strFont] = true
-		print("[Fusion RP] Added Font -> " ..strFont)
 	end
 end
 
