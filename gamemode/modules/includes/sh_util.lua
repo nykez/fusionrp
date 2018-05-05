@@ -17,3 +17,5 @@ if SERVER then
 		print("[Fusion RP] Added Font -> " ..strFont)
 	end
 end
+
+

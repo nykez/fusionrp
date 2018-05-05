@@ -67,12 +67,10 @@ Fusion.character:CharVariable("data", {
 
 Fusion.character:CharVariable("description", {
 	field = "description",
-	index = 5,
 })
 
 Fusion.character:CharVariable("vehicles", {
 	field = "vehicles",
-	index = 6,
 	default = {},
 	isLocal = true,
 })

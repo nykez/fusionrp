@@ -9,6 +9,26 @@ PLAYER = FindMetaTable("Player")
 ENTITY = FindMetaTable("Entity")
 
 Fusion = Fusion or {}
+Fusion.util = Fusion.util or {}
+
+function Fusion.util.Client(file)
+	if SERVER then AddCSLuaFile(file) end
+
+	if CLIENT then
+		return include(file)
+	end
+end
+
+function Fusion.util.Server(file)
+	if SERVER then
+		return include(file)
+	end
+end
+
+function Fusion.util.Shared(file)
+	return Fusion.util.Client(file) or Fusion.util.Server(file)
+end
+
 
 local function client(file)
 	if SERVER then AddCSLuaFile(file) end

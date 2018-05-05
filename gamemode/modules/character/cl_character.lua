@@ -355,9 +355,6 @@ function PANEL:CreateName()
 		netstream.Start("fusion_CreateCharacter", self.data)
 
 		self:Remove()
-		timer.Simple(0.1, function()
-			vgui.Create('CharacterMainMenu')
-		end)
 	end
 
 

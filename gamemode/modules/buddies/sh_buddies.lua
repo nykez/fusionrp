@@ -1,5 +1,4 @@
 
-Fusion.buddies = Fusion.buddies or {}
 
 local character = Fusion.meta.character
 
@@ -54,14 +53,14 @@ if SERVER then
 	end
 end
 
-function Fusion.buddies.HasPerms(character, id, strType)
-	if not character then return end
+-- function Fusion.buddies.HasPerms(character, id, strType)
+-- 	if not character then return end
 
-	local buddies = character:getData("buddies", {})
+-- 	local buddies = character:getData("buddies", {})
 
-	if buddies[id] and buddies[id][strType] == true then
-		return true
-	end
+-- 	if buddies[id] and buddies[id][strType] == true then
+-- 		return true
+-- 	end
 
-	return false
-end
+-- 	return false
+-- end

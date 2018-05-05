@@ -64,6 +64,7 @@ hook.Add('PlayerInitialSpawn', "fusionplayer_inital", function(pPlayer)
 				end
 
 				print("opening menu")
+				pPlayer.charlist = tblCharacter
 				netstream.Start(pPlayer, "fusion_OpenMain", tblCharacter)
 			end, false, nil
 		)
@@ -72,8 +73,7 @@ hook.Add('PlayerInitialSpawn', "fusionplayer_inital", function(pPlayer)
 			pPlayer:StripAmmo()
 		end)
 
-		print('ending spawn hook')
-		
+
 	end)
 end)
 

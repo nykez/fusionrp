@@ -5,10 +5,11 @@ Fusion.character.loaded = Fusion.character.loaded or {}
 Fusion.character.vars = Fusion.character.vars or {}
 Fusion.character.cache = Fusion.character.cache or {}
 
-//Fusion.util:include("meta.lua", "shared")
+
+Fusion.util.Shared("sh_meta.lua")
 
 if (SERVER) then
-	function Fusion.character.Create(tblData, funcCallback)
+	function Fusion.character.Create(tblData, callback)
 		local timeStamp = math.floor(os.time())
 
 		tblData.money = tblData.money or 7500
@@ -18,6 +19,8 @@ if (SERVER) then
 		else
 			tblData.data = "[]"
 		end
+
+		local ourCharacterID = nil
 
 		local insertObj = mysql:Insert("fusion_characters");
 		insertObj:Insert("steamid", tblData.steamid)
@@ -39,17 +42,15 @@ if (SERVER) then
 				end
 			end
 
-			if (!client) then return end
-
+			ourCharacterID = charID
 			local character = Fusion.character.New(tblData, charID, client, tblData.steamid)
 
 			Fusion.character.loaded[charID] = character
 
-			Fusion.character.cache[tblData.steamid] = charID
+			table.insert(Fusion.character.cache[tblData.steamid], charID)
 
-			if (funcCallback) then
-				funcCallback(charID)
-				print("Created new character.")
+			if ourCharacterID and callback then
+				callback(ourCharacterID)
 			end
 
 		end);
@@ -188,15 +189,9 @@ end
 
 if SERVER then
 	concommand.Add("test", function(pPlayer)
-		local tbl = {
-			steamid = pPlayer:SteamID64(),
-			model = pPlayer:GetModel(),
-			money = 5000,
-			data = {},
-			name = "Huskey Dicksucker",
+		local char = pPlayer:getChar()
 
-		}
-
-		Fusion.character.Create(tbl)
+		char:setData("license", true)
+		char:Save()
 	end)
 end

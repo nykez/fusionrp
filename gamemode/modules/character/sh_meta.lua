@@ -8,6 +8,14 @@ char.__index = char
 char.id = char.id or 0
 char.vars = char.vars or {}
 
+function char:__tostring()
+	return "character["..(self.id or 0).."]"
+end
+
+function char:__eq(other)
+	return self:getID() == other:getID()
+end
+
 function char:getID()
 	return self.id
 end
@@ -16,17 +24,6 @@ function char.__eq(calling)
 	return self:getID() == calling:getID()
 end
 
-function char:getPlayer()
-	if IsValid(self.player) then
-		return self.player
-	elseif (self.steamid) then
-		for k,v in pairs(player.GetAll()) do
-			if v:SteamID64() == self.steamid then
-				return v
-			end
-		end
-	end
-end
 
 if SERVER then
 
@@ -93,7 +90,7 @@ if SERVER then
 		client:setNetVar("char", self:getID())
 
 
-		client:SetSkin(self:getData("skin", 0))
+		//client:SetSkin(self:getData("skin", 0))
 
 		local bodygroups = self:getData("bodygroups", {})
 		if bodygroups then
@@ -107,6 +104,35 @@ if SERVER then
 		hook.Run("fusion_CharacterLoaded", self:getID(), client)
 	end
 
+	function char:kick()
+		local client = self:getPlayer()
+		client:KillSilent()
+
+		local steamid = client:SteamID64()
+		local id = self:getID()
+		local isCurrentChar = self and self:getID() == id
+
+		if (self and self.steamID == steamID) then
+			netstream.Start(client, "charKick", id, isCurrentChar)
+
+			if (isCurrentChar) then
+				client:setNetVar("char", nil)
+				client:Spawn()
+			end
+		end
+	end
+end
+
+function char:getPlayer()
+	if IsValid(self.player) then
+		return self.player
+	elseif (self.steamid) then
+		for k,v in pairs(player.GetAll()) do
+			if v:SteamID64() == self.steamid then
+				return v
+			end
+		end
+	end
 end
 
 function Fusion.character:CharVariable(key, data)

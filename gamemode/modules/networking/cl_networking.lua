@@ -23,6 +23,14 @@ netstream.Hook("fusion_Global", function(key, value)
 	Fusion.net.global[key] = value
 end)
 
+netstream.Hook("fusion_CharAuth", function(vault, ...)
+	if type(vault) == "table" then
+		Fusion.characters = vault
+	end
+
+	vgui.Create("CharacterMainMenu")
+end)
+
 netstream.Hook('fusion_OpenMain', function(characters)
 	if characters then
 		Fusion.characters = characters
