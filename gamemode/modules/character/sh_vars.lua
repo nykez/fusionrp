@@ -74,3 +74,5 @@ Fusion.character:CharVariable("vehicles", {
 	default = {},
 	isLocal = true,
 })
+
+//

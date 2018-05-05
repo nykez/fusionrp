@@ -1,8 +1,9 @@
 // Don't autoinclude this file //
 
 Fusion.meta = Fusion.meta or {}
-Fusion.meta.character = Fusion.meta.character or {}
+
 local char = Fusion.meta.character or {}
+debug.getregistry().Character = Fusion.meta.character
 
 char.__index = char
 char.id = char.id or 0

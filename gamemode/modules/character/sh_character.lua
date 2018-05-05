@@ -1,9 +1,9 @@
 
 
 Fusion.character = Fusion.character or {}
+Fusion.character.cache = Fusion.character.cache or {}
 Fusion.character.loaded = Fusion.character.loaded or {}
 Fusion.character.vars = Fusion.character.vars or {}
-Fusion.character.cache = Fusion.character.cache or {}
 
 
 Fusion.util.Shared("sh_meta.lua")
@@ -14,11 +14,7 @@ if (SERVER) then
 
 		tblData.money = tblData.money or 7500
 
-		if tblData.data then
-			tblData.data = util.TableToJSON(tblData.data)
-		else
-			tblData.data = "[]"
-		end
+		tblData.bodygroups = nil
 
 		local ourCharacterID = nil
 
@@ -47,7 +43,7 @@ if (SERVER) then
 
 			Fusion.character.loaded[charID] = character
 
-			table.insert(Fusion.character.cache[tblData.steamid], charID)
+			Fusion.character.cache[tblData.steamid] = charID
 
 			if ourCharacterID and callback then
 				callback(ourCharacterID)
@@ -65,7 +61,7 @@ if (SERVER) then
 
 		// this prolly won't work since we clear their character tables on disconnect //
 		// but oh well, let's try it anyways
-		if (cache and !noCache) then
+		if (cache and noCache and noCache == true) then
 			for k,v in pairs(cache) do
 				local character = Fusion.character.loaded[v]
 
@@ -143,6 +139,7 @@ if (SERVER) then
 end
 
 function Fusion.character.New(tblData, id, pPlayer, steamID)
+
 
 	if (tblData.name) then
 		tblData.name = tblData.name:gsub("#", "#​")

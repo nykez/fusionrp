@@ -139,19 +139,20 @@ netstream.Hook("fusion_CreateCharacter", function(client, tblData)
 	tblData.steamid = client:SteamID64()
 	tblData.money = 10000
 	tblData.data = {}
+	tblData.data.bodygroups = tblData.bodygroups
 	tblData.inventory = {}
 	tblData.vehicles = {}
 	tblData.name = tblData.fname .." " .. tblData.lname
 
 	Fusion.character.Create(tblData, function(id)
-		print("doing our network callback")
-		print(id)
 		if (IsValid(client)) then
-			print("validating client")
 
 			Fusion.character.loaded[id]:Sync(client)
 
-			PrintTable(client.charlist)
+			if client.charlist then
+				table.insert(client.charlist, id)
+			end
+
 
 			netstream.Start(client, "fusion_CharAuth", client.charlist)
 
