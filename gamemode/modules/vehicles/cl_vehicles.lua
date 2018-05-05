@@ -35,7 +35,8 @@ hook.Add("PostDrawTranslucentRenderables","FusionDrawPlates", function(sky, deep
 
 		if (v:GetPos():Distance(LocalPlayer():GetPos()) > 1300) then continue end
 
-		local id = v.id 
+
+		local id = v:getNetVar("id", false)
 
 		if not id then continue end
 

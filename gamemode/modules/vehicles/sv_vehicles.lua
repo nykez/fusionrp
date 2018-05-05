@@ -156,6 +156,7 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 	if data[id] then
 		if data[id].license then
 			ent:setNetVar("license", data[id].license)
+			print(ent:getNetVar('license'))
 		end
 		
 		if data[id].bodygroups then
