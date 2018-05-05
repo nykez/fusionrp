@@ -1,11 +1,6 @@
 Fusion.jobs = Fusion.jobs or {}
 Fusion.jobs.cache = Fusion.jobs.cache or {}
 
-TEAM_CITIZEN = 1
-TEAM_POLICE = 2
-TEAM_MEDIC = 3
-TEAM_FIREFIGHTER = 4
-
 function Fusion.jobs:Load()
     local jobs = file.Find(GAMEMODE.FolderName .. "/gamemode/modules/jobs/jobs/*.lua", "LUA")
 
