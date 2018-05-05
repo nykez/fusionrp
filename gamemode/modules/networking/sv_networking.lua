@@ -129,6 +129,8 @@ netstream.Hook("fusion_spawnChar", function(client, id)
 
 		character:Start()
 		client:Spawn()
+
+		Fusion.jobs:SetJob(client, 1)
 	end
 end)
 

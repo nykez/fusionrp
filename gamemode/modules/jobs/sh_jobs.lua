@@ -23,10 +23,12 @@ function Fusion.jobs:Load()
 end
 hook.Add("PostGamemodeLoaded", "Fusion.LoadJobs", Fusion.jobs.Load)
 
+
 function Fusion.jobs:RegisterJob(tblData)
     Fusion.jobs.cache[tblData.ID] = tblData
 
-    _G[tblData.Enum] = tblJob.ID
+    _G[tblData.Enum] = tblData.ID
+
 end
 
 function Fusion.jobs:GetJobs()
@@ -48,6 +50,18 @@ end
 if SERVER then
     function Fusion.jobs:SetJob(pPlayer, jobID)
         if not IsValid(pPlayer) then return end
+
+        if Fusion.jobs:GetJobByID(jobID).CanJoinJob then
+            local canJoin = Fusion.jobs:GetJobByID(jobID):CanJoinJob(pPlayer)
+
+            if canJoin != true then
+                pPlayer:Notify("You don't meet the requirements to join this job.")
+                if Fusion.jobs:GetJobByID(jobID).NoJoin then
+                    pPlayer:Notify(Fusion.jobs:GetJobByID(jobID).NoJoin)
+                end
+                return
+            end
+        end
         
         if pPlayer.currentJob then
             Fusion.jobs:GetJobByID(pPlayer.currentJob):OnPlayerQuitJob(pPlayer)
@@ -57,11 +71,16 @@ if SERVER then
         pPlayer.currentJob = jobID
         pPlayer:SetTeam(jobID)
 
-        Fusion.jobs:GetJobByID( intJobID ):OnPlayerJoin( pPlayer )
+        Fusion.jobs:GetJobByID( jobID ):OnPlayerJoin( pPlayer )
 
         pPlayer:StripWeapons()
 
+        Fusion.jobs:GetJobByID( jobID ):PlayerLoadout(pPlayer)
+
         hook.Call( "PlayerLoadout", GAMEMODE, pPlayer )
+        print('finished job hook')
+
+        print(pPlayer:Team())
     end
 end
 

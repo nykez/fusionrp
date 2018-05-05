@@ -1,10 +1,12 @@
 
+
 local JOB = {}
-JOB.ID = 1
-JOB.Name = "Citizen"
+JOB.ID = 2
+JOB.Name = "Private Security"
 JOB.Color = Color(60, 255, 60)
 JOB.Salaray = 175
-JOB.Enum = "TEAM_CITIZEN"
+JOB.Enum = "TEAM_SECURITY"
+JOB.NoJoin = "You need a private security license to become this job."
 
 // REQUIRED FIELDS 
 function JOB:OnPlayerJoin(pPlayer)
@@ -21,7 +23,7 @@ if SERVER then
 	end
 
 	function JOB:CanJoinJob(pPlayer)
-		//return Fusion.license.Has("license_security", pPlayer)
+		return Fusion.license.Has("license_security", pPlayer)
 	end
 end
 
