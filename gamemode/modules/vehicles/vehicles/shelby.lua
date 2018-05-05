@@ -12,6 +12,11 @@ veh.model = "models/sentry/shelbycobra.mdl"
 
 veh.script = "scripts/vehicles/sentry/cobra427.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -93.1, 16),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -29,6 +34,11 @@ veh.model = "models/lonewolfie/shelby_gt500kr.mdl"
 
 veh.script = "scripts/vehicles/lwcars/shelby_gt500kr.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -113.2, 24.5),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -45,5 +55,10 @@ veh.price = 15
 veh.model = "models/lonewolfie/shelby_glhs.mdl"
 
 veh.script = "scripts/vehicles/lwcars/shelby_glhs.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -94.5, 32.5),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
