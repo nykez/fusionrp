@@ -139,6 +139,7 @@ netstream.Hook("fusion_CreateCharacter", function(client, tblData)
 	tblData.steamid = client:SteamID64()
 	tblData.money = 10000
 	tblData.data = {}
+	tblData.data.bodygroups = tblData.bodygroups
 	tblData.inventory = {}
 	tblData.vehicles = {}
 	tblData.name = tblData.fname .." " .. tblData.lname
@@ -150,6 +151,10 @@ netstream.Hook("fusion_CreateCharacter", function(client, tblData)
 			print("validating client")
 
 			Fusion.character.loaded[id]:Sync(client)
+
+			if client.charlist then
+				table.insert(client.charlist, id)
+			end
 
 			PrintTable(client.charlist)
 

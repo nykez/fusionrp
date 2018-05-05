@@ -1,9 +1,9 @@
 
 
 Fusion.character = Fusion.character or {}
+Fusion.character.cache = Fusion.character.cache or {}
 Fusion.character.loaded = Fusion.character.loaded or {}
 Fusion.character.vars = Fusion.character.vars or {}
-Fusion.character.cache = Fusion.character.cache or {}
 
 
 Fusion.util.Shared("sh_meta.lua")
@@ -34,6 +34,7 @@ if (SERVER) then
 		insertObj:Insert("vehicles", "[]")
 		insertObj:Insert("description", tblData.desc or "nil")
 		insertObj:Callback(function(result, status, charID)
+			print("character ID: " .. charID)
 			local client = nil
 
 			for k,v in pairs(player.GetAll()) do
@@ -47,7 +48,9 @@ if (SERVER) then
 
 			Fusion.character.loaded[charID] = character
 
-			table.insert(Fusion.character.cache[tblData.steamid], charID)
+			Fusion.character.cache[tblData.steamid] = charID
+
+			PrintTable(Fusion.character.cache)
 
 			if ourCharacterID and callback then
 				callback(ourCharacterID)
@@ -65,7 +68,7 @@ if (SERVER) then
 
 		// this prolly won't work since we clear their character tables on disconnect //
 		// but oh well, let's try it anyways
-		if (cache and !noCache) then
+		if (cache and noCache and noCache == true) then
 			for k,v in pairs(cache) do
 				local character = Fusion.character.loaded[v]
 
