@@ -2,10 +2,12 @@
 Fusion.skills = Fusion.skills or {}
 Fusion.skills.list = Fusion.skills.list or {}
 
-function Fusion.skills:Register(tblSkill)
-	Fusion.skills.list[tblSkill.id] = tblSkill
+function Fusion.skills.Load()
+
 end
 
-function Fusion.skills:Load()
+function Fusion.skills.setup(client)
+	print("setting up skills")
+
 
 end

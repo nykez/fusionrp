@@ -28,6 +28,18 @@ netstream.Hook("FusionVehicleModify", function(pPlayer, id, bodygroups, color)
 	end
 end)
 
+local function randomString()
+	return string.char( string.byte( 'A' ) + math.random( 0, 25 ) )
+end
+
+function Fusion.vehicles:generateLicense()
+	local license = "";
+
+	license = string.format([[%s%s%s-%i%i%i]], randomString(), randomString(), randomString(), math.random( 0, 9 ), math.random( 0, 9 ), math.random( 0, 9 ))
+
+	return license
+end
+
 function Fusion.vehicles.Purchase(pPlayer, id, color)
 	if not IsValid(pPlayer) then return end
 	
@@ -54,7 +66,8 @@ function Fusion.vehicles.Purchase(pPlayer, id, color)
 	vehicle_data[id] = {
 		color = color,
 		skin = 0,
-		bodygroups = {}
+		bodygroups = {},
+		license = Fusion.vehicles:generateLicense(),
 	}
 	character:setVehicles(vehicle_data)
 
@@ -135,11 +148,15 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 	ent:SetKeyValue("vehiclescript", veh.script)
 	ent:Spawn()
 	ent.Owner = pPlayer
+	ent:setNetVar("id", id)
 	pPlayer.vehicle = ent
 
 	local data = pPlayer:getChar():getVehicles({})
 
 	if data[id] then
+		if data[id].license then
+			ent:setNetVar("license", data[id].license)
+		end
 		
 		if data[id].bodygroups then
 			for k,v in pairs(data[id].bodygroups) do

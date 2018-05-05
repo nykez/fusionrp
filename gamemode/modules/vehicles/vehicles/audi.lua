@@ -46,6 +46,11 @@ veh.model = "models/tdmcars/audir8.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/audir8.txt"
 
+veh.lplate = {
+	Vec = Vector(-2.101918, -104.330750, 28.820555),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
