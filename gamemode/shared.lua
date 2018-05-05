@@ -48,11 +48,9 @@ local function shared(file)
 	return client(file) or server(file)
 end
 
-// Usage:
-// shared("myfile/myfile.lua")
-
-/* Load core components */
-/* Note: all core files must contain a cl, sh, or sv prefix in order to be recognized */
+server("modules/sql/mysql.lua")
+server("modules/sql/sql.lua")
+shared("modules/includes/sh_pon.lua")
 
 local root = GM.FolderName .. "/gamemode/core/"
 local cl_files = file.Find(root .. "cl_*.lua", "LUA")
