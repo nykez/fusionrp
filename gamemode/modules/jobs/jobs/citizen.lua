@@ -21,7 +21,7 @@ if SERVER then
 	end
 
 	function JOB:CanJoinJob(pPlayer)
-		//return Fusion.license.Has("license_security", pPlayer)
+		return true
 	end
 end
 

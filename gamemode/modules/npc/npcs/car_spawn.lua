@@ -32,7 +32,7 @@ npc.use = function()
 	Fusion.dialog.canvas:SetTitle('Car Spawner')
 
 	Fusion.dialog.canvas:AddButton("I'm looking to get my car.", npc.buy)
-	Fusion.dialog.canvas:AddButton("What, do I look rich to you??", Fusion.dialog.Close)
+	Fusion.dialog.canvas:AddButton("Nevermind.", Fusion.dialog.Close)
 
 	Fusion.dialog.canvas:Show()
 end

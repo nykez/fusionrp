@@ -4,6 +4,9 @@ Fusion.license.cache = Fusion.license.cache or {}
 
 function Fusion.license.Register(tblData)
 	Fusion.license.cache[tblData.unique] = tblData
+	if CLIENT and tblData.mat then
+		tblData.mat = Material(tblData.mat, "noclamp smooth")
+	end
 end
 
 function Fusion.license.Get(unique)
@@ -31,18 +34,26 @@ Fusion.license.Register({
 	desc = "Allows you to purchase a tow truck, and become roadcrew. Also gives you access to roadcrew tools.",
 	price = 0,
 	renew = 250,
+	//mat = "gui/tow-truck.png",4
 	canPurchase = function(pPlayer)
 		return true
 	end
 })
 
 Fusion.license.Register({
-	name = "Private Security",
-	unique = "license_security",
-	desc = "Allows you to purchase supreme weapons to be used in security details. Police can revoke.",
-	price = 15000,
+	name = "Medical Marijuana",
+	unique = "license_weed",
+	desc = "Allows you to purchase a license to grow medical Marijuana legally.",
+	price = 0,
 	renew = 250,
 	canPurchase = function(pPlayer)
+		local can = pPlayer:getLevel() >= 50
+
+		if !can then
+			pPlayer:Notify("You need player level 50 for this license.")
+			return false
+		end
+
 		return true
 	end
 })

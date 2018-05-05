@@ -32,6 +32,7 @@ function PANEL:Init()
 	local data = Fusion.license.GetAll()
 
 	for k,v in pairs(data) do
+
 		local ourLicense = self.container:Add("DPanel")
 		ourLicense:Dock(TOP)
 		ourLicense:DockMargin(5, 5, 5, 0)
@@ -40,6 +41,13 @@ function PANEL:Init()
 		:SideBlock(Color(math.random(0, 255),math.random(0, 255),math.random(0, 255)), 4, LEFT)
 		:DualText(v.name, nil, color_white, v.desc, nil, Color(100, 100, 100))
 		:FadeHover()
+
+		if v.mat then
+			local ourMaterial = ourLicense:Add("DPanel")
+			ourMaterial:Dock(LEFT)
+			ourMaterial:DockMargin(6, 0, 0, 0)
+			ourMaterial:TDLib():Background(Color(50, 50, 50)):Material(v.mat)
+		end
 
 		local purchase = ourLicense:Add("DButton")
 		purchase:Dock(RIGHT)

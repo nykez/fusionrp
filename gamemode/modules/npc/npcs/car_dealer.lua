@@ -52,9 +52,12 @@ end
 npc.buy = function()
 	Fusion.dialog:Close()
 
-	if !Fusion.vehicles.panel then
-		Fusion.vehicles.panel = vgui.Create("FusionVehicles")
+	if Fusion.vehicles.panel then
+		Fusion.vehicles.panel:Remove()
+		Fusion.vehicles.panel = nil
 	end
+
+	Fusion.vehicles.panel = vgui.Create("FusionVehicles")
 end
 
 
