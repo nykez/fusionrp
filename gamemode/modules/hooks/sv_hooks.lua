@@ -97,6 +97,8 @@ function GM:PlayerLoadout(client)
 	local char = client:getChar()
 
 	if char then
+		client:SetupHands()
+		
 		hook.Run("PostPlayerLoadout", client)
 	else
 		client:SetNoDraw(true)
@@ -112,3 +114,4 @@ function GM:PlayerSpawn(client)
 
 	hook.Run("PlayerLoadout", client)
 end
+
