@@ -91,7 +91,7 @@ if SERVER then
 		client:setNetVar("char", self:getID())
 
 
-		//client:SetSkin(self:getData("skin", 0))
+		client:SetSkin(self:getData("skin", 0))
 
 		local bodygroups = self:getData("bodygroups", {})
 		if bodygroups then

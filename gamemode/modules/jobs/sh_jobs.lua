@@ -23,22 +23,45 @@ function Fusion.jobs:Load()
 end
 hook.Add("PostGamemodeLoaded", "Fusion.LoadJobs", Fusion.jobs.Load)
 
-function Fusion.jobs:Register(tbl)
-    if !tbl or !tbl.id then return end
-    if Fusion.jobs.cache[tbl.id] then return end
+function Fusion.jobs:RegisterJob(tblData)
+    Fusion.jobs.cache[tblData.ID] = tblData
 
-    Fusion.jobs.cache[tbl.id] = tbl
-    team.SetUp(tbl.id, tbl.name, tbl.color, true)
+    _G[tblData.Enum] = tblJob.ID
 end
 
-function PLAYER:Employed()
-    if self:Team() > 1 then
-        return true
+function Fusion.jobs:GetJobs()
+    return Fusion.jobs.cache
+end
+
+function Fusion.jobs:GetJobByID(ID)
+    return Fusion.jobs.cache[ID]
+end
+
+function Fusion.jobs:GetPlayerJob(pPlayer)
+    return Fusion.jobs.cache[pPlayer.currentJob]
+end
+
+function Fusion.jobs:IsPlayerJob(pPlayer, jobID)
+    return pPlayer.currentJob == jobID or false
+end
+
+if SERVER then
+    function Fusion.jobs:SetJob(pPlayer, jobID)
+        if not IsValid(pPlayer) then return end
+        
+        if pPlayer.currentJob then
+            Fusion.jobs:GetJobByID(pPlayer.currentJob):OnPlayerQuitJob(pPlayer)
+            hook.Call( "GamemodePlayerQuitJob", GAMEMODE, pPlayer, pPlayer.currentJob )
+        end
+
+        pPlayer.currentJob = jobID
+        pPlayer:SetTeam(jobID)
+
+        Fusion.jobs:GetJobByID( intJobID ):OnPlayerJoin( pPlayer )
+
+        pPlayer:StripWeapons()
+
+        hook.Call( "PlayerLoadout", GAMEMODE, pPlayer )
     end
-
-    return false
 end
 
-function Fusion.jobs:Get(id)
-    return Fusion.jobs.cache[id]
-end
