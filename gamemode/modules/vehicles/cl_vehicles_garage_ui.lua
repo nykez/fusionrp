@@ -64,6 +64,7 @@ function PANEL:Init()
 		purchase:SetText("Spawn")
 		local color = Color(231, 76, 60)
 
+		//local color = Color(math.random(0, 255), math.random(0, 255),math.random(0, 255))
 		purchase:TDLib():Background(color):FadeHover()
 		purchase:SetTextColor(color_white)
 		purchase.unique = k

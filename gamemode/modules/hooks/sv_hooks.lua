@@ -84,8 +84,31 @@ hook.Add("PlayerDisconnected", "fusion_player_disconnect", function(pPlayer)
 
 end)
 
+function GM:PlayerLoadedChar(client, character, lastCharacter)
+	hook.Run("PlayerLoadout", client)
+end
+
+function GM:PostPlayerLoadout(client)
+
+end
+
+function GM:PlayerLoadout(client)
+
+	local char = client:getChar()
+
+	if char then
+		hook.Run("PostPlayerLoadout", client)
+	else
+		client:SetNoDraw(true)
+		client:Lock()
+		client:SetNotSolid(true)
+	end
+end
+
 function GM:PlayerSpawn(client)
 	client:SetNoDraw(false)
 	client:UnLock()
 	client:SetNotSolid(false)
+
+	hook.Run("PlayerLoadout", client)
 end

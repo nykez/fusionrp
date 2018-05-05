@@ -130,6 +130,8 @@ netstream.Hook("fusion_spawnChar", function(client, id)
 		character:Start()
 		client:Spawn()
 
+		hook.Run("PlayerLoadedChar", client, character, currentChar)
+
 		Fusion.jobs:SetJob(client, 1)
 	end
 end)
