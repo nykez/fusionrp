@@ -243,8 +243,10 @@ function PANEL:LoadCar(id)
 		if (self.useColor == true) then
 			print(self.ourPaintColor)
 			netstream.Start("FusionVehicleModify", self.ourID, self.data, self.ourPaintColor)
+			self:Remove()
 		else
 			netstream.Start("FusionVehicleModify", self.ourID, self.data)
+			self:Remove()
 		end
 	end)
 
