@@ -38,7 +38,6 @@ hook.Add('PlayerInitialSpawn', "fusionplayer_inital", function(pPlayer)
 
 		pPlayer.loadTime = SysTime()
 
-		print("running spawn hook")
 
 		Fusion.character.BuildCharacters(pPlayer, 
 			function(tblCharacter)
@@ -63,7 +62,6 @@ hook.Add('PlayerInitialSpawn', "fusionplayer_inital", function(pPlayer)
 					end
 				end
 
-				print("opening menu")
 				pPlayer.charlist = tblCharacter
 				netstream.Start(pPlayer, "fusion_OpenMain", tblCharacter)
 			end, false, nil

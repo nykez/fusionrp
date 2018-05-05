@@ -53,7 +53,7 @@ if SERVER then
 	end
 
 	function char:Sync(rec)
-		print('syncing')
+		--print('syncing')
 		if (rec == nil) then
 			for k,v in pairs(player.GetAll()) do
 				self:Sync(v)

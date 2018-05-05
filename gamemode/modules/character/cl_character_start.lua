@@ -5,7 +5,6 @@ local PANEL = {}
 
 
 function PANEL:Init()
-	print("opening character menu")
 	self:SetWide(ScrW())
 	self:SetTall(ScrH())
 

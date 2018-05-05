@@ -252,8 +252,6 @@ function PANEL:CreateOptions()
 	    		ourBodygroups[v.Bodygroup] = v.SelectedLine
 	    	end
 
-	    	print('--bodygroups--')
-	    	PrintTable(ourBodygroups)
 	    	for k,v in pairs(ourBodygroups) do
 	    		self.modelpnl.Entity:SetBodygroup(k, v)
 	    	end
