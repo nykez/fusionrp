@@ -145,10 +145,7 @@ netstream.Hook("fusion_CreateCharacter", function(client, tblData)
 	tblData.name = tblData.fname .." " .. tblData.lname
 
 	Fusion.character.Create(tblData, function(id)
-		print("doing our network callback")
-		print(id)
 		if (IsValid(client)) then
-			print("validating client")
 
 			Fusion.character.loaded[id]:Sync(client)
 
@@ -156,7 +153,6 @@ netstream.Hook("fusion_CreateCharacter", function(client, tblData)
 				table.insert(client.charlist, id)
 			end
 
-			PrintTable(client.charlist)
 
 			netstream.Start(client, "fusion_CharAuth", client.charlist)
 

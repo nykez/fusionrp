@@ -14,11 +14,7 @@ if (SERVER) then
 
 		tblData.money = tblData.money or 7500
 
-		if tblData.data then
-			tblData.data = util.TableToJSON(tblData.data)
-		else
-			tblData.data = "[]"
-		end
+		tblData.bodygroups = nil
 
 		local ourCharacterID = nil
 
@@ -34,7 +30,6 @@ if (SERVER) then
 		insertObj:Insert("vehicles", "[]")
 		insertObj:Insert("description", tblData.desc or "nil")
 		insertObj:Callback(function(result, status, charID)
-			print("character ID: " .. charID)
 			local client = nil
 
 			for k,v in pairs(player.GetAll()) do
@@ -49,8 +44,6 @@ if (SERVER) then
 			Fusion.character.loaded[charID] = character
 
 			Fusion.character.cache[tblData.steamid] = charID
-
-			PrintTable(Fusion.character.cache)
 
 			if ourCharacterID and callback then
 				callback(ourCharacterID)
@@ -146,6 +139,7 @@ if (SERVER) then
 end
 
 function Fusion.character.New(tblData, id, pPlayer, steamID)
+
 
 	if (tblData.name) then
 		tblData.name = tblData.name:gsub("#", "#​")

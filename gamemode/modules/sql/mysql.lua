@@ -156,10 +156,17 @@ function QUERY_CLASS:Select(fieldName)
 end;
 
 function QUERY_CLASS:Insert(key, value)
+	if type(value) == "table" then
+		value = util.TableToJSON(value)
+	end
+
 	self.insertList[#self.insertList + 1] = {"`"..key.."`", "\""..self:Escape(value).."\""};
 end;
 
 function QUERY_CLASS:Update(key, value)
+	if type(value) == "table" then
+		value = util.TableToJSON(value)
+	end
 	self.updateList[#self.updateList + 1] = {"`"..key.."`", "\""..self:Escape(value).."\""};
 end;
 

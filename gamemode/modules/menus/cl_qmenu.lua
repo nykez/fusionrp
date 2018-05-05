@@ -59,7 +59,6 @@ function PANEL:Init()
 
 	local data = Fusion.menu:Get()
 
-	PrintTable(data)
 
 	self.buttons = {}
 	for k,v in pairs(data) do
