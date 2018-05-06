@@ -8,6 +8,13 @@ surface.CreateFont("Fusion_Skills", {
     antialias = true
 })
 
+surface.CreateFont("Fusion_Skills2", {
+    font = "GeosansLight",
+    size = ScreenScale(10),
+    weight = 400,
+    antialias = true
+})
+
 function PANEL:Init()
 
 	self:SetWide(ScrW() * 0.55)
@@ -36,35 +43,55 @@ function PANEL:Init()
 	self.container = self:Add("DScrollPanel")
 	self.container:Dock(FILL)
 
-	local ourSkills = Fusion.skills.cache
+	local ourCats = Fusion.skills.cats
 
-	for k,v in pairs(ourSkills) do
-		local char = LocalPlayer():getChar()
-		local max = char:GetRequiredXP(k)
-		local skill = self.container:Add("FusionProgressBar")
-		skill:Dock(TOP)
-		skill:SetTall(50)
-		skill:DockMargin(5, 5, 5, 0)
-		skill:SetMax(max)
-		skill:SetValue(char:GetSkillXP(k))
-		skill:TDLib():Outline(Color(25, 25, 25))
+   local catlbl = {}
+
+   for k,v in SortedPairs(ourCats) do
+      local data = Fusion.skills:GetCat(k)
+
+      local clr = Color(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+      if !catlbl[k] then
+         catlbl[k] = self.container:Add("DPanel")
+         local pnl = catlbl[k]
+         pnl:Dock(TOP)
+         pnl:SetTall(40)
+         pnl:DockMargin(6, 5, 6, 0)
+         pnl:TDLib():Background(Color(40, 40, 40)):Outline(Color(50, 50, 50))
+         :Text(k, "Fusion_Skills2", color_white)
+         :SideBlock(clr)
+      end
+
+      for i, skills in pairs(data) do
+
+         local char = LocalPlayer():getChar()
+         local max = char:GetRequiredXP(i)
+         local skill = self.container:Add("FusionProgressBar")
+         skill:Dock(TOP)
+         skill:SetTall(50)
+         skill:DockMargin(5, 5, 5, 0)
+         skill:SetMax(max)
+         skill:SetValue(char:GetSkillXP(i))
+         skill:TDLib():Outline(Color(25, 25, 25))
 
 
 
-		local label = skill:Add("DLabel")
-		label:SetText(k)
-		label:Dock(LEFT)
-		label:DockMargin(5, 0, 0, 0)
-		label:SetFont("Fusion_Dealer_Button")
+         local label = skill:Add("DLabel")
+         label:SetText(i)
+         label:Dock(LEFT)
+         label:DockMargin(5, 0, 0, 0)
+         label:SetFont("Fusion_Dealer_Button")
 
-		label:SizeToContents()
+         label:SizeToContents()
 
-		local level = skill:Add("DLabel")
-		level:SetText(char:GetSkillLevel(k))
-		level:Dock(LEFT)
-		level:DockMargin(0, 0, 0, 0)
-		level:SetFont("Fusion_Skills")
-	end
+         local level = skill:Add("DLabel")
+         level:SetText(char:GetSkillLevel(i))
+         level:Dock(LEFT)
+         level:DockMargin(0, 0, 0, 0)
+         level:SetFont("Fusion_Skills")
+         
+      end
+   end
 end
 
 vgui.Register("FusionSkills", PANEL, "EditablePanel")

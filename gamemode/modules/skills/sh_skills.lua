@@ -6,17 +6,25 @@ Fusion.skills.cats = Fusion.skills.cat or {}
 local MAX_LEVEL = 35
 
 local skills = {
-	["Crafting"] = {MaxLevel = 25, Const = 0.20},
-	["Herbology"] = {MaxLevel = 25, Const = 0.20},
-	["Mining"] = {MaxLevel = 25, Const = 0.20},
-	["Forestry"] = {MaxLevel = 25, Const = 0.20},
-	["Bartering"] = {MaxLevel = 25, Const = 0.20},
-	["Endurance"] = {MaxLevel = 25, Const = 0.20},
-	["Cooking"] = {MaxLevel = 25, Const = 0.20},
+	["Crafting"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
+	["Herbology"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
+	["Mining"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
+	["Forestry"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
+	["Bartering"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
+	["Endurance"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
+	["Cooking"] = {MaxLevel = 25, Const = 0.20, Cat = "Player"},
 
-	["Police"] = {MaxLevel = 25, Const = 0.20},
-	["EMT"] = {MaxLevel = 25, Const = 0.20},
-	["Firefighter"] = {MaxLevel = 25, Const = 0.20},
+	["Police"] = {MaxLevel = 25, Const = 0.20, Cat = "Government"},
+	["EMT"] = {MaxLevel = 25, Const = 0.20, Cat = "Government"},
+	["Firefighter"] = {MaxLevel = 25, Const = 0.20, Cat = "Government"},
+
+	["Light Weapons"] = {MaxLevel = 25, Const = 0.20, Cat = "Weapon Proficiency"},
+	["Assault Rifles"] = {MaxLevel = 25, Const = 0.20, Cat = "Weapon Proficiency"},
+	["Long Rifles"] = {MaxLevel = 25, Const = 0.20, Cat = "Weapon Proficiency"},
+	["Explosives"] = {MaxLevel = 25, Const = 0.20, Cat = "Weapon Proficiency"},
+	["Melee"] = {MaxLevel = 25, Const = 0.20, Cat = "Weapon Proficiency"},
+
+
 }
 
 //
@@ -24,10 +32,15 @@ local skills = {
 function Fusion.skills.Load()
 	for k,v in pairs(skills) do
 		Fusion.skills:Register(k, v.MaxLevel, v.Const, v.Reduce)
+		Fusion.skills.cats[v.Cat] = Fusion.skills.cats[v.Cat] or {}
+		Fusion.skills.cats[v.Cat][k] = v
 	end
 end
 hook.Add("PostGamemodeLoaded", "FusionRP.LoadSkillsTable", Fusion.skills.Load)
 
+function Fusion.skills:GetCat(strCat)
+	return Fusion.skills.cats[strCat]
+end
 
 function Fusion.skills:Register(strSkill, intMaxLevel, intXPConst, intReduceRatio )
 	Fusion.skills.cache[strSkill] = {Max = intMaxLevel, Const = intXPConst, Ratio = intReduceRatio}
