@@ -12,6 +12,11 @@ veh.model = "models/lonewolfie/nis_skyline_r32.mdl"
 
 veh.script = "scripts/vehicles/lwcars/nis_skyline_r32.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -109, 21.3),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -27,7 +32,7 @@ veh.price = 15
 
 veh.model = "models/tdmcars/skyline_r34.mdl"
 
-veh.script = "scripts/vehicles/tdmcars/skyline_r34"
+veh.script = "scripts/vehicles/fusion/fusion_r34"
 
 Fusion.vehicles:Register(veh)
 
@@ -46,6 +51,11 @@ veh.model = "models/tdmcars/nis_leaf.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/nis_leaf.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -102, 22.5),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -62,6 +72,11 @@ veh.price = 15
 veh.model = "models/tdmcars/350z.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/350z.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -102.5, 30.5),
+	Ang = Angle(0, 0, 75),
+}
 
 Fusion.vehicles:Register(veh)
 
@@ -97,6 +112,11 @@ veh.model = "models/tdmcars/nissan_gtr.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/gtr.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -110.5, 30),
+	Ang = Angle(0, 0, 75),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -113,5 +133,10 @@ veh.price = 15
 veh.model = "models/lonewolfie/nissan_sileighty.mdl"
 
 veh.script = "scripts/vehicles/lwcars/nissan_sileighty.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -110.5, 20),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
