@@ -50,22 +50,31 @@ function PANEL:Init()
    for k,v in SortedPairs(ourCats) do
       local data = Fusion.skills:GetCat(k)
 
+      local valueMax = 0 
+      local currentValue = 0
+
       local clr = Color(math.random(0, 255), math.random(0, 255), math.random(0, 255))
       if !catlbl[k] then
-         catlbl[k] = self.container:Add("DPanel")
+         catlbl[k] = self.container:Add("FusionProgressBar")
          local pnl = catlbl[k]
          pnl:Dock(TOP)
          pnl:SetTall(40)
          pnl:DockMargin(6, 5, 6, 0)
-         pnl:TDLib():Background(Color(40, 40, 40)):Outline(Color(50, 50, 50))
-         :Text(k, "Fusion_Skills2", color_white)
-         :SideBlock(clr)
+        // pnl:TDLib():Background(Color(40, 40, 40)):Outline(Color(50, 50, 50))
+         //:Text(k, "Fusion_Skills2", color_white)
+        // :SideBlock(clr)
+
+         // New bar //
+         pnl:TDLib():Text(k, "Fusion_Skills2", color_white)
+         pnl:SetColor(clr)
       end
 
       for i, skills in pairs(data) do
 
          local char = LocalPlayer():getChar()
          local max = char:GetRequiredXP(i)
+         valueMax = valueMax + max
+         currentValue = currentValue + char:GetSkillXP(i)
          local skill = self.container:Add("FusionProgressBar")
          skill:Dock(TOP)
          skill:SetTall(50)
@@ -91,6 +100,8 @@ function PANEL:Init()
          level:SetFont("Fusion_Skills")
          
       end
+      catlbl[k]:SetMax(valueMax)
+      catlbl[k]:SetValue(currentValue)
    end
 end
 

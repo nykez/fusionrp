@@ -116,7 +116,8 @@ if SERVER then
 	concommand.Add("addskill", function(pPlayer)
 		local char = pPlayer:getChar()
 
-		char:AddSkillXP("Crafting", 40)
+		char:AddSkillXP("Police", 40)
+		char:AddSkillXP("EMT", 120)
 
 		pPlayer:Notify("Level: " .. char:GetSkillLevel("Crafting"))
 
