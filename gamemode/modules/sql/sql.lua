@@ -63,6 +63,7 @@ local function populateTables()
     chars:Create("create_time", INT_NOT_NULL)
     chars:Create("description", "varchar(50) NOT NULL")
     chars:Create("skills", "LONGTEXT")
+    chars:Create("levels", "LONGTEXT")
     chars:PrimaryKey("id")
     chars:Execute()
 

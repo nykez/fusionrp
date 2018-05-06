@@ -81,11 +81,6 @@ Fusion.character:CharVariable("skills", {
 	isLocal = true,
 })
 
-Fusion.character:CharVariable("skills", {
-	field = "skills",
-	default = {},
-	isLocal = true,
-})
 
 Fusion.character:CharVariable("levels", {
 	field = "levels",

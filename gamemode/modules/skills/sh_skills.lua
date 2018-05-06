@@ -66,25 +66,32 @@ if SERVER then
 			ourSkills[strSkill] = intAmount
 		end
 
+
 		if ourSkills[strSkill] > self:GetRequiredXP(strSkill) then
-			local levels = self:getLevels()[strSkill] or 1
-			levels[strSkill] = levels[strSkill] + 1
+			local levels = self:getLevels()
+
+			if levels[strSkill] then
+				levels[strSkill] = levels[strSkill] + 1
+			else
+				levels[strSkill] = 2
+			end
 
 			self:setLevels(levels)
 
-			print('level up')
+			ourSkills[strSkill] = 0
 
+			client:Notify('You leveled up '.. strSkill .. "!")
 		end
 		
 		self:setSkills(ourSkills)
 
-		//self:Save()
+		self:Save()
 	end
 
 	concommand.Add("addskill", function(pPlayer)
 		local char = pPlayer:getChar()
 
-		char:AddSkillXP("Crafting", 10)
+		char:AddSkillXP("Crafting", 40)
 
 		pPlayer:Notify("Level: " .. char:GetSkillLevel("Crafting"))
 
