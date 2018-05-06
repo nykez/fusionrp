@@ -1,13 +1,25 @@
 
 Fusion.skills = Fusion.skills or {}
 Fusion.skills.cache = Fusion.skills.cache or {}
+Fusion.skills.cats = Fusion.skills.cat or {}
 
 local MAX_LEVEL = 35
 
 local skills = {
 	["Crafting"] = {MaxLevel = 25, Const = 0.20},
 	["Herbology"] = {MaxLevel = 25, Const = 0.20},
+	["Mining"] = {MaxLevel = 25, Const = 0.20},
+	["Forestry"] = {MaxLevel = 25, Const = 0.20},
+	["Bartering"] = {MaxLevel = 25, Const = 0.20},
+	["Endurance"] = {MaxLevel = 25, Const = 0.20},
+	["Cooking"] = {MaxLevel = 25, Const = 0.20},
+
+	["Police"] = {MaxLevel = 25, Const = 0.20},
+	["EMT"] = {MaxLevel = 25, Const = 0.20},
+	["Firefighter"] = {MaxLevel = 25, Const = 0.20},
 }
+
+//
 
 function Fusion.skills.Load()
 	for k,v in pairs(skills) do
@@ -21,7 +33,7 @@ function Fusion.skills:Register(strSkill, intMaxLevel, intXPConst, intReduceRati
 	Fusion.skills.cache[strSkill] = {Max = intMaxLevel, Const = intXPConst, Ratio = intReduceRatio}
 end
 
-Fusion.skills.Load()//
+Fusion.skills.Load()
 
 
 local charMeta = Fusion.meta.character

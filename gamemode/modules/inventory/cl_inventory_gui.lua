@@ -103,6 +103,12 @@ function PANEL:CreateModel()
 		return
 	end
 
+	if LocalPlayer():getChar():getData("bodygroups", {}) then
+		for k,v in pairs(LocalPlayer():getChar():getData("bodygroups", {})) do
+			self.modelpnl.Entity:SetBodygroup(k, v)
+		end
+	end
+
 	function self.modelpnl.PostDrawModel( ent )
 		local ply = LocalPlayer()
 		if not IsValid( ply ) then return end

@@ -185,11 +185,13 @@ local data = {name = "Inventory", panel = "FusionInventory", icon = {inventorypn
 
 Fusion.menu:Add(data)
 
-
 local data = {name = "Organization", panel = "FusionInventory", icon = {inventorypng, "gui/gang.png" }}
 Fusion.menu:Add(data)
 
 local data = {name = "Settings", panel = "FusionInventory", icon = {inventorypng, "gui/settings.png" }}
+Fusion.menu:Add(data)
+
+local data = {name = "Skills", panel = "FusionInventory", icon = {inventorypng, "gui/skills.png" }}
 Fusion.menu:Add(data)
 
 
