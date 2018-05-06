@@ -80,3 +80,15 @@ Fusion.character:CharVariable("skills", {
 	default = {},
 	isLocal = true,
 })
+
+Fusion.character:CharVariable("skills", {
+	field = "skills",
+	default = {},
+	isLocal = true,
+})
+
+Fusion.character:CharVariable("levels", {
+	field = "levels",
+	default = {},
+	isLocal = true,
+})
