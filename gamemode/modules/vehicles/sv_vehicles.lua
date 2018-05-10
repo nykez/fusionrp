@@ -72,8 +72,7 @@ function Fusion.vehicles.Purchase(pPlayer, id, color)
 		skin = 0,
 		bodygroups = {},
 		license = Fusion.vehicles:generateLicense(),
-		//bill = os.time() + 86400,
-		bill = os.time() - 60,
+		bill = os.time() + 86400,
 	}
 	character:setVehicles(vehicle_data)
 
@@ -118,6 +117,11 @@ function Fusion.vehicles.Spawn(pPlayer, id)
 	if not Vectors then return end
 
 	if !pPlayer:HasVehicle(id) then
+		return
+	end
+
+	if character:getVehicles()[id].bill < os.time() then
+		pPlayer:Notify("You have a insurance bill due. Pay it first.")
 		return
 	end
 	
