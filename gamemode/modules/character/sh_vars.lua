@@ -87,3 +87,9 @@ Fusion.character:CharVariable("levels", {
 	default = {},
 	isLocal = true,
 })
+
+Fusion.character:CharVariable("org", {
+	field = "org",
+	default = {},
+	isLocal = true,
+})

@@ -1,19 +1,40 @@
-Fusion.organizations = Fusion.organizations or {}
-Fusion.organizations.cache = Fusion.organizations.cache or {}
+Fusion.orgs = Fusion.orgs or {}
+Fusion.orgs.cache = Fusion.orgs.cache or {}
 
-function PLAYER:GetOrganization()
-    return self:GetNetworkedInt("organization", 0)
+
+// Checks if a player has a valid org
+function Fusion.orgs.HasPlayerOrg(pPlayer)
+	if not pPlayer then return end 
+
+	local char = pPlayer:getChar()
+
+	return char:getOrg() and char:getOrg()["id"] and true or false 
 end
 
-function PLAYER:InOrg()
-    if self:GetOrganization() != 0 then return true end
+// Returns the characters org id //
+function Fusion.orgs.GetPlayerOrg(pPlayer)
+	if not pPlayer then return end 
 
-    return false
+	local char = pPlayer:getChar()
+
+	return char:getOrg() and char:getOrg()['id'] or false
 end
 
-function Fusion.organizations:GetOwner(id)
-    if !self.cache[id] then return end
-    if !self.cache[id].owner_id then return end
+// Returns the data to the org
+function Fusion.orgs.GetOrg(id)
+	return Fusion.orgs.cache[id] or false
+end
 
-    return self.cache[id].owner_id
+// Can only pass a character to this //
+// Owner is super rank will always have permisisons //
+function Fusion.orgs.HasPerms(character, flags)
+	if character:getOrg()["id"] then
+		if character:getOrg()["rank"] == "owner" then
+			return true 
+		elseif table.HasValue(character:getOrg()["rank"]["flags"], flags) then
+			return true
+		end
+	end
+
+	return false
 end

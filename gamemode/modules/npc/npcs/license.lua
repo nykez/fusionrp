@@ -31,6 +31,7 @@ npc.use = function()
 	Fusion.dialog.canvas:SetTitle('License Registration')
 
 	Fusion.dialog.canvas:AddButton("I'm looking to buy a license.", npc.buy)
+	Fusion.dialog.canvas:AddButton("I want to pay my car insurance.", npc.insurance)
 	Fusion.dialog.canvas:AddButton("Nevermind.", Fusion.dialog.Close)
 
 	Fusion.dialog.canvas:Show()
@@ -46,6 +47,19 @@ npc.buy = function()
 
 	if !Fusion.license.gui then
 		Fusion.license.gui = vgui.Create("FusionLicense")
+	end
+end
+
+npc.insurance = function()
+	Fusion.dialog:Close()
+
+	if Fusion.license.gui then
+		Fusion.license.gui:Remove()
+		Fusion.license.gui = nil
+	end
+
+	if !Fusion.license.gui then
+		Fusion.license.gui = vgui.Create("FusionInsurance")
 	end
 end
 

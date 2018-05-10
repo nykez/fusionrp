@@ -20,6 +20,10 @@ netstream.Hook("FusionVehicleSpawn", function(pPlayer, id )
 	Fusion.vehicles.Spawn(pPlayer, id)
 end)
 
+netstream.Hook("FusionVehicleInsurance", function(pPlayer, id)
+	Fusion.vehicles.PayInsurance(pPlayer, id)
+end)
+
 netstream.Hook("FusionVehicleModify", function(pPlayer, id, bodygroups, color)
 	if color then
 		Fusion.vehicles.Modify(pPlayer, id, bodygroups, color)
@@ -68,6 +72,8 @@ function Fusion.vehicles.Purchase(pPlayer, id, color)
 		skin = 0,
 		bodygroups = {},
 		license = Fusion.vehicles:generateLicense(),
+		//bill = os.time() + 86400,
+		bill = os.time() - 60,
 	}
 	character:setVehicles(vehicle_data)
 
@@ -199,4 +205,35 @@ function Fusion.vehicles.Modify(pPlayer, id, bodygroups, color)
 	pPlayer:Notify("You succesfully modified your vehicle.")
 
 	character:Save()
+end
+
+
+function Fusion.vehicles.PayInsurance(pPlayer, id)
+
+	local character = pPlayer:getChar()
+
+	if !character then return end
+
+	local car = Fusion.vehicles:GetTable(id)
+
+	local data = character:getVehicles({})
+	if not data[id] then return end
+	
+	if data[id].bill then
+		if data[id].bill < os.time() then
+			local price = car.price * 0.1
+
+			if !character:hasMoney(price) then 
+				pPlayer:Notify("You can't afford to pay insurance on this vehicle.")
+				return 
+			end
+
+			data[id].bill = os.time() + 86400
+
+			character:setVehicles(data)
+
+			pPlayer:Notify("You paid your insurance bill.")
+		end
+	end
+
 end

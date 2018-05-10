@@ -1,28 +1,52 @@
 Fusion.inventory = Fusion.inventory or {}
 Fusion.inventory.cache = Fusion.inventory.cache or {}
 
--- local item = Fusion.inventory.meta or {}
--- item.__index = item
--- item.name = "N/A"
--- item.desc = "N/A"
--- item.id = item.id or 0 
--- item.unique = "undefined"
+local ITEM = Fusion.meta.item or {}
+ITEM.__index = ITEM
+ITEM.name = "Undefined"
+ITEM.desc = "An item."
+ITEM.id = ITEM.id or 0
+ITEM.unique = "undefined"
 
--- function item:getID()
--- 	return self.id
--- end
 
--- function item:getName()
--- 	self.name
--- end
+function ITEM:getID()
+	return self.id
+end
 
--- function item:getDesc()
--- 	if !self.desc then return "n/a" end
--- 	return self.desc
--- end
+function ITEM:getName()
+	return self.name
+end
 
--- function item:getOwner()
+function ITEM:getDesc()
+	if (!self.desc) then return "ERROR" end
+	
+	return L(self.desc or "noDesc")
+end
 
--- end
+function ITEM:call(method, client, entity, ...)
+	local oldPlayer, oldEntity = self.player, self.entity
 
--- Fusion.inventory.meta = item
+	self.player = client or self.player
+	self.entity = entity or self.entity
+
+	if (type(self[method]) == "function") then
+		local results = {self[method](self, ...)}
+
+		self.player = nil
+		self.entity = nil
+
+		return unpack(results)
+	end
+
+	self.player = oldPlayer
+	self.entity = oldEntity
+end
+
+
+function ITEM:getOwner()
+	local id = self.id
+
+end
+
+
+Fusion.meta.item = ITEM
