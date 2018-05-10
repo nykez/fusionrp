@@ -194,6 +194,9 @@ Fusion.menu:Add(data)
 local data = {name = "Skills", panel = "FusionSkills", icon = {inventorypng, "gui/skills.png" }}
 Fusion.menu:Add(data)
 
+local data = {name = "Org", panel = "FusionOrgs", icon = {inventorypng, "gui/org.png" }}
+Fusion.menu:Add(data)
+
 
 hook.Add( "OnSpawnMenuOpen", "SpawnMenuWhitelist", function()
 	if IsValid(mainmenu) then
