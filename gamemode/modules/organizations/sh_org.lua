@@ -2,39 +2,162 @@ Fusion.orgs = Fusion.orgs or {}
 Fusion.orgs.cache = Fusion.orgs.cache or {}
 
 
-// Checks if a player has a valid org
-function Fusion.orgs.HasPlayerOrg(pPlayer)
-	if not pPlayer then return end 
 
-	local char = pPlayer:getChar()
+local org = Fusion.meta.orgs or {}
+org.__index = org
 
-	return char:getOrg() and char:getOrg()["id"] and true or false 
+function org:getName()
+	return self.data.name
 end
 
-// Returns the characters org id //
-function Fusion.orgs.GetPlayerOrg(pPlayer)
-	if not pPlayer then return end 
-
-	local char = pPlayer:getChar()
-
-	return char:getOrg() and char:getOrg()['id'] or false
+function org:getMembers()
+	return self.data.members or false
 end
 
-// Returns the data to the org
-function Fusion.orgs.GetOrg(id)
-	return Fusion.orgs.cache[id] or false
+function org:setData(str, value)
+	self.data[str] = value
+
+	if SERVER then
+		netstream.Start(nil, "Fusion_UpdateOrg", self.id, str, value)
+	end
 end
 
-// Can only pass a character to this //
-// Owner is super rank will always have permisisons //
-function Fusion.orgs.HasPerms(character, flags)
-	if character:getOrg()["id"] then
-		if character:getOrg()["rank"] == "owner" then
+function org:getData(str)
+	return self.data[str]
+end
+
+function org:getID()
+	return self.id or self.data.id or false
+end
+
+function org:getRanks()
+	return self.data.ranks or {}
+end
+
+function org:getMembers()
+	return self.data.members or {} 
+end
+
+function org:HasPermissions(character, flag)
+	local members = self:getMembers()
+
+	local rank = nil
+
+	if members[character:getPlayer():SteamID()] then
+		rank = members[character:getPlayer():SteamID()].rank
+	end
+
+	if !rank then return false end 
+
+	if rank == "owner" then
+		return true 
+	end
+
+	local ourRanks = self:getRanks()
+
+	if ourRanks[rank] then
+		if table.HasValue(ourRanks[rank], flag) then
 			return true 
-		elseif table.HasValue(character:getOrg()["rank"]["flags"], flags) then
-			return true
 		end
 	end
 
 	return false
 end
+
+function org:CreateRank(character, strRank, tblflags)
+	if not character then return end 
+
+	local ranks = self:getRanks()
+
+	if !self:HasPermissions(character, "e") then 
+		character:getPlayer():Notify("No permissions.")
+		return 
+	end
+
+	if ranks and ranks[strRank] then
+		character:getPlayer():Notify("A rank with that name already exists.")
+		return
+	end
+
+	ranks[strRank] = tblflags
+
+	self:setData("ranks", ranks)
+
+	character:getPlayer():Notify("Rank created succesfullly.")
+end
+
+function org:EditRank(character, strRank, tblflags)
+	if not character then return end 
+
+	local ranks = self:getRanks()
+
+	if !self:HasPermissions(character, "e") then return end
+
+	if !ranks[strRank] then return end 
+
+
+	ranks[strRank] = tblflags
+
+	self:setData("ranks", ranks)
+
+	character:getPlayer():Notify("Rank editted succesfullly.")
+end
+
+function org:AddUser(user, userRank)
+
+	local ranks = self:getRanks()
+
+	if not ranks[userRank] then return false end 
+
+	local members = self:getMembers()
+	if not members then return false end 
+
+	members[user:SteamID()] = {name = user:getChar():getName(), rank = userRank}
+
+	self:setData("members", members)
+
+	return true 
+end
+
+function org:RemoveUser(user)
+	if not user then return end
+	
+	local member = self:getMembers()
+
+	if member and member[user:SteamID()] then
+		member[user:SteamID()] = nil
+		self:setData("members", member)
+
+		return true
+	end
+
+	return false 
+end
+
+Fusion.meta.orgs = org
+
+
+local PLAYER = FindMetaTable("Player")
+
+function PLAYER:OrgObject()
+	return Fusion.orgs.cache[tonumber(self:getChar():getOrg())] or false
+end
+
+
+function Fusion.orgs.New(name, motd, tblMembers, money, id)
+	local self = setmetatable({}, Fusion.meta.orgs)
+
+	self.data = {}
+
+	self.data.name = name
+	self.data.motd = motd
+	self.data.members = tblMembers
+	self.data.money = money
+	self.data.id = id 
+	self.id = id
+
+
+	return self;
+end
+
+

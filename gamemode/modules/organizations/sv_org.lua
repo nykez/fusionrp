@@ -5,37 +5,42 @@ netstream.Hook("fusion_createorg", function(pPlayer, tableData)
     Fusion.orgs.Create(pPlayer, tableData)
 end)
 
-netstream.Hook("fusion_addrank", function(pPlayer, tableData)
 
-end)
 
 function Fusion.orgs.Create(pPlayer, tableData)
     local character = pPlayer:getChar()
 
-    if character:getOrg()['id'] then 
+    if character:getOrg(false) then 
         pPlayer:Notify("You must leave/disband your current org.")
         return 
     end 
 
+    local members = {}
+    members[pPlayer:SteamID()] = {name = character:getName(), rank = "owner"}
+
     local insertObj = mysql:Insert("fusion_orgs");
-    insertObj:Insert("owner", character:getPlayer():SteamID64());
+    insertObj:Insert("owner", character:getPlayer():SteamID());
     insertObj:Insert("owner_id", character.id);
     insertObj:Insert("name", tableData.name);
     insertObj:Insert("data", "[]");
+    insertObj:Insert("members", util.TableToJSON(members));
     insertObj:Callback(function(result, status, orgID)
         if orgID then
-            local data = {}
-            data.name = tableData.name
-            data.id = orgID
-            data.rank = "owner"
 
-            character:setOrg(data)
-            Fusion.orgs.cache[orgID] = tableData
+            character:setOrg(orgID)
+
+            Fusion.orgs.cache[orgID] = Fusion.orgs.New(tableData.name, "Your MOTD", members, 0, orgID)
+
+            netstream.Start(nil, "Fusion_CreateOrg", orgID, tableData.name, members)
 
             pPlayer:Notify("You succesfully created your org.")
+
+            character:Save()
         end
     end);
     insertObj:Execute();
+
+    PrintTable(Fusion.orgs.cache)
 end
 
 function Fusion.orgs.Leave(pPlayer)
@@ -80,61 +85,24 @@ function Fusion.orgs.Leave(pPlayer)
     end
 end
 
-function Fusion.orgs.NewRank(pPlayer, strName, tableData)
-    local character = pPlayer:getChar()
-    if not character then return end
 
-    local org = Fusion.orgs.GetPlayerOrg(pPlayer)
-
-    local rankName = tostring(strName)
-
-    if !org then
-        pPlayer:Notify("Umm... you're not in a org.")
-        return
-    end
-
-    if !Fusion.orgs.HasPerms(character, "r") then
-        pPlayer:Notify("You don't have the correct permissions to do this.")
-        return
-    end
-
-    local data = Fusion.orgs.GetOrg(character:getOrg()["id"])
-    if !data then return end
-
-    if data.ranks then
-        if data.ranks[rankName] then
-            pPlayer:Notify("A rank already exists with that name!")
-            return
-        end
-
-        data.ranks[rankName] = tableData
-
-    else
-        data.ranks = data.ranks or {}
-        data.ranks[rankName] = tableData
-    end 
-
-    local updateObj = mysql:Update("fusion_orgs");
-    updateObj:Update("data", util.TableToJSON(data.ranks))
-    updateObj:Where("id", character:getOrg()["id"])
-    updateObj:Execute();
-
-    netstream.Start(nil, "Fusion_UpdateOrgs", character:getOrg()["id"], data)
-
-    
-    pPlayer:Notify("Your rank has been added.")
-
-end
 
 concommand.Add("org", function(pPlayer)
     local tableData = {}
-    tableData.name = "My org"
+    tableData.name = "Gang Shit Only"
     
     //Fusion.orgs.Create(pPlayer, tableData)
     
-    //Fusion.orgs.Leave(pPlayer)
 
-    Fusion.orgs.NewRank(pPlayer, "2nd Owner", {flags = {"r", "c"}})
+
+   local org = pPlayer:OrgObject()
+
+   PrintTable(org)
+
+   -- PrintTable(org:getMembers())
+
+   -- org:CreateRank(pPlayer:getChar(), "Private", {"r", "c", "e"})
+
 end)
 
 
@@ -146,10 +114,9 @@ hook.Add("PostGamemodeLoaded", "Fusion_LoadOrgs", function()
                 
                 for k,v in pairs(result) do
                     if v.id then
-                        Fusion.orgs.cache[v.id] = {
-                            data = util.JSONToTable(v.data),
-                            name = v.name,
-                        }
+                        local members = util.JSONToTable(v.members)
+                        Fusion.orgs.cache[v.id] = Fusion.orgs.New(v.name, "Your MOTD", members, 0, v.id)
+                        netstream.Start(nil, "Fusion_CreateOrg", v.id, v.name, members)
                     end
                 end
             end
@@ -162,12 +129,29 @@ end)
 // Check to make sure the players org still exists 
 hook.Add("PlayerLoadedChar", "Fusion_CheckOrg", function(pPlayer, character, currentChar)
     local currentChar = pPlayer:getChar()
-    if currentChar:getOrg() and currentChar:getOrg()['id'] then
-        local id = currentChar:getOrg()['id']
+    if currentChar:getOrg(false)then
+        local id = tonumber(currentChar:getOrg())
 
         if !Fusion.orgs.cache[id] then
             pPlayer:Notify("Your organization has been disbaned by its leader.")
             currentChar:setOrg(nil)
+
+            currentChar:Save()
         end
     end
+
+    for k,v in pairs(Fusion.orgs.cache) do
+        netstream.Start(pPlayer, "Fusion_CreateOrg", v.id, v.name, v.members)
+    end
+end)
+
+
+concommand.Add("getcurrentorg", function(pPlayer)
+    local char = pPlayer:getChar()
+
+    print(char:getOrg())
+    
+
+    PrintTable(Fusion.orgs.cache[tonumber(char:getOrg())])
+
 end)
