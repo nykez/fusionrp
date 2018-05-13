@@ -22,6 +22,8 @@ local function DrawMe(ply)
 
 	if not ply.cosmetic then return end
 
+	if ply:InVehicle() then return end
+
 
 	for k,v in pairs(ply.cosmetic) do
 		local draw = Fusion.inventory:GetItem(v[1])

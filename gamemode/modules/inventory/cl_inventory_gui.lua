@@ -185,14 +185,15 @@ end
 
 function PANEL:CreateInventory()
 	self.inventory_items = self:Add("DIconLayout")
-	self.inventory_items:SetSize(self:GetWide() * 0.33, self:GetTall() * 0.55)
+	self.inventory_items:SetSize(self:GetWide() * 0.66, self:GetTall() * 0.55)
 	self.inventory_items:SetPos(self.modelpnl:GetWide() + 10, self:GetTall() * 0.35)
+	//self.inventory_items:Dock(FILL)
 	self.inventory_items:SetSpaceX(5)
 	self.inventory_items:SetSpaceY(5)
 	self.inventory_items.items = {}
 
-	local MAX_COUNTER = 25
-	for i=1, 25 do
+	local MAX_COUNTER = 55
+	for i=1, 55 do
 		self.inventory_items.items[i] = self.inventory_items:Add("DPanel")
 		self.inventory_items.items[i]:SetSize(64 + 24, 64 + 24)
 		self.inventory_items.items[i]:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
