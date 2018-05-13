@@ -86,10 +86,13 @@ end)
 
 function GM:PlayerLoadedChar(client, character, lastCharacter)
 	hook.Run("PlayerLoadout", client)
+
 end
 
 function GM:PostPlayerLoadout(client)
+	client.inventory = {}
 
+	Fusion.inventory.LoadPlayer(client)
 end
 
 function GM:PlayerLoadout(client)

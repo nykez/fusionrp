@@ -186,9 +186,6 @@ function Fusion.inventory:FullSync(pPlayer)
 	net.Send(pPlayer)
 end
 
-hook.Add("Fusion.PlayerLoaded", function(ply)
-	Fusion.inventory.LoadPlayer(ply)
-end)
 
 function Fusion.inventory:Save(pPlayer)
 	if not IsValid(pPlayer) then return end
@@ -196,21 +193,25 @@ function Fusion.inventory:Save(pPlayer)
 	local tbl = Fusion.util:JSON(pPlayer.inventory or {})
 
 
-	local updateObj = mysql:Update("player_data");
+	local updateObj = mysql:Update("fusion_characters");
 	updateObj:Update("inventory", tbl);
-	updateObj:Where("steam_id", pPlayer:SteamID());
+	updateObj:Where("steamid", pPlayer:SteamID64());
+	updateObj:Where("id", pPlayer:getNetVar("char"));
 	updateObj:Execute();
-	MsgN('saved')
 end
 
 function Fusion.inventory.LoadPlayer(pPlayer)
-	local queryObj = mysql:Select("player_data");
-	queryObj:Where("steam_id", pPlayer:SteamID())
+	local queryObj = mysql:Select("fusion_characters");
+	queryObj:Where("steamid", pPlayer:SteamID64())
+	queryObj:Where("id", pPlayer:getNetVar("char"));
 	queryObj:Callback(function(result, status, lastID)
 		if (type(result) == "table" and #result > 0) then
+			PrintTable(result)
 			local inventory = result[1].inventory
+			print(inventory)
 			local compiled = util.JSONToTable(inventory or {})
 			pPlayer.inventory = compiled
+			PrintTable(pPlayer.inventory)
 			net.Start("Fusion.inventory.sync")
 				net.WriteTable(pPlayer.inventory or {})
 			net.Send(pPlayer)
@@ -284,6 +285,10 @@ concommand.Add("inventory", function(pPlayer)
 	pPlayer:StripWeapons()
 
 	print('loading inventory')
+
+	Fusion.inventory:Save(pPlayer)
+
+
 	-- Fusion.inventory.LoadPlayer(pPlayer)
 
 	//print(Fusion.inventory:GetSlot(pPlayer, "equip", 1))
