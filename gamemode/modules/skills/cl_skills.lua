@@ -42,6 +42,7 @@ function PANEL:Init()
 
 	self.container = self:Add("DScrollPanel")
 	self.container:Dock(FILL)
+  self.container:DockMargin(0, 0, 0, 5)
 
 	local ourCats = Fusion.skills.cats
 
