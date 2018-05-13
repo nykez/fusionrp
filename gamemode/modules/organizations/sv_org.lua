@@ -6,7 +6,6 @@ netstream.Hook("fusion_createorg", function(pPlayer, tableData)
 end)
 
 
-
 function Fusion.orgs.Create(pPlayer, tableData)
     local character = pPlayer:getChar()
 
@@ -97,9 +96,9 @@ concommand.Add("org", function(pPlayer)
 
    local org = pPlayer:OrgObject()
 
-   PrintTable(org)
 
-   -- PrintTable(org:getMembers())
+
+  org:setData("money", 5000)
 
    -- org:CreateRank(pPlayer:getChar(), "Private", {"r", "c", "e"})
 
@@ -140,9 +139,21 @@ hook.Add("PlayerLoadedChar", "Fusion_CheckOrg", function(pPlayer, character, cur
         end
     end
 
-    for k,v in pairs(Fusion.orgs.cache) do
-        netstream.Start(pPlayer, "Fusion_CreateOrg", v.id, v.name, v.members)
-    end
+    timer.Simple(1, function()
+        local queryObj = mysql:Select("fusion_orgs");
+        queryObj:Callback(function(result, status, lastID)
+            if (type(result) == "table" and #result > 0) then
+                
+                for k,v in pairs(result) do
+                    if v.id then
+                        local members = util.JSONToTable(v.members)
+                        netstream.Start(pPlayer, "Fusion_CreateOrg", v.id, v.name, members)
+                    end
+                end
+            end
+        end)
+        queryObj:Execute();
+    end)
 end)
 
 

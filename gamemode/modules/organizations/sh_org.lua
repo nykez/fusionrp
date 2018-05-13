@@ -1,8 +1,6 @@
 Fusion.orgs = Fusion.orgs or {}
 Fusion.orgs.cache = Fusion.orgs.cache or {}
 
-
-
 local org = Fusion.meta.orgs or {}
 org.__index = org
 
@@ -19,6 +17,17 @@ function org:setData(str, value)
 
 	if SERVER then
 		netstream.Start(nil, "Fusion_UpdateOrg", self.id, str, value)
+		if str == "members" then
+			local updateObj = mysql:Update("fusion_orgs");
+			updateObj:Update("members", util.TableToJSON(self.data.members))
+			updateObj:Where("id", self:getID())
+			updateObj:Execute();
+		else
+			local updateObj = mysql:Update("fusion_orgs");
+			updateObj:Update("data", util.TableToJSON(self.data))
+			updateObj:Where("id", self:getID())
+			updateObj:Execute();
+		end
 	end
 end
 
@@ -104,13 +113,17 @@ function org:EditRank(character, strRank, tblflags)
 end
 
 function org:AddUser(user, userRank)
+	print('done')
 
 	local ranks = self:getRanks()
+	print('done')
+
 
 	if not ranks[userRank] then return false end 
 
 	local members = self:getMembers()
 	if not members then return false end 
+	print('done')
 
 	members[user:SteamID()] = {name = user:getChar():getName(), rank = userRank}
 

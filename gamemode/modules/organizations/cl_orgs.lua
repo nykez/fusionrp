@@ -9,6 +9,9 @@ netstream.Hook("Fusion_DestoryOrg", function(id)
 	Fusion.orgs.cache[id] = nil
 end)
 
+netstream.Hook("Fusion_CreateOrgWhole", function(id, tbl)
+	Fusion.orgs.cache[id] = tbl
+end)
 
 netstream.Hook("Fusion_UpdateOrg", function(id, index, value)
 	local org = Fusion.orgs.cache[id]
@@ -163,7 +166,7 @@ function PANEL:BuildTabs(org)
 	local members = docker_top:Add('DPanel')
 	members:SetSize(205, 100)
 	members:TDLib():Background(Color(35, 35, 35)):Outline(Color(72, 72, 72))
-	:DualText("Money", nil, color_white, org:getData("money"), nil, Color(100, 100, 100))
+	:DualText("Money", nil, color_white, "$".. string.Comma(org:getData("money")), nil, Color(100, 100, 100))
 
 	local members = docker_top:Add('DPanel')
 	members:SetSize(205, 100)
@@ -180,7 +183,7 @@ function PANEL:BuildTabs(org)
 	local motd_text = panel:Add("DLabel")
 	motd_text:Dock(TOP)
 	motd_text:DockMargin(5, 5, 5, 0)
-	motd_text:SetText("Welcome to the org. We got a few fucking rules around here to follow. So listen up.\n\nDon't minge.\nDon't raid fellow org mates")
+	motd_text:SetText(org:getData("motd") or "n/a")
 	motd_text:SetAutoStretchVertical( true )
 	motd_text:SetWrap(true)
 	motd_text:SetFont("Fusion_Dealer_Button")
@@ -202,6 +205,35 @@ function PANEL:BuildTabs(org)
 	members:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
 	:Text("Members List")
 
+	local member_dock = panel:Add("DScrollPanel")
+	member_dock:Dock(FILL)
+	member_dock:DockMargin(5, 5, 5, 0)
+
+	local membertable = org:getMembers()
+
+	for k,v in pairs(player.GetAll()) do
+		if v:OrgObject() == org then
+			membertable[v:SteamID()].online = true
+		end
+	end
+
+	for k,v in pairs(org:getMembers()) do
+		local mycolor = Color(255, 0, 0)
+		if v.online then
+			mycolor = Color(0, 255, 0)
+		end
+
+		local mem = member_dock:Add('DPanel')
+		mem:Dock(TOP)
+		mem:DockMargin(0, 0, 0, 5)
+		mem:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
+		:DualText(v.name, nil, color_white, v.rank, nil, Color(100, 100, 100))
+		:FadeHover()
+		:SideBlock(mycolor)
+
+		mem:SetTall(45)
+	end
+
 	self:AddSheet("Dashboard", panel, users )
 
 	local panel = self:Add('DPanel')
@@ -214,7 +246,6 @@ function PANEL:BuildTabs(org)
 	members:DockMargin(5, 5, 5, 0)
 	members:SetTall(40)
 	members:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
-	:Text("Chat")
 
 	local filler = panel:Add("DPanel")
 	filler:Dock(FILL)
@@ -251,6 +282,8 @@ function PANEL:BuildTabs(org)
 
 
 	self:AddSheet("Dashboard", panel, chat )
+
+	if !org:HasPermissions(LocalPlayer():getChar(), "z") then return end
 
 	local panel = self:Add('DPanel')
 	panel:Dock(FILL)
