@@ -5,6 +5,128 @@ netstream.Hook("fusion_createorg", function(pPlayer, tableData)
     Fusion.orgs.Create(pPlayer, tableData)
 end)
 
+netstream.Hook("fusion_flushinvites", function(pPlayer)
+    Fusion.orgs.FlushInvites(pPlayer)
+end)
+
+netstream.Hook("fusion_orgkick", function(pPlayer)
+    Fusion.orgs.FlushInvites(pPlayer)
+end)
+
+netstream.Hook("fusion_invite", function(pPlayer, character)
+    Fusion.orgs.InvitePlayer(pPlayer, character)
+end)
+
+netstream.Hook("fusion_cinvite", function(pPlayer, id)
+    Fusion.orgs.CancelInvite(pPlayer, id)
+end)
+
+netstream.Hook("fusion_setmotd", function(pPlayer, strText)
+    local org = pPlayer:OrgObject()
+
+    local char = pPlayer:getChar()
+
+    if !org:HasPermissions(char, "m") then
+        pPlayer:Notify("You don't have permisisons to do this.")
+        return
+    end
+
+    org:setData("motd", strText)
+
+    pPlayer:Notify("Message of the day updated.")
+end)
+
+function Fusion.orgs.CancelInvite(pPlayer, id)
+    local org = pPlayer:OrgObject()
+
+    local char = pPlayer:getChar()
+
+    if !org:HasPermissions(char, "f") then
+        pPlayer:Notify("You don't have permisisons to do this.")
+        return
+    end
+
+    local invites = org:getData("invites")
+
+    if !invites and !invites[id] then
+        pPlayer:Notify("Invite doesn't exist")
+        return 
+    end
+
+    invites[id] = nil
+
+    org:setData("invites", invites)
+
+    pPlayer:Notify("Invite to player has been canceled.")
+end
+
+function Fusion.orgs.FlushInvites(pPlayer)
+    local org = pPlayer:OrgObject()
+
+    local char = pPlayer:getChar()
+
+    if !org:HasPermissions(char, "f") then
+        pPlayer:Notify("You don't have permisisons to do this.")
+        return
+    end
+
+    pPlayer:Notify("All org invites have been flushed.")
+
+    org:setData("invites", {})
+end
+
+function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id)
+
+    playerinvited:Notify("You have been invited to join " .. strName .. " by " .. char:getName())
+    
+    netstream.Start(playerinvited, "fusion_orginvite", strName, id)
+
+    local invites = playerinvited:getChar():getData("invites") or {}
+    table.insert(invites, {
+        name = strName,
+        invitedby = char:getName(),
+        id = id,
+        steamid = playerinvited:SteamID64(),
+    })
+
+    playerinvited:getChar():setData("invites", invites)
+end
+
+function Fusion.orgs.InvitePlayer(pPlayer, character)
+
+    local org = pPlayer:OrgObject()
+
+    local char = pPlayer:getChar()
+
+    if !org:HasPermissions(char, "i") then
+        pPlayer:Notify("You don't have permisisons to do this.")
+        return
+    end
+
+    local invited = nil
+    for k,v in pairs(player.GetAll()) do
+        if v == character then 
+            invited = v
+        end
+    end
+
+    if !invited then
+        pPlayer:Notify("Can't find person to invite.")
+        return
+    end
+
+    Fusion.orgs.DoInvite(pPlayer, invited, org:getName(), char, org:getID())
+
+    local invites = org:getData("invites")
+    table.insert(invites, {
+        name = invited:getChar():getName()
+    })
+
+    org:setData("invites", invites)
+
+    pPlayer:Notify("Invite has been sent to the player.")
+end
+
 
 function Fusion.orgs.Create(pPlayer, tableData)
     local character = pPlayer:getChar()

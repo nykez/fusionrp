@@ -20,6 +20,10 @@ netstream.Hook("Fusion_UpdateOrg", function(id, index, value)
 	org:setData(index, value)
 end)
 
+netstream.Hook("fusion_orginvite", function(name, id)
+
+end)
+
 
 local dashboard = Material("gui/org/dash.png", "noclamp smooth")
 local users = Material("gui/org/users.png", "noclamp smooth")
@@ -170,12 +174,13 @@ function PANEL:BuildInvitePanel()
 	frame:Center()
 	frame:MakePopup()
 	frame:ShowCloseButton(false)
+	frame:SetTitle("")
 	frame:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
 
 
-	local exit = vgui.Create("DButton", self.f)
+	local exit = vgui.Create("DButton", frame)
 	exit:SetSize(32, 32)
-	exit:SetPos(self.f:GetWide() - 38, 2)
+	exit:SetPos(frame:GetWide() - 38, 2)
 	exit:SetText('X')
 	exit:TDLib():Background(Color(231, 76, 60)):FadeHover()
 	exit:SetTextColor(color_white)
@@ -186,12 +191,13 @@ function PANEL:BuildInvitePanel()
 	local players = GetPotentialPlayers(self.org:getID())
 
 
-	local AppList = vgui.Create( "DScrollPanel", self.f)
+	local AppList = vgui.Create( "DScrollPanel", frame)
 	AppList:Dock( FILL )
 	AppList:DockMargin(1, 5, 1, 5)
 
 	for k,v in pairs(players) do
 		local ourPlayer = AppList:Add("DPanel")
+		ourPlayer.player = v
 		ourPlayer:Dock(TOP)
 		ourPlayer:DockMargin(5, 5, 5, 5)
 		ourPlayer:TDLib():Background(Color(30, 30, 30)):Outline(Color(70, 70, 70)):FadeHover()
@@ -204,6 +210,10 @@ function PANEL:BuildInvitePanel()
 		invite:SetText("Invite")
 		invite:SetTextColor(color_white)
 		invite:TDLib():Background(Color(50, 50, 50)):Outline(Color(24, 24, 24))
+		invite:On("DoClick", function()
+			netstream.Start("fusion_invite", ourPlayer.player)
+			frame:Close()
+		end)
 
 	end
 
@@ -430,6 +440,14 @@ function PANEL:BuildTabs(org)
 	cinvite:SetText("Flush Invites")
 	cinvite:TDLib():Background(Color(230, 126, 34)):Outline(Color(0, 0, 0, 200)):FadeHover()
 	cinvite:SetTextColor(color_white)
+	cinvite:On('DoClick', function(s)
+		Derma_Query("Are you sure you want to flush all invites?", "", "Yes", function() 
+			netstream.Start("fusion_flushinvites")
+			self:Remove()
+		end, "No")
+	end)
+
+	//
 
 	local ccinvite = newInvite:Add("DButton")
 	ccinvite:SetSize(100, 25)
@@ -450,16 +468,51 @@ function PANEL:BuildTabs(org)
 	end
 	for k,v in pairs(curInvites) do
 		local ourInvite = panel1:Add("DPanel")
-		ourInvite:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
+		ourInvite:Dock(TOP)
+		ourInvite:DockMargin(5, 5, 5, 0)
+		ourInvite:SetTall(35)
+		ourInvite.id = k
+		ourInvite:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64)):Text(v.name)
+		:SideBlock(Color(0, 255, 0))
+
+		local cancel_invite = ourInvite:Add('DButton')
+		cancel_invite:Dock(RIGHT)
+		cancel_invite:DockMargin(0, 5, 5, 5)
+		cancel_invite:SetText("Cancel")
+		cancel_invite:SetTextColor(color_white)
+		cancel_invite:TDLib():Background(Color(231, 76, 60)):Outline(Color(0, 0, 0, 200)):FadeHover()
+		cancel_invite:On("DoClick", function()
+			netstream.Start("fusion_cinvite", ourInvite.id)
+			self:Remove()
+		end)
 
 	end
 
 
-
-
 	sheet:AddSheet( "Invites", panel1)
 
+	local panel1 = vgui.Create( "DPanel", sheet )
+	panel1:Dock(FILL)
+	panel1:TDLib():Background(Color(30, 30, 30)):Outline(Color(65, 65, 65))
 
+	local ourMotd = panel1:Add('DTextEntry')
+	ourMotd:Dock(TOP)
+	ourMotd:SetTall(self:GetTall() * 0.30)
+	ourMotd:DockMargin(5, 5, 5, 0)
+	ourMotd:SetText(org:getData("motd"))
+	ourMotd:SetMultiline(true)
+
+	local confirm = panel1:Add('DButton')
+	confirm:Dock(BOTTOM)
+	confirm:DockMargin(5, 5, 5, 5)
+	confirm:SetText('Confirm')
+	confirm:SetTextColor(color_white)
+	confirm:TDLib():Background(Color(46, 204, 113)):Outline(Color(0, 0, 0, 255)):FadeHover()
+	confirm:On("DoClick", function(s)
+		netstream.Start("fusion_setmotd", ourMotd:GetValue())
+	end)
+
+	sheet:AddSheet( "MOTD", panel1)
 
 
 	self:AddSheet("Dashboard", panel, manage )
