@@ -58,9 +58,7 @@ function org:HasPermissions(character, flag)
 
 	if !rank then return false end 
 
-	if rank == "owner" then
-		return true 
-	end
+	if rank == "owner" then return true end
 
 	local ourRanks = self:getRanks()
 

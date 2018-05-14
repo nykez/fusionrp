@@ -366,7 +366,7 @@ function PANEL:BuildTabs(org)
 
 	self:AddSheet("Dashboard", panel, chat )
 
-	if !org:HasPermissions(LocalPlayer():getChar(), "z") then return end
+	if !org:HasPermissions(LocalPlayer():getChar(), {'z', "i"}) then return end
 
 	//
 
