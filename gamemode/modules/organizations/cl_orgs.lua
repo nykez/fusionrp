@@ -33,7 +33,7 @@ local PANEL = {}
 local function GetPotentialPlayers(id)
 	local players = {}
 	for k,v in pairs(player.GetAll()) do
-		if v:getOrg() == id then continue end 
+		if v:getChar():getOrg() == id then continue end 
 		table.insert(players, v)
 	end
 
@@ -50,6 +50,8 @@ function PANEL:Init()
 	self:TDLib():Background(Color(35, 35, 35)):Outline(Color(0, 0, 0))
 
 	local org = LocalPlayer():OrgObject()
+
+	self.org = org
 
 
 	self.navbar = self:Add("DPanel")
@@ -163,24 +165,49 @@ function PANEL:SetActiveButton( active )
 end
 
 function PANEL:BuildInvitePanel()
-	self.f = vgui.Create( "DFrame" )
-	self.f:SetSize( 500, 500 )
-	self.f:Center()
-	self.f:MakePopup()
+	local frame = vgui.Create( "DFrame" )
+	frame:SetSize( 500, 500 )
+	frame:Center()
+	frame:MakePopup()
+	frame:ShowCloseButton(false)
+	frame:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
 
-	local AppList = vgui.Create( "DListView", self.f)
+
+	local exit = vgui.Create("DButton", self.f)
+	exit:SetSize(32, 32)
+	exit:SetPos(self.f:GetWide() - 38, 2)
+	exit:SetText('X')
+	exit:TDLib():Background(Color(231, 76, 60)):FadeHover()
+	exit:SetTextColor(color_white)
+	exit:On('DoClick', function()
+		frame:Close()
+	end)
+
+	local players = GetPotentialPlayers(self.org:getID())
+
+
+	local AppList = vgui.Create( "DScrollPanel", self.f)
 	AppList:Dock( FILL )
-	AppList:SetMultiSelect( false )
-	AppList:AddColumn( "Application" )
-	AppList:AddColumn( "Size" )
+	AppList:DockMargin(1, 5, 1, 5)
 
-	AppList:AddLine( "PesterChum", "2mb" )
-	AppList:AddLine( "Lumitorch", "512kb" )
-	AppList:AddLine( "Troj-on", "661kb" )
+	for k,v in pairs(players) do
+		local ourPlayer = AppList:Add("DPanel")
+		ourPlayer:Dock(TOP)
+		ourPlayer:DockMargin(5, 5, 5, 5)
+		ourPlayer:TDLib():Background(Color(30, 30, 30)):Outline(Color(70, 70, 70)):FadeHover()
+		:Text(v:getChar():getName())
+		ourPlayer:SetTall(30)
 
-	AppList.OnRowSelected = function( lst, index, pnl )
-		print( "Selected " .. pnl:GetColumnText( 1 ) .. " ( " .. pnl:GetColumnText( 2 ) .. " ) at index " .. index )
+		local invite = ourPlayer:Add('DButton')
+		invite:Dock(RIGHT)
+		invite:DockMargin(0, 2, 5, 2)
+		invite:SetText("Invite")
+		invite:SetTextColor(color_white)
+		invite:TDLib():Background(Color(50, 50, 50)):Outline(Color(24, 24, 24))
+
 	end
+
+
 end
 
 function PANEL:BuildTabs(org)
