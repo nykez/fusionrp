@@ -12,8 +12,6 @@ function Fusion.menu:Add(tblData)
 
 	if tblData.icon then
 		tblData.icon[1] = Material(tblData.icon[2], "noclamp smooth")
-		print("Created icon for main menu.")
-		print(tblData.icon[1], tblData.icon[2])
 	end
 end
 
@@ -38,6 +36,11 @@ function PANEL:Init()
 	self:MakePopup()
 
 	self:TDLib():Background(Color(32, 32, 32, 210)):Gradient(Color(35, 35, 35, 255))
+	function self:OnFocusChanged(gained ) 
+		if gained == true then
+			self:MoveToBack()
+		end
+	end
 
 	self.PanelsBuilt = {}
 	self.Active = nil
@@ -124,6 +127,7 @@ function PANEL:ShowPanels()
 	self.mycontainer:SizeTo(self.cache_container_w, self.container:GetTall(), 0.3, 0, 4, function()
 		for k,v in pairs(self.buttons) do
 			v:SetVisible(true)
+			self:SetMouseInputEnabled(true)
 		end
 	end)
 end
@@ -168,6 +172,7 @@ function PANEL:BuildPanel(ID, panel)
 
 	self.Active = self.PanelsBuilt[ID]
 
+	//self:SetMouseInputEnabled(false)
 
 	self:CreateButton()
 end

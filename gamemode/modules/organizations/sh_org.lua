@@ -1,6 +1,16 @@
 Fusion.orgs = Fusion.orgs or {}
 Fusion.orgs.cache = Fusion.orgs.cache or {}
 
+Fusion.orgs.flags = {
+	{"i", "Invite"},
+	{"f", "Flush Invite"},
+	{"k", "Kick"},
+	{"c", "Create Ranks"},
+	{"m", "Edit MOTD"},
+	{"w", "Withdraw Money"},
+	{"d", "Deposit Money"},
+}
+
 local org = Fusion.meta.orgs or {}
 org.__index = org
 
@@ -85,7 +95,7 @@ function org:CreateRank(character, strRank, tblflags)
 
 	local ranks = self:getRanks()
 
-	if !self:HasPermissions(character, "e") then 
+	if !self:HasPermissions(character, "c") then 
 		character:getPlayer():Notify("No permissions.")
 		return 
 	end
@@ -102,12 +112,35 @@ function org:CreateRank(character, strRank, tblflags)
 	character:getPlayer():Notify("Rank created succesfullly.")
 end
 
+function org:DeletRank(character, strRank)
+	if not character then return end 
+
+	local ranks = self:getRanks()
+
+	if !self:HasPermissions(character, "c") then 
+		character:getPlayer():Notify("No permissions.")
+		return 
+	end
+
+
+	if !ranks and !ranks[strRank] then
+		character:getPlayer():Notify("No rank with that name exists")
+		return
+	end
+
+	ranks[strRank] = nil
+
+	self:setData("ranks", ranks)
+
+	character:getPlayer():Notify("Rank deleted succesfullly.")
+end
+
 function org:EditRank(character, strRank, tblflags)
 	if not character then return end 
 
 	local ranks = self:getRanks()
 
-	if !self:HasPermissions(character, "e") then return end
+	if !self:HasPermissions(character, "c") then return end
 
 	if !ranks[strRank] then return end 
 
@@ -120,17 +153,12 @@ function org:EditRank(character, strRank, tblflags)
 end
 
 function org:AddUser(user, userRank)
-	print('done')
-
 	local ranks = self:getRanks()
-	print('done')
-
 
 	if not ranks[userRank] then return false end 
 
 	local members = self:getMembers()
 	if not members then return false end 
-	print('done')
 
 	members[user:SteamID()] = {name = user:getChar():getName(), rank = userRank}
 
@@ -164,17 +192,25 @@ function PLAYER:OrgObject()
 end
 
 
-function Fusion.orgs.New(name, motd, tblMembers, money, id)
+function Fusion.orgs.New(name, motd, tblMembers, money, id, data)
 	local self = setmetatable({}, Fusion.meta.orgs)
 
-	self.data = {}
+	if data then
+		self.data = data
+		self.data.members = tblMembers
+		self.data.money = money
+		self.data.id = id
+		self.id = id
+	else
+		self.data = {}
 
-	self.data.name = name
-	self.data.motd = motd
-	self.data.members = tblMembers
-	self.data.money = money
-	self.data.id = id 
-	self.id = id
+		self.data.name = name
+		self.data.motd = motd
+		self.data.members = tblMembers
+		self.data.money = money
+		self.data.id = id 
+		self.id = id
+	end
 
 
 	return self;

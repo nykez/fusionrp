@@ -13,12 +13,42 @@ netstream.Hook("fusion_orgkick", function(pPlayer)
     Fusion.orgs.FlushInvites(pPlayer)
 end)
 
-netstream.Hook("fusion_invite", function(pPlayer, character)
-    Fusion.orgs.InvitePlayer(pPlayer, character)
+netstream.Hook("fusion_invite", function(pPlayer, character, strRank)
+    Fusion.orgs.InvitePlayer(pPlayer, character, strRank)
 end)
 
 netstream.Hook("fusion_cinvite", function(pPlayer, id)
     Fusion.orgs.CancelInvite(pPlayer, id)
+end)
+
+netstream.Hook("fusion_createrank", function(pPlayer, strRank, tblFlags)
+    local org = pPlayer:OrgObject()
+
+    if not org then return end 
+
+    local character = pPlayer:getChar()
+
+    org:CreateRank(character, strRank, tblFlags)
+end)
+
+netstream.Hook("fusion_editrank", function(pPlayer, strRank, tblFlags)
+    local org = pPlayer:OrgObject()
+
+    if not org then return end 
+
+    local character = pPlayer:getChar()
+
+    org:EditRank(character, strRank, tblFlags)
+end)
+
+netstream.Hook("fusion_deletrank", function(pPlayer, strRank)
+    local org = pPlayer:OrgObject()
+
+    if not org then return end 
+
+    local character = pPlayer:getChar()
+
+    org:DeletRank(character, strRank)
 end)
 
 netstream.Hook("fusion_setmotd", function(pPlayer, strText)
@@ -75,9 +105,9 @@ function Fusion.orgs.FlushInvites(pPlayer)
     org:setData("invites", {})
 end
 
-function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id)
+function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id, rank)
 
-    playerinvited:Notify("You have been invited to join " .. strName .. " by " .. char:getName())
+    playerinvited:Notify("You have been invited to join " .. strName .. " by " .. char:getName() .. " as the rank of " .. rank .. "!")
     
     netstream.Start(playerinvited, "fusion_orginvite", strName, id)
 
@@ -92,7 +122,7 @@ function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id)
     playerinvited:getChar():setData("invites", invites)
 end
 
-function Fusion.orgs.InvitePlayer(pPlayer, character)
+function Fusion.orgs.InvitePlayer(pPlayer, character, strRank)
 
     local org = pPlayer:OrgObject()
 
@@ -115,11 +145,12 @@ function Fusion.orgs.InvitePlayer(pPlayer, character)
         return
     end
 
-    Fusion.orgs.DoInvite(pPlayer, invited, org:getName(), char, org:getID())
+    Fusion.orgs.DoInvite(pPlayer, invited, org:getName(), char, org:getID(), strRank)
 
     local invites = org:getData("invites")
     table.insert(invites, {
-        name = invited:getChar():getName()
+        name = invited:getChar():getName(),
+        rank = strRank,
     })
 
     org:setData("invites", invites)
@@ -230,12 +261,13 @@ hook.Add("PostGamemodeLoaded", "Fusion_LoadOrgs", function()
         local queryObj = mysql:Select("fusion_orgs");
         queryObj:Callback(function(result, status, lastID)
             if (type(result) == "table" and #result > 0) then
-                
                 for k,v in pairs(result) do
                     if v.id then
                         local members = util.JSONToTable(v.members)
-                        Fusion.orgs.cache[v.id] = Fusion.orgs.New(v.name, "Your MOTD", members, 0, v.id)
-                        netstream.Start(nil, "Fusion_CreateOrg", v.id, v.name, members)
+                        local data = util.JSONToTable(v.data)
+                        Fusion.orgs.cache[v.id] = Fusion.orgs.New(v.name, "Your MOTD", members, 0, v.id, data)
+                        netstream.Start(nil, "Fusion_CreateOrg", v.id, v.name, members, data)
+
                     end
                 end
             end
@@ -267,22 +299,12 @@ hook.Add("PlayerLoadedChar", "Fusion_CheckOrg", function(pPlayer, character, cur
                 for k,v in pairs(result) do
                     if v.id then
                         local members = util.JSONToTable(v.members)
-                        netstream.Start(pPlayer, "Fusion_CreateOrg", v.id, v.name, members)
+                        local data = util.JSONToTable(v.data)
+                        netstream.Start(pPlayer, "Fusion_CreateOrg", v.id, v.name, members, data)
                     end
                 end
             end
         end)
         queryObj:Execute();
     end)
-end)
-
-
-concommand.Add("getcurrentorg", function(pPlayer)
-    local char = pPlayer:getChar()
-
-    print(char:getOrg())
-    
-
-    PrintTable(Fusion.orgs.cache[tonumber(char:getOrg())])
-
 end)

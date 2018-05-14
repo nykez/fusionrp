@@ -1,8 +1,12 @@
 
 if not CLIENT then return end 
 
-netstream.Hook("Fusion_CreateOrg", function(orgID, name, members)
-	Fusion.orgs.cache[orgID] = Fusion.orgs.New(name, "Your MOTD", members, 0, orgID)
+netstream.Hook("Fusion_CreateOrg", function(orgID, name, members, data)
+	if data then
+		Fusion.orgs.cache[orgID] = Fusion.orgs.New(name, "Your MOTD", members, 0, orgID, data)
+	else
+		Fusion.orgs.cache[orgID] = Fusion.orgs.New(name, "Your MOTD", members, 0, orgID)
+	end
 end)
 
 netstream.Hook("Fusion_DestoryOrg", function(id)
@@ -77,7 +81,7 @@ function PANEL:Init()
 
 	self.Navigation = vgui.Create( "DScrollPanel", self )
 	self.Navigation:Dock( LEFT )
-	self.Navigation:SetWidth( 32 )
+	self.Navigation:SetWidth( 50 )
 	self.Navigation:DockMargin( 10, 10, 10, 0 )
 
 	self.Content = vgui.Create( "Panel", self )
@@ -103,10 +107,18 @@ function PANEL:AddSheet( label, panel, material )
 
 	if material then
 		Sheet.Button = vgui.Create( "DButton", self.Navigation )
+		Sheet.Button.alpha = 255
 		Sheet.Button.Paint = function(s)
-			surface.SetDrawColor(color_white)
+			surface.SetDrawColor(Color(255, 255, 255, s.alpha))
 			surface.SetMaterial(material)
-			surface.DrawTexturedRect(0, 0, 32, 32)
+			surface.DrawTexturedRect(10, 2, 32, 32)
+
+			if self.ActiveButton == s then
+				s.alpha = 170
+
+				surface.SetDrawColor(255, 255, 255, 10)
+				surface.DrawRect(0, 0, s:GetWide(), s:GetTall())
+			end
 		end
 		Sheet.Button:SetText( " " )
 	else
@@ -117,13 +129,8 @@ function PANEL:AddSheet( label, panel, material )
 	Sheet.Button.Target = panel
 	Sheet.Button:Dock( TOP )
 	Sheet.Button:DockMargin( 0, 5, 0, 0 )
-	Sheet.Button:SetTall(32)
+	Sheet.Button:SetTall(40)
 	Sheet.Button:TDLib():FadeHover()
-	Sheet.Button:On('Paint', function(s)
-		if self.ActiveButton == s then
-			s:SideBlock()
-		end
-	end)
 
 
 	Sheet.Button.DoClick = function()
@@ -153,6 +160,7 @@ function PANEL:SetActiveButton( active )
 
 	if ( self.ActiveButton && self.ActiveButton.Target ) then
 		self.ActiveButton.Target:SetVisible( false )
+		self.ActiveButton.alpha = 255
 		self.ActiveButton:SetSelected( false )
 		self.ActiveButton:SetToggle( false )
 		--self.ActiveButton:SetColor( Color( 150, 150, 150, 100 ) )
@@ -168,7 +176,7 @@ function PANEL:SetActiveButton( active )
 
 end
 
-function PANEL:BuildInvitePanel()
+function PANEL:BuildInvitePanel(org)
 	local frame = vgui.Create( "DFrame" )
 	frame:SetSize( 500, 500 )
 	frame:Center()
@@ -211,13 +219,163 @@ function PANEL:BuildInvitePanel()
 		invite:SetTextColor(color_white)
 		invite:TDLib():Background(Color(50, 50, 50)):Outline(Color(24, 24, 24))
 		invite:On("DoClick", function()
-			netstream.Start("fusion_invite", ourPlayer.player)
-			frame:Close()
+			local ranks = org:getRanks()
+			local menu = DermaMenu()
+			for k,v in pairs(ranks) do
+				menu:AddOption(k, function() 
+					netstream.Start("fusion_invite", ourPlayer.player, k)
+				end )
+			end
+
+			if table.Count(ranks) <= 0 then
+				menu:AddOption('Create a rank first', function() 
+				end )
+			end
+
+			menu:AddOption( "Close", function() frame:Close() end) 
+			menu:Open()
 		end)
 
 	end
 
 
+end
+
+function PANEL:BuildRankPanel()
+	local frame = vgui.Create( "DFrame" )
+	frame:SetSize( 500, 500 )
+	frame:Center()
+	frame:MakePopup()
+	frame:ShowCloseButton(false)
+	frame:SetTitle("")
+	frame:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
+
+
+	local exit = vgui.Create("DButton", frame)
+	exit:SetSize(32, 32)
+	exit:SetPos(frame:GetWide() - 38, 2)
+	exit:SetText('X')
+	exit:TDLib():Background(Color(231, 76, 60)):FadeHover()
+	exit:SetTextColor(color_white)
+	exit:On('DoClick', function()
+		frame:Close()
+	end)
+
+	local container = frame:Add("DScrollPanel")
+	container:Dock(FILL)
+	container:DockMargin(5, 15, 5, 5)
+
+	local TextEntry = vgui.Create( "DTextEntry", container ) -- create the form as a child of frame
+	TextEntry:Dock(TOP)
+	TextEntry:DockMargin(2, 5, 2, 0)
+	TextEntry:SetText( "Rank name" )
+
+	local checkboxs = {}
+	for k,v in pairs(Fusion.orgs.flags) do
+		checkboxs[k] = container:Add('DCheckBoxLabel')
+		DermaCheckbox = checkboxs[k]
+		DermaCheckbox:Dock(TOP)
+		DermaCheckbox:DockMargin(2, 5, 2, 0)
+		DermaCheckbox:SetValue( 0 )
+		DermaCheckbox:SetText(v[2])
+		DermaCheckbox.id = v[1]	
+	end
+
+	local submit = container:Add('DButton')
+	submit:Dock(TOP)
+	submit:DockMargin(2, 5, 2, 0)
+	submit:TDLib():Background(Color(46, 204, 113)):Outline(Color(0, 0, 0, 200))
+	:Text("Submit", "TargetID", color_white):FadeHover()
+	submit:On('DoClick', function(s)
+		local rankName = tostring(TextEntry:GetValue())
+
+		local flags = {}
+
+		for k,v in pairs(checkboxs) do
+			if v:GetChecked() == true then
+				table.insert(flags, v.id)
+			end
+		end
+
+		netstream.Start("fusion_createrank", rankName, flags)
+		frame:Close()
+	end)
+end
+
+function PANEL:BuildRankEditPanel(org, id)
+	local frame = vgui.Create( "DFrame" )
+	frame:SetSize( 500, 500 )
+	frame:Center()
+	frame:MakePopup()
+	frame:ShowCloseButton(false)
+	frame:SetTitle("")
+	frame:TDLib():Background(Color(24, 24, 24)):Outline(Color(54, 54, 54))
+
+
+	local exit = vgui.Create("DButton", frame)
+	exit:SetSize(32, 32)
+	exit:SetPos(frame:GetWide() - 38, 2)
+	exit:SetText('X')
+	exit:TDLib():Background(Color(231, 76, 60)):FadeHover()
+	exit:SetTextColor(color_white)
+	exit:On('DoClick', function()
+		frame:Close()
+	end)
+
+	local container = frame:Add("DScrollPanel")
+	container:Dock(FILL)
+	container:DockMargin(5, 15, 5, 5)
+
+	local rank = org:getData("ranks")
+
+	if not rank[id] then
+		frame:Close()
+		return
+	end
+
+	rank = rank[id]
+
+	PrintTable(rank)
+
+	local TextEntry = vgui.Create( "DTextEntry", container ) -- create the form as a child of frame
+	TextEntry:Dock(TOP)
+	TextEntry:DockMargin(2, 5, 2, 0)
+	TextEntry:SetText(id)
+
+	local checkboxs = {}
+	for k,v in pairs(Fusion.orgs.flags) do
+		checkboxs[k] = container:Add('DCheckBoxLabel')
+		DermaCheckbox = checkboxs[k]
+		DermaCheckbox:Dock(TOP)
+		DermaCheckbox:DockMargin(2, 5, 2, 0)
+		DermaCheckbox:SetValue( 0 )
+		DermaCheckbox:SetText(v[2])
+		DermaCheckbox.id = v[1]	
+
+		if table.HasValue(rank, v[1]) then
+			DermaCheckbox:SetValue(1)
+		end
+	end
+
+	local submit = container:Add('DButton')
+	submit:Dock(TOP)
+	submit:DockMargin(2, 5, 2, 0)
+	submit:TDLib():Background(Color(46, 204, 113)):Outline(Color(0, 0, 0, 200))
+	:Text("Save", "TargetID", color_white):FadeHover()
+	submit:On('DoClick', function(s)
+		local rankName = tostring(TextEntry:GetValue())
+
+		local flags = {}
+
+		for k,v in pairs(checkboxs) do
+			if v:GetChecked() == true then
+				table.insert(flags, v.id)
+			end
+		end
+
+		netstream.Start("fusion_editrank", rankName, flags)
+		frame:Close()
+	end)
 end
 
 function PANEL:BuildTabs(org)
@@ -412,9 +570,10 @@ function PANEL:BuildTabs(org)
 	panel:DockMargin(0, 5, 5, 5)
 	panel:TDLib():Background(Color(30, 30, 30)):Outline(Color(64, 64, 64))
 
-	local sheet = vgui.Create( "DPropertySheet", panel)
+	local sheet = vgui.Create( "DPropertyFusion", panel)
 	sheet:Dock( FILL )
 	sheet:DockMargin(5, 5, 5, 5)
+	sheet:TDLib():Background(Color(35, 35, 35))
 
 	local panel1 = vgui.Create( "DPanel", sheet )
 	panel1:Dock(FILL)
@@ -432,7 +591,7 @@ function PANEL:BuildTabs(org)
 	invite:TDLib():Background(Color(46, 204, 113)):Outline(Color(0, 0, 0, 200)):FadeHover()
 	invite:SetTextColor(color_white)
 	invite:On('DoClick', function(s)
-		self:BuildInvitePanel()
+		self:BuildInvitePanel(org)
 	end)
 
 	local cinvite = newInvite:Add("DButton")
@@ -489,7 +648,7 @@ function PANEL:BuildTabs(org)
 	end
 
 
-	sheet:AddSheet( "Invites", panel1)
+	sheet:AddSheet( "Manage", panel1)
 
 	local panel1 = vgui.Create( "DPanel", sheet )
 	panel1:Dock(FILL)
@@ -513,6 +672,80 @@ function PANEL:BuildTabs(org)
 	end)
 
 	sheet:AddSheet( "MOTD", panel1)
+
+
+	local panel1 = vgui.Create( "DPanel", sheet )
+	panel1:Dock(FILL)
+	panel1:TDLib():Background(Color(30, 30, 30)):Outline(Color(65, 65, 65))
+
+	local newInvite = panel1:Add("DIconLayout")
+	newInvite:Dock(TOP)
+	newInvite:DockMargin(5, 5, 5, 0)
+	newInvite:SetTall(40)
+	newInvite:SetSpaceX(5)
+
+	local invite = newInvite:Add("DButton")
+	invite:SetSize(100, 25)
+	invite:SetText("New Rank")
+	invite:TDLib():Background(Color(46, 204, 113)):Outline(Color(0, 0, 0, 200)):FadeHover()
+	invite:SetTextColor(color_white)
+	invite:On('DoClick', function(s)
+		self:BuildRankPanel()
+	end)
+
+	local dataranks = org:getRanks()
+
+	if table.Count(dataranks) <= 0 then
+		local motd_text = panel1:Add("DLabel")
+		motd_text:Dock(TOP)
+		motd_text:DockMargin(5, 5, 5, 0)
+		motd_text:SetText("No ranks.")
+		motd_text:SetAutoStretchVertical( true )
+		motd_text:SetWrap(true)
+		motd_text:SetFont("Fusion_Dealer_Button")
+	end
+
+	for k,v in pairs(dataranks) do
+		local ourInvite = panel1:Add("DPanel")
+		ourInvite:Dock(TOP)
+		ourInvite:DockMargin(5, 5, 5, 0)
+		ourInvite:SetTall(35)
+		ourInvite.id = k
+		ourInvite:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64)):Text(k)
+		:SideBlock(Color(0, 255, 0))
+
+		local cancel_invite = ourInvite:Add('DButton')
+		cancel_invite:Dock(RIGHT)
+		cancel_invite:DockMargin(0, 5, 5, 5)
+		cancel_invite:SetText("Edit")
+		cancel_invite:SetTextColor(color_white)
+		cancel_invite.id = k
+		cancel_invite:TDLib():Background(Color(230, 126, 34)):Outline(Color(0, 0, 0, 200)):FadeHover()
+		cancel_invite:On("DoClick", function(s)
+			self:BuildRankEditPanel(org, s.id)
+		end)
+
+		local ccancel_invite = ourInvite:Add('DButton')
+		ccancel_invite:Dock(RIGHT)
+		ccancel_invite:DockMargin(0, 5, 5, 5)
+		ccancel_invite:SetText("Delete")
+		ccancel_invite:SetTextColor(color_white)
+		ccancel_invite.id = k
+		ccancel_invite:TDLib():Background(Color(231, 76, 60)):Outline(Color(0, 0, 0, 200)):FadeHover()
+		ccancel_invite:On("DoClick", function(s)
+				Derma_Query("Are you sure you want to delete this rank?","Confirm", 'Yes',
+					function()
+						netstream.Start("fusion_deletrank", s.id)
+						self:Remove()
+					end,
+					"No"
+				)
+		end)
+	end
+
+
+
+	sheet:AddSheet( "Ranks", panel1)
 
 
 	self:AddSheet("Dashboard", panel, manage )
