@@ -24,8 +24,15 @@ netstream.Hook("Fusion_UpdateOrg", function(id, index, value)
 	org:setData(index, value)
 end)
 
-netstream.Hook("fusion_orginvite", function(name, id)
+local function CreateOrginvite(name, id)
+	Derma_Query("You've been invited to join " .. name .. "!", "",
+		"Accept", function() end,
+		"Deny"
+	)
+end
 
+netstream.Hook("fusion_orginvite", function(name, id)
+	CreateOrginvite(name, id)
 end)
 
 

@@ -112,14 +112,40 @@ function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id, rank)
     netstream.Start(playerinvited, "fusion_orginvite", strName, id)
 
     local invites = playerinvited:getChar():getData("invites") or {}
-    table.insert(invites, {
+    invites[id] = {
         name = strName,
         invitedby = char:getName(),
         id = id,
         steamid = playerinvited:SteamID64(),
-    })
+        rank = rank,
+    }
+
 
     playerinvited:getChar():setData("invites", invites)
+end
+
+function Fusion.orgs.AcceptInvite(pPlayer, id, name)
+    local char = pPlayer:getChar()
+
+    local invites = char:getData("invites")
+
+    if not invites[id] then return end
+    
+    invites = invites[id]
+
+    if char:getOrg(false) then
+        pPlayer:Notify("You must leave your current org first.")
+        return
+    end
+
+    char:setOrg(id)
+
+    local org = Fusion.orgs.cache[invites]
+    if not org then return end 
+
+    org:AddUser(pPlayer, invites.rank)
+
+    pPlayer:Notify("You have joined the organization.")
 end
 
 function Fusion.orgs.InvitePlayer(pPlayer, character, strRank)
