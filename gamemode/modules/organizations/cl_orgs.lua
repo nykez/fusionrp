@@ -26,8 +26,19 @@ local users = Material("gui/org/users.png", "noclamp smooth")
 local chat = Material("gui/org/chat.png", "noclamp smooth")
 local manage = Material("gui/org/manage.png", "noclamp smooth")
 
+Fusion.OrgChat = Fusion.OrgChat or {}
 
 local PANEL = {}
+
+local function GetPotentialPlayers(id)
+	local players = {}
+	for k,v in pairs(player.GetAll()) do
+		if v:getOrg() == id then continue end 
+		table.insert(players, v)
+	end
+
+	return players
+end
 
 function PANEL:Init()
 
@@ -102,6 +113,12 @@ function PANEL:AddSheet( label, panel, material )
 	Sheet.Button:DockMargin( 0, 5, 0, 0 )
 	Sheet.Button:SetTall(32)
 	Sheet.Button:TDLib():FadeHover()
+	Sheet.Button:On('Paint', function(s)
+		if self.ActiveButton == s then
+			s:SideBlock()
+		end
+	end)
+
 
 	Sheet.Button.DoClick = function()
 		self:SetActiveButton( Sheet.Button )
@@ -143,6 +160,27 @@ function PANEL:SetActiveButton( active )
 
 	self.Content:InvalidateLayout()
 
+end
+
+function PANEL:BuildInvitePanel()
+	self.f = vgui.Create( "DFrame" )
+	self.f:SetSize( 500, 500 )
+	self.f:Center()
+	self.f:MakePopup()
+
+	local AppList = vgui.Create( "DListView", self.f)
+	AppList:Dock( FILL )
+	AppList:SetMultiSelect( false )
+	AppList:AddColumn( "Application" )
+	AppList:AddColumn( "Size" )
+
+	AppList:AddLine( "PesterChum", "2mb" )
+	AppList:AddLine( "Lumitorch", "512kb" )
+	AppList:AddLine( "Troj-on", "661kb" )
+
+	AppList.OnRowSelected = function( lst, index, pnl )
+		print( "Selected " .. pnl:GetColumnText( 1 ) .. " ( " .. pnl:GetColumnText( 2 ) .. " ) at index " .. index )
+	end
 end
 
 function PANEL:BuildTabs(org)
@@ -192,7 +230,7 @@ function PANEL:BuildTabs(org)
 
 	// END DASHBOARD //
 
-	// Start users //
+	// Start Members //
 	local panel = self:Add('DPanel')
 	panel:Dock(FILL)
 	panel:DockMargin(0, 5, 5, 5)
@@ -205,9 +243,11 @@ function PANEL:BuildTabs(org)
 	members:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
 	:Text("Members List")
 
-	local member_dock = panel:Add("DScrollPanel")
+	local member_dock = panel:Add("DIconLayout")
 	member_dock:Dock(FILL)
 	member_dock:DockMargin(5, 5, 5, 0)
+	member_dock:SetSpaceX(5)
+	member_dock:SetSpaceY(5)
 
 	local membertable = org:getMembers()
 
@@ -218,23 +258,58 @@ function PANEL:BuildTabs(org)
 	end
 
 	for k,v in pairs(org:getMembers()) do
-		local mycolor = Color(255, 0, 0)
-		if v.online then
-			mycolor = Color(0, 255, 0)
+		local mem = member_dock:Add('DPanel')
+		mem:SetSize(200, 200)
+		mem:TDLib():Background(Color(28, 28, 28)):Outline(Color(64, 64, 64)):FadeHover()
+		mem.OnMousePressed = function( self )
+
+			local url = "http://steamcommunity.com/profiles/"..util.SteamIDTo64(k)
+
+			gui.OpenURL( url )
+
 		end
 
-		local mem = member_dock:Add('DPanel')
-		mem:Dock(TOP)
-		mem:DockMargin(0, 0, 0, 5)
-		mem:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
-		:DualText(v.name, nil, color_white, v.rank, nil, Color(100, 100, 100))
-		:FadeHover()
-		:SideBlock(mycolor)
+		local av = vgui.Create( "AvatarImage", mem)
+		av:SetSteamID(util.SteamIDTo64(k) , 400)
+		av:Dock(TOP)
+		av:DockMargin(5, 3, 5, 0)
+		av:SetTall(mem:GetTall()*0.55)
 
-		mem:SetTall(45)
+
+		local name = mem:Add("DLabel")
+		name:Dock(TOP)
+		name:DockMargin(5, 5, 5, 0)
+		name:SetText(v.name)
+		name:SetFont("Fusion_Dealer_Title")
+		name:SetContentAlignment(5)
+		name:SetAutoStretchVertical(true)
+		name:SetTextColor(color_white)
+
+		local name = mem:Add("DLabel")
+		name:Dock(TOP)
+		name:DockMargin(5, 5, 5, 0)
+		name:SetText(v.rank)
+		name:SetFont("Fusion_Dealer_Button")
+		name:SetContentAlignment(5)
+
+		local text = "Offline"
+
+		if v.online then
+			text = "Online"
+		end
+
+		local name = mem:Add("DLabel")
+		name:Dock(TOP)
+		name:DockMargin(5, 5, 5, 0)
+		name:SetText(text)
+		name:SetFont("Fusion_Dealer_Button")
+		name:SetContentAlignment(5)
+
 	end
 
 	self:AddSheet("Dashboard", panel, users )
+
+
 
 	local panel = self:Add('DPanel')
 	panel:Dock(FILL)
@@ -255,6 +330,10 @@ function PANEL:BuildTabs(org)
 	local richtext = vgui.Create( "RichText", filler )
 	richtext:Dock( FILL )
 
+	for k,v in pairs(Fusion.OrgChat) do
+		richtext:InsertColorChange( 255, 255, 255, 255 )
+		richtext:AppendText(v[1].. ": " .. v[2] .. "\n")
+	end
 	local textBox = filler:Add("DPanel")
 	textBox:Dock(BOTTOM)
 	textBox:SetTall(self:GetTall() * 0.1)
@@ -276,6 +355,10 @@ function PANEL:BuildTabs(org)
 	entryBox.OnEnter = function()
 		richtext:InsertColorChange( 255, 255, 255, 255 )
 		richtext:AppendText(LocalPlayer():getChar():getName()..": " ..entryBox:GetValue().."\n")
+		local txt = entryBox:GetValue()
+		local record = table.Count(Fusion.OrgChat)
+		Fusion.OrgChat[record] = {LocalPlayer():getChar():getName(), txt}
+
 		entryBox:SetText("")
 		entryBox:Clear()
 	end
@@ -285,13 +368,76 @@ function PANEL:BuildTabs(org)
 
 	if !org:HasPermissions(LocalPlayer():getChar(), "z") then return end
 
+	//
+
 	local panel = self:Add('DPanel')
 	panel:Dock(FILL)
 	panel:DockMargin(0, 5, 5, 5)
+	panel:TDLib():Background(Color(30, 30, 30)):Outline(Color(64, 64, 64))
+
+	local sheet = vgui.Create( "DPropertySheet", panel)
+	sheet:Dock( FILL )
+	sheet:DockMargin(5, 5, 5, 5)
+
+	local panel1 = vgui.Create( "DPanel", sheet )
+	panel1:Dock(FILL)
+	panel1:TDLib():Background(Color(30, 30, 30)):Outline(Color(65, 65, 65))
+
+	local newInvite = panel1:Add("DIconLayout")
+	newInvite:Dock(TOP)
+	newInvite:DockMargin(5, 5, 5, 0)
+	newInvite:SetTall(40)
+	newInvite:SetSpaceX(5)
+
+	local invite = newInvite:Add("DButton")
+	invite:SetSize(100, 25)
+	invite:SetText("Invite")
+	invite:TDLib():Background(Color(46, 204, 113)):Outline(Color(0, 0, 0, 200)):FadeHover()
+	invite:SetTextColor(color_white)
+	invite:On('DoClick', function(s)
+		self:BuildInvitePanel()
+	end)
+
+	local cinvite = newInvite:Add("DButton")
+	cinvite:SetSize(100, 25)
+	cinvite:SetText("Flush Invites")
+	cinvite:TDLib():Background(Color(230, 126, 34)):Outline(Color(0, 0, 0, 200)):FadeHover()
+	cinvite:SetTextColor(color_white)
+
+	local ccinvite = newInvite:Add("DButton")
+	ccinvite:SetSize(100, 25)
+	ccinvite:SetText("Kick Player")
+	ccinvite:TDLib():Background(Color(231, 76, 60)):Outline(Color(0, 0, 0, 200)):FadeHover()
+	ccinvite:SetTextColor(color_white)
+
+	local curInvites = org:getData("invites")
+
+	if table.Count(curInvites) <= 0 then
+		local motd_text = panel1:Add("DLabel")
+		motd_text:Dock(TOP)
+		motd_text:DockMargin(5, 5, 5, 0)
+		motd_text:SetText("No pending invites")
+		motd_text:SetAutoStretchVertical( true )
+		motd_text:SetWrap(true)
+		motd_text:SetFont("Fusion_Dealer_Button")
+	end
+	for k,v in pairs(curInvites) do
+		local ourInvite = panel1:Add("DPanel")
+		ourInvite:TDLib():Background(Color(34, 34, 34)):Outline(Color(64, 64, 64))
+
+	end
+
+
+
+
+	sheet:AddSheet( "Invites", panel1)
+
+
 
 
 	self:AddSheet("Dashboard", panel, manage )
 end
+
 
 
 vgui.Register("FusionOrgs", PANEL, "EditablePanel")

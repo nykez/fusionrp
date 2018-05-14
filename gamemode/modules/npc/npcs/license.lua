@@ -32,6 +32,7 @@ npc.use = function()
 
 	Fusion.dialog.canvas:AddButton("I'm looking to buy a license.", npc.buy)
 	Fusion.dialog.canvas:AddButton("I want to pay my car insurance.", npc.insurance)
+	Fusion.dialog.canvas:AddButton("I want to start an organization.", npc.insurance)
 	Fusion.dialog.canvas:AddButton("Nevermind.", Fusion.dialog.Close)
 
 	Fusion.dialog.canvas:Show()

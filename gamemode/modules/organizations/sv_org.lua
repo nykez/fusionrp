@@ -38,8 +38,6 @@ function Fusion.orgs.Create(pPlayer, tableData)
         end
     end);
     insertObj:Execute();
-
-    PrintTable(Fusion.orgs.cache)
 end
 
 function Fusion.orgs.Leave(pPlayer)

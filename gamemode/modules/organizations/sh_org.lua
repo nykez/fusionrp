@@ -32,7 +32,7 @@ function org:setData(str, value)
 end
 
 function org:getData(str)
-	return self.data[str]
+	return self.data[str] or {}
 end
 
 function org:getID()
@@ -65,10 +65,19 @@ function org:HasPermissions(character, flag)
 	local ourRanks = self:getRanks()
 
 	if ourRanks[rank] then
-		if table.HasValue(ourRanks[rank], flag) then
-			return true 
+		if type(flag) == 'table' then
+			for k,v in pairs(flag) do
+				if table.HasValue(ourRanks[rank], v) then
+					return true 
+				end
+			end
+		else
+			if table.HasValue(ourRanks[rank], flag) then
+				return true 
+			end
 		end
 	end
+
 
 	return false
 end
