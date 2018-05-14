@@ -20,11 +20,11 @@ function Fusion.license.Purchase(unique, pPlayer)
 		return
 	end
 	
-	local canPurchase = license.canPurchase(pPlayer) or true
-	if (canPurchase == false) then
+	if !license.canPurchase(pPlayer) then
 		pPlayer:Notify("You don't meet the requirements to purchase this license")
 		return
 	end
+
 
 	local license_data = character:getData("license", {})
 

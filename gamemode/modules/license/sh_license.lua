@@ -47,13 +47,15 @@ Fusion.license.Register({
 	price = 0,
 	renew = 250,
 	canPurchase = function(pPlayer)
-		local can = pPlayer:getLevel() >= 50
+		local char = pPlayer:getChar()
+		local can = char:GetSkillLevel("Herbology") >= 50
+
+		print(can)
 
 		if !can then
-			pPlayer:Notify("You need player level 50 for this license.")
-			return false
+			pPlayer:Notify("You need player level 50 Herbology for this license.")
 		end
 
-		return true
+		return can
 	end
 })
