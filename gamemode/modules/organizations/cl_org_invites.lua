@@ -32,7 +32,19 @@ function PANEL:Init()
 
 	local data = LocalPlayer():getChar():getData("invites", {})
 
-	PrintTable(data)
+	if #data <= 0 then
+		if table.Count(data) <= 0 then
+			local motd_text = self.container:Add("DLabel")
+			motd_text:Dock(TOP)
+			motd_text:DockMargin(5, 5, 5, 0)
+			motd_text:SetText("No pending invites.")
+			motd_text:SetAutoStretchVertical( true )
+			motd_text:SetWrap(true)
+			motd_text:SetFont("Fusion_Dealer_Button")
+		end
+	end
+	
+
 	for k,v in pairs(data) do
 
 		local ourLicense = self.container:Add("DPanel")
