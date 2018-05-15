@@ -18,6 +18,10 @@ function org:getName()
 	return self.data.name
 end
 
+function org:getMOTD()
+	return self.data.motd or "No MOTD"
+end
+
 function org:getMembers()
 	return self.data.members or false
 end
@@ -41,8 +45,14 @@ function org:setData(str, value)
 	end
 end
 
-function org:getData(str)
-	return self.data[str] or {}
+function org:getData(str, default)
+	if self.data[str] then 
+		return self.data[str]
+	elseif default then 
+		return default
+	else
+		return {}
+	end
 end
 
 function org:getID()
@@ -88,6 +98,18 @@ function org:HasPermissions(character, flag)
 
 
 	return false
+end
+
+function org:GetRank(pPlayer)
+	local members = self:getMembers()
+
+	local rank = false
+
+	if members[pPlayer:SteamID()] then
+		rank = members[pPlayer:SteamID()].rank
+	end
+
+	return rank
 end
 
 function org:CreateRank(character, strRank, tblflags)
@@ -197,6 +219,7 @@ function Fusion.orgs.New(name, motd, tblMembers, money, id, data)
 
 	if data then
 		self.data = data
+		self.data.name = name
 		self.data.members = tblMembers
 		self.data.money = money
 		self.data.id = id

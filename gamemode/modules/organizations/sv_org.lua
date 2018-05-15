@@ -66,6 +66,25 @@ netstream.Hook("fusion_setmotd", function(pPlayer, strText)
     pPlayer:Notify("Message of the day updated.")
 end)
 
+netstream.Hook("fusion_leaveorg", function(pPlayer)
+    Fusion.orgs.Leave(pPlayer)
+end)
+
+netstream.Hook("fusion_invitecmd", function(pPlayer, strtype, id )
+    if strtype == 'a' then
+        Fusion.orgs.AcceptInvite(pPlayer, id)
+    elseif strtype == 'd' then
+        Fusion.orgs.DenyInvite(pPlayer, id)
+    elseif strtype == 'flush' then
+        local char = pPlayer:getChar()
+
+        char:setData("invites", {})
+
+        pPlayer:Notify("All invites have been flushed.")
+    end
+end)
+
+
 function Fusion.orgs.CancelInvite(pPlayer, id)
     local org = pPlayer:OrgObject()
 
@@ -109,8 +128,6 @@ function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id, rank)
 
     playerinvited:Notify("You have been invited to join " .. strName .. " by " .. char:getName() .. " as the rank of " .. rank .. "!")
     
-    netstream.Start(playerinvited, "fusion_orginvite", strName, id)
-
     local invites = playerinvited:getChar():getData("invites") or {}
     invites[id] = {
         name = strName,
@@ -124,7 +141,21 @@ function Fusion.orgs.DoInvite(pPlayer, playerinvited, strName, char, id, rank)
     playerinvited:getChar():setData("invites", invites)
 end
 
-function Fusion.orgs.AcceptInvite(pPlayer, id, name)
+function Fusion.orgs.DenyInvite(pPlayer, id)
+    local char = pPlayer:getChar()
+
+    local invites = char:getData("invites")
+
+    if not invites[id] then return end
+    
+    invites[id] = nil
+
+    char:setData("invites", invites)
+
+    pPlayer:Notify("Invite has been denied.")
+end
+
+function Fusion.orgs.AcceptInvite(pPlayer, id)
     local char = pPlayer:getChar()
 
     local invites = char:getData("invites")
@@ -141,9 +172,19 @@ function Fusion.orgs.AcceptInvite(pPlayer, id, name)
     char:setOrg(id)
 
     local org = Fusion.orgs.cache[invites]
-    if not org then return end 
+    if not org then
+        pPlayer:Notify("Org no longer exists")
+        return
+    end
+
+    if !table.HasValue(org.data.ranks, invites.rank) then
+        pPlayer:Notify("The rank you've been invited to no longer exists")
+        return
+    end
 
     org:AddUser(pPlayer, invites.rank)
+
+    char:setData("invites", {})
 
     pPlayer:Notify("You have joined the organization.")
 end
@@ -177,6 +218,7 @@ function Fusion.orgs.InvitePlayer(pPlayer, character, strRank)
     table.insert(invites, {
         name = invited:getChar():getName(),
         rank = strRank,
+        id = #invites + 1,
     })
 
     org:setData("invites", invites)
@@ -196,11 +238,15 @@ function Fusion.orgs.Create(pPlayer, tableData)
     local members = {}
     members[pPlayer:SteamID()] = {name = character:getName(), rank = "owner"}
 
+    local orgData = {}
+    orgData.motd = "Your MOTD"
+    orgData.money = 0
+
     local insertObj = mysql:Insert("fusion_orgs");
     insertObj:Insert("owner", character:getPlayer():SteamID());
     insertObj:Insert("owner_id", character.id);
     insertObj:Insert("name", tableData.name);
-    insertObj:Insert("data", "[]");
+    insertObj:Insert("data", util.TableToJSON(orgData))
     insertObj:Insert("members", util.TableToJSON(members));
     insertObj:Callback(function(result, status, orgID)
         if orgID then
@@ -224,28 +270,31 @@ function Fusion.orgs.Leave(pPlayer)
 
     local character = pPlayer:getChar() 
 
-    if !character:getOrg()['id'] then 
+    if !character:getOrg(false) then 
         pPlayer:Notify("You're not in a org.")
         return 
     end 
 
-    if character:getOrg()['rank'] == "owner" then
-        // Disband the entire org //
+    local org = pPlayer:OrgObject()
 
-        local data = character:getOrg()
+    local rank = org:GetRank(pPlayer)
 
+    if rank == "owner" then
+        local id = org:getID()
 
-        Fusion.orgs.cache[data.id] = nil
+        Fusion.orgs.cache[id] = nil
+
         character:setOrg(nil)
 
+
         local insertObj = mysql:Delete("fusion_orgs")
-        insertObj:Where("id", data.id)
+        insertObj:Where("id", id)
         insertObj:Execute();
 
         for k,v in pairs(player.GetAll()) do
             if v:getChar() then
                 local ourChar = v:getChar()
-                if ourChar:getOrg()["id"] and ourChar:getOrg()["id"] == data.id then
+                if ourChar:getOrg() and ourChar:getOrg() == id then
                     pPlayer:Notify("The owner has disbaned your org.")
                     ourChar:setOrg(nil)
                 end
@@ -253,33 +302,16 @@ function Fusion.orgs.Leave(pPlayer)
         end
 
         pPlayer:Notify('Your org has been disbanded.')
-
     else
-        character:setOrg(nil)
 
-        pPlayer:Notify("You have left your org.")
+        local remove = org:RemoveUser(pPlayer)
+
+        if remove then 
+            character:setOrg(nil)
+            pPlayer:Notify("You have left your org.")
+        end
     end
 end
-
-
-
-concommand.Add("org", function(pPlayer)
-    local tableData = {}
-    tableData.name = "Gang Shit Only"
-    
-    //Fusion.orgs.Create(pPlayer, tableData)
-    
-
-
-   local org = pPlayer:OrgObject()
-
-
-
-  org:setData("money", 5000)
-
-   -- org:CreateRank(pPlayer:getChar(), "Private", {"r", "c", "e"})
-
-end)
 
 
 hook.Add("PostGamemodeLoaded", "Fusion_LoadOrgs", function()

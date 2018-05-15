@@ -65,3 +65,7 @@ end)
 concommand.Add("fs_setrank", function(ply, cmd, args)
     ply:SetAccountLevel(tonumber(args[1]))
 end)
+
+concommand.Add("fs_pos", function(ply)
+    print(ply:GetPos())
+end)

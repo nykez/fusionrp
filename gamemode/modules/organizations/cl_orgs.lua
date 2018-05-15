@@ -48,7 +48,7 @@ local PANEL = {}
 local function GetPotentialPlayers(id)
 	local players = {}
 	for k,v in pairs(player.GetAll()) do
-		if v:getChar():getOrg() == id then continue end 
+		if !v:getChar():getOrg() == id then continue end 
 		table.insert(players, v)
 	end
 
@@ -65,6 +65,16 @@ function PANEL:Init()
 	self:TDLib():Background(Color(35, 35, 35)):Outline(Color(0, 0, 0))
 
 	local org = LocalPlayer():OrgObject()
+
+
+	if not org then
+		self.navbar = self:Add("DPanel")
+		self.navbar:Dock(TOP)
+		self.navbar:SetTall(self:GetTall() * 0.07)
+		self.navbar:TDLib():Background(Color(26, 26, 26)):Gradient(Color(30, 30, 30))
+		self.navbar:Text("No org")
+		return
+	end
 
 	self.org = org
 
@@ -423,7 +433,7 @@ function PANEL:BuildTabs(org)
 	local motd_text = panel:Add("DLabel")
 	motd_text:Dock(TOP)
 	motd_text:DockMargin(5, 5, 5, 0)
-	motd_text:SetText(org:getData("motd") or "n/a")
+	motd_text:SetText(org:getData("motd", "no motd"))
 	motd_text:SetAutoStretchVertical( true )
 	motd_text:SetWrap(true)
 	motd_text:SetFont("Fusion_Dealer_Button")
