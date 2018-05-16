@@ -17,6 +17,7 @@ if SERVER then
 	end
 end
 
+//
 -- Includes a file from the prefix.
 function Fusion.util.include(fileName, state)
 	if (!fileName) then
@@ -47,7 +48,7 @@ end
 -- Include files based off the prefix within a directory.
 function Fusion.util.includeDir(directory, fromLua, recursive)
 	local baseDir = "fusionrp"
-	
+
 	if (SCHEMA and SCHEMA.folder and SCHEMA.loading) then
 		baseDir = SCHEMA.folder.."/schema/"
 	else
