@@ -388,6 +388,6 @@ if SERVER then
 	concommand.Add("nigger2", function(pPlayer)
 
 		local char = pPlayer:getChar()
-		Fusion.item.spawn("357", pPlayer:GetPos(), nil, Angle(0, 90, 0), {})
+		Fusion.item.spawn("vector", pPlayer:GetPos(), nil, Angle(0, 90, 0), {})
 	end)
 end

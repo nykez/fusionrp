@@ -181,3 +181,7 @@ function GM:CanPlayerTakeItem(client, item)
 		end
 	end
 end
+
+for k,v in pairs(weapons.GetList()) do
+	print(v.ClassName, v.WorldModel)
+end
