@@ -77,6 +77,7 @@ if (SERVER) then
 			if (itemTable.onEntityCreated) then
 				itemTable:onEntityCreated(self)
 			end
+
 		end
 	end
 
@@ -124,44 +125,44 @@ else
 	local toScreen = FindMetaTable("Vector").ToScreen
 	local colorAlpha = ColorAlpha
 
-	-- function ENT:onDrawEntityInfo(alpha)
-	-- 	local itemTable = self.getItemTable(self)
+	function ENT:onDrawEntityInfo(alpha)
+		local itemTable = self.getItemTable(self)
 
-	-- 	if (itemTable) then
-	-- 		local oldData = itemTable.data
-	-- 		itemTable.data = self.getNetVar(self, "data", {})
-	-- 		itemTable.entity = self
+		if (itemTable) then
+			local oldData = itemTable.data
+			itemTable.data = self.getNetVar(self, "data", {})
+			itemTable.entity = self
 
-	-- 		local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
-	-- 		local x, y = position.x, position.y
-	-- 		local description = itemTable.getDesc(itemTable)
+			local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
+			local x, y = position.x, position.y
+			local description = itemTable.getDesc(itemTable)
 
-	-- 		if (description != self.desc) then
-	-- 			self.desc = description
-	-- 			self.markup = nut.markup.parse("<font=nutItemDescFont>" .. description .. "</font>", ScrW() * 0.7)
-	-- 		end
+			if (description != self.desc) then
+				self.desc = description
+				self.markup = markup.Parse("<font=TargetID>" .. description .. "</font>", ScrW() * 0.7)
+			end
 			
-	-- 		nut.util.drawText(itemTable.getName and itemTable:getName() or L(itemTable.name), x, y, colorAlpha(nut.config.get("color"), alpha), 1, 1, nil, alpha * 0.65)
+			Fusion.util.drawText(itemTable.getName and itemTable:getName() or (itemTable.name), x, y, colorAlpha(Color(255, 255, 255), alpha), 1, 1, nil, alpha * 0.65)
 
-	-- 		y = y + 12
-	-- 		if (self.markup) then
-	-- 			self.markup:draw(x, y, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	-- 		end
+			y = y + 12
+			if (self.markup) then
+				self.markup:Draw(x, y, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+			end
 
-	-- 		x, y = hook.Run("DrawItemDescription", self, x, y, colorAlpha(color_white, alpha), alpha * 0.65)
+			x, y = hook.Run("DrawItemDescription", self, x, y, colorAlpha(color_white, alpha), alpha * 0.65)
 
-	-- 		itemTable.entity = nil
-	-- 		itemTable.data = oldData
-	-- 	end		
-	-- end
+			itemTable.entity = nil
+			itemTable.data = oldData
+		end		
+	end
 
-	-- function ENT:DrawTranslucent()
-	-- 	local itemTable = self:getItemTable()
+	function ENT:DrawTranslucent()
+		local itemTable = self:getItemTable()
 
-	-- 	if (itemTable and itemTable.drawEntity) then
-	-- 		itemTable:drawEntity(self)
-	-- 	end
-	-- end
+		if (itemTable and itemTable.drawEntity) then
+			itemTable:drawEntity(self)
+		end
+	end
 
 	function ENT:Draw()
 		self:DrawModel()

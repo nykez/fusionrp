@@ -94,6 +94,7 @@ function PLAYER:getNetVar(key, default)
 end
 
 ENTITY.getNetVar = PLAYER.getNetVar
+PLAYER.getLocalVar = ENTITY.getNetVar
 
 
 // Config management //

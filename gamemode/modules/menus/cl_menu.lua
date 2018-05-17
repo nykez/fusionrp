@@ -8,6 +8,8 @@ function Fusion.menu.add(options, position, onRemove)
 	local width = 0
 	local entity
 
+	print("setting up menu")
+
 	-- The font for the buttons.
 	surface.SetFont("TargetID")
 
@@ -24,6 +26,7 @@ function Fusion.menu.add(options, position, onRemove)
 		position = entity:WorldToLocal(LocalPlayer():GetEyeTrace().HitPos)
 	end
 
+	print("finished menu")
 	-- Add the new menu to the list.
 	return table.insert(Fusion.menu.list, {
 		-- Use the specified position or whatever the player is looking at.
@@ -39,6 +42,7 @@ function Fusion.menu.add(options, position, onRemove)
 		-- Called after the menu has faded out.
 		onRemove = onRemove
 	})
+
 end
 
 -- Gradient for subtle effects.
