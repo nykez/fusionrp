@@ -49,11 +49,8 @@ end
 function Fusion.util.includeDir(directory, fromLua, recursive)
 	local baseDir = "fusionrp"
 
-	if (SCHEMA and SCHEMA.folder and SCHEMA.loading) then
-		baseDir = SCHEMA.folder.."/schema/"
-	else
-		baseDir = baseDir.."/gamemode/"
-	end 
+
+	baseDir = baseDir.."/gamemode/"
 	
 	if recursive then
 		local function AddRecursive(folder)
@@ -79,3 +76,18 @@ function Fusion.util.includeDir(directory, fromLua, recursive)
 end
 
 
+if CLIENT then
+	
+	function Fusion.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
+		color = color or color_white
+
+		return draw.TextShadow({
+			text = text,
+			font = font or "TargetID",
+			pos = {x, y},
+			color = color,
+			xalign = alignX or 0,
+			yalign = alignY or 0
+		}, 1, alpha or (color.a * 0.575))
+	end
+end

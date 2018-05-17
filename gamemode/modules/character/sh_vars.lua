@@ -92,3 +92,15 @@ Fusion.character:CharVariable("org", {
 	field = "org",
 	isLocal = true,
 })
+
+Fusion.character:CharVariable("inv", {
+	noNetworking = true,
+	noDisplay = true,
+	onGet = function(character, index)
+		if (index and type(index) != "number") then
+			return character.vars.inv or {}
+		end
+
+		return character.vars.inv and character.vars.inv[index or 1]
+	end
+})

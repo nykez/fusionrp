@@ -4,7 +4,7 @@ local mysql_data = {
 
 	username = "pgrpdev",
 
-	password = "Makayla123!!",
+	password = "Nigger1771!",
 
 	database = "pgrpdev_fusionrp",
 
@@ -77,6 +77,26 @@ local function populateTables()
 	orgs:Create("members", "LONGTEXT")
 	orgs:PrimaryKey("id")
 	orgs:Execute()
+
+	local inv = mysql:Create("fusion_inventories")
+	inv:Create("_invID", "int(11) unsigned NOT NULL AUTO_INCREMENT")
+	inv:Create("_charID", "int(11) unsigned NOT NULL")
+	inv:Create("_invType", "varchar(24) DEFAULT NULL")
+	inv:PrimaryKey("_invID")
+	inv:Execute()
+
+	local item = mysql:Create("fusion_items")
+	item:Create("_itemID", "int(11) unsigned NOT NULL AUTO_INCREMENT")
+	item:Create("_invID", "int(11) unsigned NOT NULL")
+	item:Create("_uniqueID", "varchar(60) NOT NULL")
+	item:Create("_data", "varchar(500) DEFAULT NULL")
+	item:Create("_x", "smallint(4) NOT NULL")
+	item:Create("_y", "smallint(4) NOT NULL")
+	item:PrimaryKey("_itemID")
+	item:Execute()
+
+
+
 
 	print("[Fusion RP] Completed!")
 	print("[Fusion RP] Database connected.")

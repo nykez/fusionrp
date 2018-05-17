@@ -1,7 +1,5 @@
 // Don't autoinclude this file //
 
-Fusion.meta = Fusion.meta or {}
-
 local char = Fusion.meta.character or {}
 debug.getregistry().Character = Fusion.meta.character
 
@@ -97,6 +95,15 @@ if SERVER then
 		if bodygroups then
 			for k,v in pairs(bodygroups) do
 				client:SetBodygroup(k, v)
+			end
+		end
+		if (!noNetworking) then
+			self:Sync()
+				
+			for k, v in ipairs(self:getInv(true)) do
+				if (type(v) == "table") then 
+					v:sync(client)	
+				end
 			end
 		end
 

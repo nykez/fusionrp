@@ -32,28 +32,38 @@ if (SERVER) then
 		insertObj:Insert("levels", "[]")
 		insertObj:Insert("description", tblData.desc or "nil")
 		insertObj:Callback(function(result, status, charID)
-			local client = nil
+			mysql:RawQuery("INSERT INTO fusion_inventories (_charID) VALUES ("..charID..")", function(_, status, invID)
+				local client = nil
 
-			for k,v in pairs(player.GetAll()) do
-				if v:SteamID() == tblData.steamid then
-					client = v
+				for k,v in pairs(player.GetAll()) do
+					if v:SteamID() == tblData.steamid then
+						client = v
+					end
 				end
-			end
 
-			ourCharacterID = charID
-			local character = Fusion.character.New(tblData, charID, client, tblData.steamid)
+				ourCharacterID = charID
+				local character = Fusion.character.New(tblData, charID, client, tblData.steamid)
 
-			Fusion.character.loaded[charID] = character
+				local w, h = 6, 6
+				local inventory = Fusion.item.createInv(w, h, invID)
+				character.vars.inv = {inventory}
+				
+				inventory:setOwner(charID)
 
-			Fusion.character.cache[tblData.steamid] = charID
+				Fusion.character.loaded[charID] = character
 
-			if ourCharacterID and callback then
-				callback(ourCharacterID)
-			end
+				Fusion.character.cache[tblData.steamid] = charID
 
+				if ourCharacterID and callback then
+					callback(ourCharacterID)
+				end
+
+			end)
 		end);
 		insertObj:Execute();
 	end
+
+	// Fusion.character.BuildCharacters(pPlayer, func, noCache, id)
 
 
 	function Fusion.character.BuildCharacters(pPlayer, func, noCache, id)
@@ -118,6 +128,54 @@ if (SERVER) then
 
 
 						local character = Fusion.character.New(data, ourID, pPlayer)
+						character.vars.inv = {
+							[1] = -1,
+						}
+
+						mysql:RawQuery("SELECT _invID, _invType FROM fusion_inventories WHERE _charID = "..ourID, function(data)
+							if (data and #data > 0) then
+								for k, v in pairs(data) do
+									if (v._invType and isstring(v._invType) and v._invType == "NULL") then
+										v._invType = nil
+									end
+
+									local w, h = 5, 5
+
+									local invType 
+									if (v._invType) then
+										invType = Fusion.item.inventoryTypes[v._invType]
+
+										if (invType) then
+											w, h = invType.w, invType.h
+										end
+									end
+
+									Fusion.item.restoreInv(tonumber(v._invID), w, h, function(inventory)
+										if (v._invType) then
+											inventory.vars.isBag = v._invType
+											table.insert(character.vars.inv, inventory)
+										else
+											character.vars.inv[1] = inventory
+										end
+
+										inventory:setOwner(id)
+									end, true)
+								end
+							else
+								local insert = mysql:Insert("fusion_inventories")
+								insert:Insert("_charID", id)
+								insert:Callback(function(result, status, invID)
+									local w, h = 5, 5
+									local inventory = Fusion.item.createInv(w, h, invID)
+									inventory:setOwner(id)
+									character.vars.inv = {
+										inventory
+									}
+								end)
+								insert:Execute()
+							end
+						end)
+
 
 						Fusion.character.loaded[ourID] = character
 					end

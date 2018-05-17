@@ -10,6 +10,8 @@ ENTITY = FindMetaTable("Entity")
 
 Fusion = Fusion or {}
 Fusion.util = Fusion.util or {}
+Fusion.meta = Fusion.meta or {}
+
 
 function Fusion.util.Client(file)
 	if SERVER then AddCSLuaFile(file) end

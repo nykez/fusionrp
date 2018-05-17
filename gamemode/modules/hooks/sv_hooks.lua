@@ -1,4 +1,5 @@
 
+
 hook.Add("PlayerInitialSpawn", "PlayerInitialSpawn_Insert", function(pPlayer)
 	local queryObj = mysql:Select("fusion_players");
 	queryObj:Where("steam_id", pPlayer:SteamID());
@@ -31,11 +32,6 @@ end)
 
 hook.Add('PlayerInitialSpawn', "fusionplayer_inital", function(pPlayer)
 	timer.Simple(5, function()
-
-		pPlayer:SetNoDraw(true)
-		pPlayer:SetNotSolid(true)
-		pPlayer:Lock(true)
-
 		pPlayer.loadTime = SysTime()
 
 
@@ -66,6 +62,11 @@ hook.Add('PlayerInitialSpawn', "fusionplayer_inital", function(pPlayer)
 				netstream.Start(pPlayer, "fusion_OpenMain", tblCharacter)
 			end, false, nil
 		)
+
+		pPlayer:SetNoDraw(true)
+		pPlayer:SetNotSolid(true)
+		pPlayer:Lock(true)
+
 		timer.Simple(1, function()
 			pPlayer:KillSilent()
 			pPlayer:StripAmmo()
@@ -92,7 +93,6 @@ end
 function GM:PostPlayerLoadout(client)
 	client.inventory = {}
 
-	Fusion.inventory.LoadPlayer(client)
 end
 
 function GM:PlayerLoadout(client)
@@ -118,3 +118,66 @@ function GM:PlayerSpawn(client)
 	hook.Run("PlayerLoadout", client)
 end
 
+
+function GM:PlayerUse(client, entity)
+	if (client:getNetVar("restricted")) then
+		return false
+	end
+
+	if (entity:IsDoor()) then
+		local result = hook.Run("CanPlayerUseDoor", client, entity)
+
+		if (result == false) then
+			return false
+		else
+			hook.Run("PlayerUseDoor", client, entity)
+		end
+	end
+
+	return true
+end
+
+function GM:KeyPress(client, key)
+	if (key == IN_RELOAD) then
+
+	elseif (key == IN_USE) then
+		local data = {}
+			data.start = client:GetShootPos()
+			data.endpos = data.start + client:GetAimVector()*96
+			data.filter = client
+		local entity = util.TraceLine(data).Entity
+
+		if (IsValid(entity) and entity:IsDoor() or entity:IsPlayer()) then
+			hook.Run("PlayerUse", client, entity)
+		end
+	end
+end
+
+
+function GM:CanPlayerInteractItem(client, action, item)
+	if (client:getNetVar("restricted")) then
+		return false
+	end
+
+	if (action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false) then
+		return false
+	end
+
+	if (action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false) then
+		return false
+	end
+
+	return client:Alive()
+end
+
+function GM:CanPlayerTakeItem(client, item)
+	if (type(item) == "Entity") then
+		local char = client:getChar()
+		
+		if (item.fusionSteamID and item.fusionSteamID == client:SteamID() and item.fusionCharID != char:getID()) then
+			client:Notify("You cant pick this up.")
+
+			return false
+		end
+	end
+end
