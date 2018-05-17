@@ -12,6 +12,11 @@ veh.model = "models/tdmcars/hon_crxsir.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/hon_crxsir.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -86.5, 20),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -28,6 +33,11 @@ veh.price = 15
 veh.model = "models/tdmcars/civic_typer.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/civictyper.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -95, 38),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
 
@@ -46,6 +56,11 @@ veh.model = "models/tdmcars/hon_s2000.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/s2000.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -97.5, 21),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -63,6 +78,11 @@ veh.model = "models/crsk_autos/honda/nsx_2017.mdl"
 
 veh.script = "scripts/vehicles/crsk_autos/crsk_honda_nsx_2017.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -100, 19),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -79,5 +99,10 @@ veh.price = 15
 veh.model = "models/tdmcars/honda_motorcycle.mdl"
 
 veh.script = "scripts/vehicles/fpv/hondacbrr.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -30, 40),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
