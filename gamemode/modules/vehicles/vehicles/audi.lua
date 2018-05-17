@@ -12,6 +12,11 @@ veh.model = "models/tdmcars/aud_rs4avant.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/rs4avant.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -111, 33.8),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -28,6 +33,11 @@ veh.price = 15
 veh.model = "models/tdmcars/aud_s4.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/aud_s4.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -110, 38),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
 
@@ -47,7 +57,7 @@ veh.model = "models/tdmcars/audir8.mdl"
 veh.script = "scripts/vehicles/tdmcars/audir8.txt"
 
 veh.lplate = {
-	Vec = Vector(-2.101918, -104.330750, 28.820555),
+	Vec = Vector(0, -105, 29),
 	Ang = Angle(0, 0, 85),
 }
 
@@ -68,6 +78,11 @@ veh.model = "models/tdmcars/audi_r8_spyder.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/audir8spyd.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -104, 35),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -84,6 +99,11 @@ veh.price = 15
 veh.model = "models/tdmcars/auditt.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/auditt.txt"
+
+veh.lplate = {
+	Vec = Vector(2, -94.5, 30.5),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
 
@@ -102,6 +122,11 @@ veh.model = "models/tdmcars/s5.mdl"
 
 veh.script = "scripts/vehicles/tdmcars/s5.txt"
 
+veh.lplate = {
+	Vec = Vector(0, -109, 38),
+	Ang = Angle(0, 0, 85),
+}
+
 Fusion.vehicles:Register(veh)
 
 
@@ -118,5 +143,10 @@ veh.price = 15
 veh.model = "models/spedcars/quattros1.mdl"
 
 veh.script = "scripts/vehicles/spedcars/quattros1.txt"
+
+veh.lplate = {
+	Vec = Vector(0, -102, 30),
+	Ang = Angle(0, 0, 85),
+}
 
 Fusion.vehicles:Register(veh)
