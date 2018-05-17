@@ -166,7 +166,7 @@ if (SERVER) then
 								local insert = mysql:Insert("fusion_inventories")
 								insert:Insert("_charID", id)
 								insert:Callback(function(result, status, invID)
-									local w, h = 5, 5
+									local w, h = 6, 6
 									local inventory = Fusion.item.createInv(w, h, invID)
 									inventory:setOwner(id)
 									character.vars.inv = {

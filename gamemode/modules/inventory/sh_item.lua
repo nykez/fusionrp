@@ -433,6 +433,7 @@ do
 
 				for k, v in ipairs(character:getInv(true)) do
 					if (v.id == id) then
+						print('found a owner')
 						character:getInv(true)[k] = inventory
 
 						return

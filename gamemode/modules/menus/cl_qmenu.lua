@@ -4,7 +4,6 @@ Fusion.menu = Fusion.menu or {}
 Fusion.menu.items = Fusion.menu.items or {}
 
 
-
 function Fusion.menu:Add(tblData)
 	Fusion.menu.items[tblData.name] = {
 		tblData
@@ -190,16 +189,10 @@ local data = {name = "Inventory", panel = "FusionInventory", icon = {inventorypn
 
 Fusion.menu:Add(data)
 
-local data = {name = "Organization", panel = "FusionInventory", icon = {inventorypng, "gui/gang.png" }}
-Fusion.menu:Add(data)
-
-local data = {name = "Settings", panel = "FusionInventory", icon = {inventorypng, "gui/settings.png" }}
-Fusion.menu:Add(data)
-
 local data = {name = "Skills", panel = "FusionSkills", icon = {inventorypng, "gui/skills.png" }}
 Fusion.menu:Add(data)
 
-local data = {name = "Org", panel = "FusionOrgs", icon = {inventorypng, "gui/org.png" }}
+local data = {name = "Org", panel = "FusionOrgs", icon = {inventorypng, "gui/gang.png" }}
 Fusion.menu:Add(data)
 
 

@@ -112,7 +112,6 @@ PANEL = {}
 				table.insert(Fusion.gui.inv1.childPanels, self)
 			end
 
-			PrintTable(inventory)
 			self.invID = inventory:getID()
 			self:SetSize(64, 64)
 			self:setGridSize(inventory:getSize())

@@ -2,8 +2,8 @@
 local META = Fusion.meta.inventory or {}
 META.__index = META
 META.slots = META.slots or {}
-META.w = META.w or 4
-META.h = META.h or 4
+META.w = META.w or 6
+META.h = META.h or 6
 META.vars = META.vars or {}
 
 function META:getID()
