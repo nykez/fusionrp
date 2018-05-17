@@ -7,6 +7,7 @@ ITEM.weaponCategory = "sidearm"
 ITEM.price = 350
 ITEM.width = 2
 ITEM.height = 1
+
 ITEM.iconCam = {
 	ang	= Angle(-17.581502914429, 250.7974395752, 0),
 	fov	= 5.412494001838,

@@ -42,17 +42,18 @@ if (SERVER) then
 				end
 
 				ourCharacterID = charID
-				local character = Fusion.character.New(tblData, charID, client, tblData.steamid)
+
+				local character = Fusion.character.New(tblData, ourCharacterID, client, tblData.steamid)
 
 				local w, h = 6, 6
 				local inventory = Fusion.item.createInv(w, h, invID)
 				character.vars.inv = {inventory}
 				
-				inventory:setOwner(charID)
+				inventory:setOwner(ourCharacterID)
 
 				Fusion.character.loaded[charID] = character
 
-				Fusion.character.cache[tblData.steamid] = charID
+				Fusion.character.cache[tblData.steamid] = ourCharacterID
 
 				if ourCharacterID and callback then
 					callback(ourCharacterID)
@@ -158,7 +159,7 @@ if (SERVER) then
 											character.vars.inv[1] = inventory
 										end
 
-										inventory:setOwner(id)
+										inventory:setOwner(ourID)
 									end, true)
 								end
 							else

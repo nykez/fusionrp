@@ -77,7 +77,7 @@ ITEM.functions.EquipUn = { -- sorry, for name order.
 
 -- On player eqipped the item, Gives a weapon to player and load the ammo data from the item.
 ITEM.functions.Equip = {
-	name = "Equip",
+	name = "Use",
 	tip = "equipTip",
 	icon = "icon16/tick.png",
 	onRun = function(item)
@@ -94,12 +94,12 @@ ITEM.functions.Equip = {
 				local itemTable = Fusion.item.instances[v.id]
 				
 				if (!itemTable) then
-					client:notifyLocalized("tellAdmin", "wid!xt")
+					print("nah")
 
 					return false
 				else
 					if (itemTable.isWeapon and client.carryWeapons[item.weaponCategory] and itemTable:getData("equip")) then
-						client:notifyLocalized("weaponSlotFilled")
+						client:Notify("You must Unequip a weapon first.")
 
 						return false
 					end

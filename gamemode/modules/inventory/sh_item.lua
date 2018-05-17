@@ -133,6 +133,7 @@ function Fusion.item.load(path, baseID, isBaseItem)
 
 	if (uniqueID) then
 		uniqueID = (isBaseItem and "base_" or "")..uniqueID
+		print("weapon is a base item.")
 		Fusion.item.register(uniqueID, baseID, isBaseItem, path)
 	else
 		if (!path:find(".txt")) then
@@ -145,10 +146,10 @@ function Fusion.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 	local meta = Fusion.meta.item
 
 	if (uniqueID) then
-		print(uniqueID)
 		ITEM = (isBaseItem and Fusion.item.base or Fusion.item.list)[uniqueID] or setmetatable({}, meta)
 			ITEM.desc = "noDesc"
 			ITEM.uniqueID = uniqueID
+			print(uniqueID, "item base:", baseID)
 			ITEM.base = baseID
 			ITEM.isBase = isBaseItem
 			ITEM.hooks = ITEM.hooks or {}
@@ -397,7 +398,6 @@ do
 		netstream.Hook("inv", function(slots, id, w, h, owner, vars)
 			local character
 
-			print('doing networking')
 
 			if (owner) then
 				character = Fusion.character.loaded[owner]
@@ -406,7 +406,6 @@ do
 			end
 
 			if (character) then
-				print('got a character')
 				local inventory = Fusion.item.createInv(w, h, id)
 				inventory:setOwner(character:getID())
 				inventory.slots = {}
@@ -433,7 +432,7 @@ do
 				character.vars.inv = character.vars.inv or {}
 
 				for k, v in ipairs(character:getInv(true)) do
-					if (v:getID() == id) then
+					if (v.id == id) then
 						character:getInv(true)[k] = inventory
 
 						return
@@ -660,13 +659,16 @@ do
 
 			if (type(item) != "Entity") then
 				if (!inventory or !inventory.owner or inventory.owner != character:getID()) then
+					print('error no inventory')
 					return
 				end
 			end
 
+
 			if (hook.Run("CanPlayerInteractItem", client, action, item, data) == false) then
 				return
 			end
+
 
 			if (type(item) == "Entity") then
 				if (IsValid(item)) then

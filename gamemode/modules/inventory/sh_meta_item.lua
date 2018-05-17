@@ -109,7 +109,7 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
 	if (!noSave) then
 		local update = mysql:Update("fusion_items")
 		update:Update("_data", self.data)
-		update:Where("_itemID", self:getId())
+		update:Where("_itemID", self:getID())
 		update:Execute()
 	end	
 end

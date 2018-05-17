@@ -485,6 +485,7 @@ if (SERVER) then
 	function META:sync(receiver, fullUpdate)
 		local slots = {}
 
+
 		for x, items in pairs(self.slots) do
 			for y, item in pairs(items) do
 				if (item.gridX == x and item.gridY == y) then

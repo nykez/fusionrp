@@ -132,10 +132,7 @@ PANEL = {}
 							if (newTooltip) then
 								icon:SetToolTip(newTooltip)
 							else
-								icon:SetToolTip(
-									Format(Fusion.config.itemFormat,
-									item.getName and item:getName() or (item.name), item:getDesc() or "")
-								)
+								icon:SetToolTip(item.getName and item:getName() or (item.name) or "")
 							end
 							icon.itemID = item.id
 
@@ -502,7 +499,6 @@ PANEL = {}
 						
 						if (override == true) then if (menu.Remove) then menu:Remove() end return end
 							for k, v in SortedPairs(itemTable.functions) do
-								if (k == "combine") then continue end -- we don't need combine on the menu mate. 
 
 								if (v.onCanRun) then
 									if (v.onCanRun(itemTable) == false) then
@@ -614,7 +610,6 @@ concommand.Add("gui_inventory", function()
 	local inventoryID = LocalPlayer():getChar():getInv().id
 	local inventory = Fusion.item.inventories[inventoryID]
 
-	print(inventory)
 
 	if (inventory) then
 			Fusion.gui.inv1:setInventory(inventory)
