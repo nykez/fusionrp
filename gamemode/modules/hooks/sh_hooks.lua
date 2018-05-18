@@ -16,7 +16,7 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
 					
 					if (owner and IsValid(owner)) then
 						if (SERVER) then
-							owner:notifyLocalized("equippedBag")
+							owner:Notify("Bag already equipped.")
 						end
 					end
 

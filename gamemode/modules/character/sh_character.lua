@@ -45,7 +45,7 @@ if (SERVER) then
 
 				local character = Fusion.character.New(tblData, ourCharacterID, client, tblData.steamid)
 
-				local w, h = 6, 6
+				local w, h = 7, 7
 				local inventory = Fusion.item.createInv(w, h, invID)
 				character.vars.inv = {inventory}
 				
@@ -140,7 +140,7 @@ if (SERVER) then
 										v._invType = nil
 									end
 
-									local w, h = 5, 5
+									local w, h = 7, 7
 
 									local invType 
 									if (v._invType) then

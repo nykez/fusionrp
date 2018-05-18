@@ -6,7 +6,7 @@ ITEM.desc = "Crafting's basic."
 ITEM.isBlueprint = true
 
 function ITEM:getDesc()
-	return self.name
+	return ""
 end
 
 function ITEM:onRegistered()
@@ -17,4 +17,20 @@ function ITEM:onRegistered()
 			end
 		end
 	end
+
+	if self.mixture then
+		
+	end
 end
+
+
+ITEM.functions.use = {
+	name = "Learn",
+	tip = "useTip",
+	icon = "icon16/add.png",
+	onRun = function(item)
+
+		
+		return true
+	end,
+}

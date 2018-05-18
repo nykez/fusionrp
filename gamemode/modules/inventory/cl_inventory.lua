@@ -25,6 +25,7 @@ local PANEL = {}
 
 function PANEL:Init()
 	self:Droppable("inv")
+
 end
 
 function PANEL:PaintOver(w, h)
@@ -78,6 +79,8 @@ PANEL = {}
 		self:SetTitle("inventory")
 
 		self.panels = {}
+
+		//self:TDLib():Background(Color(35, 35, 35)):Outline(Color(64, 64, 64))
 	end
 		
 	function PANEL:OnRemove()
