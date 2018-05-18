@@ -70,7 +70,7 @@ function PANEL:Load()
 
     self.title:SetText("Vehicle Dealership")
 
-    for k, v in pairs(Fusion.vehicles.make) do
+    for k, v in SortedPairs(Fusion.vehicles.make) do
         self.cat[k] = self.panel:Add("DButton")
         self.cat[k]:TDLib():ClearPaint()
         self.cat[k]:SetTall(ScrH() * .027)
