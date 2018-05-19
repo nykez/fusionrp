@@ -37,13 +37,10 @@ function PANEL:Init()
     self.scroll:DockMargin(5, 5, 5, 5)
     self.scroll:Dock(FILL)
 
-    print(LocalPlayer():GetModel())
-
-    
     self.leftModel = self:Add("DModelPanel")
     self.leftModel:SetSize(self:GetWide() * 0.33, self:GetTall() * 0.6)
     self.leftModel:SetPos(0, self:GetTall() - self.leftModel:GetTall())
-    self.leftModel:SetModel(LocalPlayer():GetModel())
+    self.leftModel:SetModel("models/player/breen.mdl")
     local mn, mx = self.leftModel.Entity:GetRenderBounds()
     local size = 0
     size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
@@ -59,17 +56,6 @@ function PANEL:Init()
     self.leftModel:SetFOV(20)
     self.leftModel:SetCamPos(Vector(size, size, size))
     self.leftModel:SetLookAt(( mn + mx ) * 0.8)
-
-    local char = LocalPlayer():getChar()
-    if char then
-
-	    self.leftModel.Entity:SetSkin(char:getData('skin', 0))
-
-	    for k,v in pairs(char:getData("bodygroups")) do
-	    	self.leftModel.Entity:SetBodygroup(k, v)
-	    	self.leftModel:SetBodygroup(k, v)
-	    end
-	end
 
     self.rightModel = self:Add("DModelPanel")
     self.rightModel:SetSize(self:GetWide() * 0.33, self:GetTall() * 0.6)
@@ -140,3 +126,11 @@ function PANEL:Hide()
 end
 
 vgui.Register("FusionDialog", PANEL, "EditablePanel")
+
+concommand.Add("panel", function(ply, cmd, args)
+    if IsValid(Fusion.dialog.canvas) then
+		Fusion.dialog.canvas:Remove()
+	end
+
+	Fusion.dialog.canvas = Fusion.menus:Create("FusionDialog")
+end)
