@@ -1,4 +1,4 @@
-<h2> Wrote for FusionRoleplay </h2>
+<h2> Fusion Roleplay </h2>
 
 
 Unfinished. No TODO list. Requires tmysql4/mysqloo and other undocumented content packs. Code is super messy, as refactor was never started. Documentation is lacking; no support will be given. Thanks :)
