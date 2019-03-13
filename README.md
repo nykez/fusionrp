@@ -1,4 +1,4 @@
-<h1>Fusion RP</h1>
-<h3>An extensive roleplaying gamemode created for Garry's Mod.</h3>
+<h2> Wrote for FusionRoleplay </h2>
 
-<p>Memes</p>
+
+Unfinished. No TODO list. Requires tmysql4/mysqloo and other undocumented content packs.
